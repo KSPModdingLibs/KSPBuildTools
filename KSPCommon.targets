@@ -1,0 +1,19 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--MSBuild targets-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+    <CallTarget Targets="CopyBinariesToRepo" />
+  </Target>
+  <!--Custom Targets-->
+  <Target Name="CopyBinariesToRepo">
+    <PropertyGroup>
+      <BinariesRepoRootPath Condition="'$(UsePluginsFolder)' == 'true'">$(RepoRootPath)\GameData\$(GameDataFolderName)\Plugins</BinariesRepoRootPath>
+      <BinariesRepoRootPath Condition="'$(UsePluginsFolder)' == 'false'">$(RepoRootPath)\GameData\$(GameDataFolderName)</BinariesRepoRootPath>
+    </PropertyGroup>
+    <ItemGroup>
+      <BinariesToCopy Include="$(TargetDir)\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(BinariesToCopy)" DestinationFolder="$(BinariesRepoRootPath)" />
+  </Target>
+</Project>

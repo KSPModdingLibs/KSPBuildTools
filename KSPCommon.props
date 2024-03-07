@@ -19,6 +19,10 @@
     <StartAction>Program</StartAction>
     <StartProgram>$(ReferencePath)\$(KSPExecutable)</StartProgram>
     <StartWorkingDirectory>$(ReferencePath)</StartWorkingDirectory>
+    <!--Set property defaults for targets-->
+    <RepoRootPath Condition="'$(RepoRootPath)' == ''">$(SolutionDir)</RepoRootPath>
+    <GameDataFolderName Condition="'$(GameDataFolderName)' == ''">$(SolutionName)</GameDataFolderName>
+    <UsePluginsFolder Condition="'$(UsePluginsFolder)' == ''">false</UsePluginsFolder>
   </PropertyGroup>
   <!--Import references-->
   <ItemGroup>
