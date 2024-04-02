@@ -5,8 +5,8 @@ env:
   SOLUTION_PATH: .
 
 inputs:
-  name: build-configuration
-  default: Release
+  build-configuration:
+    default: Release
 
 runs:
   runs-on: ubuntu-latest
