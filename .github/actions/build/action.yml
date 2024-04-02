@@ -1,60 +1,57 @@
 name: build
 
-on:
-  workflow_call:
-
 env:
   KSP_ROOT: ksp/
   SOLUTION_PATH: .
 
-jobs:
-  build:
-    inputs:
-      name: build-configuration
-      default: Release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Mod Repo
-        uses: actions/checkout@v4
-        with:
-          # working around a bug in checkout action: https://github.com/actions/checkout/issues/1418#issuecomment-1899122964
-          ref: "${{ github.head_ref || github.ref }}"
+inputs:
+  name: build-configuration
+  default: Release
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 5.x
+runs:
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout Mod Repo
+      uses: actions/checkout@v4
+      with:
+        # working around a bug in checkout action: https://github.com/actions/checkout/issues/1418#issuecomment-1899122964
+        ref: "${{ github.head_ref || github.ref }}"
 
-      - name: Download required assemblies
-        shell: bash
-        env:
-          KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
-        run: |
-          wget https://github.com/KSPModStewards/KSPCommon/raw/main/KSP-1.12.5.zip
-          unzip -P "${KSP_ZIP_PASSWORD}" KSP-1.12.5.zip -d "${{ env.KSPRoot }}"
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 5.x
 
-      - name: Install Dependencies
-        run: echo "TODO"
+    - name: Download required assemblies
+      shell: bash
+      env:
+        KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
+      run: |
+        wget https://github.com/KSPModStewards/KSPCommon/raw/main/KSP-1.12.5.zip
+        unzip -P "${KSP_ZIP_PASSWORD}" KSP-1.12.5.zip -d "${{ env.KSPRoot }}"
 
-      - name: Update Version
-        run: echo "TODO"
-        # TODO: fetch tag, datetime, etc
+    - name: Install Dependencies
+      run: echo "TODO"
 
-      - name: Restore NuGet Packages
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+    - name: Update Version
+      run: echo "TODO"
+      # TODO: fetch tag, datetime, etc
 
-      - name: Build Mod Solution
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: msbuild /p:Configuration=${{inputs.build-configuration}} /p:ReferencePath="${{env.KSP_ROOT}}" ${{env.SOLUTION_FILE_PATH}}
-      
-      - name: Assemble Release
-        run: echo "TODO"
-        # TODO: copy license/readme/changelog etc? copy to temp location?
+    - name: Restore NuGet Packages
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          # TODO: add version to filename?
-          name: ${github.event.repository.name}
-          path: ${GITHUB_WORKSPACE}/GameData
+    - name: Build Mod Solution
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: msbuild /p:Configuration=${{inputs.build-configuration}} /p:ReferencePath="${{env.KSP_ROOT}}" ${{env.SOLUTION_FILE_PATH}}
+    
+    - name: Assemble Release
+      run: echo "TODO"
+      # TODO: copy license/readme/changelog etc? copy to temp location?
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        # TODO: add version to filename?
+        name: ${github.event.repository.name}
+        path: ${GITHUB_WORKSPACE}/GameData
