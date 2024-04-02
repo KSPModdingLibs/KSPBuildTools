@@ -9,4 +9,4 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: build@main
+      - uses: .github/actions/build@main
