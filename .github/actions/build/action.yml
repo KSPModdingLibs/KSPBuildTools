@@ -9,7 +9,6 @@ inputs:
     default: Release
 
 runs:
-  runs-on: ubuntu-latest
   steps:
     - name: Checkout Mod Repo
       uses: actions/checkout@v4
@@ -31,21 +30,26 @@ runs:
         unzip -P "${KSP_ZIP_PASSWORD}" KSP-1.12.5.zip -d "${{ env.KSPRoot }}"
 
     - name: Install Dependencies
+      shell: bash
       run: echo "TODO"
 
     - name: Update Version
+      shell: bash
       run: echo "TODO"
       # TODO: fetch tag, datetime, etc
 
     - name: Restore NuGet Packages
+      shell: bash
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: nuget restore ${{env.SOLUTION_FILE_PATH}}
 
     - name: Build Mod Solution
+      shell: bash
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: msbuild /p:Configuration=${{inputs.build-configuration}} /p:ReferencePath="${{env.KSP_ROOT}}" ${{env.SOLUTION_FILE_PATH}}
     
     - name: Assemble Release
+      shell: bash
       run: echo "TODO"
       # TODO: copy license/readme/changelog etc? copy to temp location?
 
