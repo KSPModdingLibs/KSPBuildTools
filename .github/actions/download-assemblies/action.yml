@@ -2,12 +2,12 @@ name: download-assemblies
 
 env:
   KSP_ROOT: ksp/
+  KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
 
 runs:
   using: composite
-  shell: bash
-  env:
-    KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
-  run: |
-    wget https://github.com/KSPModStewards/KSPCommon/raw/main/KSP-1.12.5.zip
-    unzip -P "${KSP_ZIP_PASSWORD}" KSP-1.12.5.zip -d "${{ env.KSPRoot }}"
+  steps:
+    shell: bash
+    run: |
+      wget https://github.com/KSPModStewards/KSPCommon/raw/main/KSP-1.12.5.zip
+      unzip -P "${KSP_ZIP_PASSWORD}" KSP-1.12.5.zip -d "${{ env.KSPRoot }}"
