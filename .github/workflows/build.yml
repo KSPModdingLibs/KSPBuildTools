@@ -1,13 +1,72 @@
 name: build
 
-on: [workflow_call, workflow_dispatch]
+on: 
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      solution-path:
+        type: string
+        default: .
+      build-configuration:
+        type: string
+        default: Release
 
 env:
   KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
+  KSP_ROOT: ksp/
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/build
+      - run: echo '${{ toJSON(github) }}'
+    
+      - name: Checkout Mod Repo
+        uses: actions/checkout@v4
+        with:
+          # working around a bug in checkout action: https://github.com/actions/checkout/issues/1418#issuecomment-1899122964
+          ref: "${{ github.head_ref || github.ref }}"
+  
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 5.x
+  
+      - name: Download required assemblies
+        shell: bash
+        env:
+          KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
+        run: |
+          wget https://github.com/KSPModStewards/KSPCommon/raw/main/KSP-1.12.5.zip
+          unzip -P "${KSP_ZIP_PASSWORD}" KSP-1.12.5.zip -d "${{ env.KSPRoot }}"
+  
+      - name: Install Dependencies
+        shell: bash
+        run: echo "TODO"
+  
+      - name: Update Version
+        shell: bash
+        run: echo "TODO"
+        # TODO: fetch tag, datetime, etc
+  
+      - name: Restore NuGet Packages
+        shell: bash
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+  
+      - name: Build Mod Solution
+        shell: bash
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: msbuild /p:Configuration=${{inputs.build-configuration}} /p:ReferencePath="${{env.KSP_ROOT}}" ${{env.SOLUTION_FILE_PATH}}
+      
+      - name: Assemble Release
+        shell: bash
+        run: echo "TODO"
+        # TODO: copy license/readme/changelog etc? copy to temp location?
+  
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          # TODO: add version to filename?
+          name: ${github.event.repository.name}
+          path: ${GITHUB_WORKSPACE}/GameData
