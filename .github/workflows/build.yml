@@ -1,0 +1,12 @@
+name: build
+
+on: [workflow_call, workflow_dispatch]
+
+env:
+  KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: build@main
