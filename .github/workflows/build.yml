@@ -10,12 +10,12 @@ on:
       build-configuration:
         type: string
         default: Release
-      ksp-zip-password:
-        type: string
-        default: ${{ secrets.
       ksp-zip-url:
         type: string
         default: https://github.com/KSPModStewards/KSPCommon/raw/main/KSP-1.12.5.zip
+    secrets:
+      ksp-zip-password:
+        required: false
 
 env:
   KSP_ROOT: ksp/
@@ -39,7 +39,7 @@ jobs:
         shell: bash
         run: |
           wget ${{ inputs.ksp-zip-url }} -O /tmp/ksp.zip
-          unzip -P "${{ inputs.ksp-zip-password }}" /tmp/ksp.zip -d "${{ env.KSPRoot }}"
+          unzip -P "${{ secrets.ksp-zip-password }}" /tmp/ksp.zip -d "${{ env.KSPRoot }}"
   
       - name: Install Dependencies
         shell: bash
