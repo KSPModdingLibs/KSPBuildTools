@@ -10,7 +10,7 @@ on:
       build-configuration:
         type: string
         default: Release
-      artifact-root:
+      artifacts:
         type: string
         default: GameData
       ksp-zip-url:
@@ -67,7 +67,11 @@ jobs:
         run: |
           mkdir ${{env.RELEASE_STAGING}}
           cp -r ${{github.workspace}}/${{inputs.artifact-root}} ${{env.RELEASE_STAGING}}/${{inputs.artifact-root}}
-          # TODO: license, readme, additional files?  delete pdb files?
+          # TODO: delete pdb files?
+          for artifact in ${{inputs.artifacts}}
+          do
+            cp -r ${{github.workspace}}/$artifact ${{env.RELEASE_STAGING}}/$artifact
+          end
   
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
