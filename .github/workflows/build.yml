@@ -18,7 +18,7 @@ on:
         required: false
 
 env:
-  KSP_ROOT: ksp/
+  KSP_ROOT: ksp
 
 jobs:
   build:
@@ -58,7 +58,7 @@ jobs:
       - name: Build Mod Solution
         shell: bash
         working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: msbuild /p:Configuration=${{inputs.build-configuration}} /p:ReferencePath="${{env.KSP_ROOT}}" /p:ManagedRelativePath=KSP_x64_Data/Managed ${{env.SOLUTION_FILE_PATH}}
+        run: msbuild /p:Configuration=${{inputs.build-configuration}} /p:KSPRoot="${{env.KSP_ROOT}}" /p:ManagedRelativePath=KSP_x64_Data/Managed ${{env.SOLUTION_FILE_PATH}}
       
       - name: Assemble Release
         shell: bash
