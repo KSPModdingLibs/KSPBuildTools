@@ -18,7 +18,7 @@ on:
         required: false
 
 env:
-  KSP_ROOT: ksp
+  KSP_ROOT: ${{env.GITHUB_WORKSPACE}}/ksp
 
 jobs:
   build:
