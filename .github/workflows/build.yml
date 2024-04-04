@@ -42,7 +42,7 @@ jobs:
       - name: Download KSP Libs
         run: |
           wget ${{ inputs.ksp-zip-url }} -O /tmp/ksp.zip
-          unzip -P "${{ secrets.ksp-zip-password }}" /tmp/ksp.zip -d "${{ env.KSPRoot }}"
+          unzip -P "${{ secrets.ksp-zip-password }}" /tmp/ksp.zip -d "${{ env.KSP_ROOT }}"
   
       - name: Install Dependencies
         run: echo "TODO"
