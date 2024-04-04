@@ -65,7 +65,7 @@ jobs:
 
       - name: Assemble Release
         run: |
-          cp ${{github.workspace}}/${{inputs.artifact-root}} ${{env.RELEASE_STAGING}}/${{inputs.artifact-root}}
+          cp -r ${{github.workspace}}/${{inputs.artifact-root}} ${{env.RELEASE_STAGING}}/${{inputs.artifact-root}}
           # TODO: license, readme, additional files?  delete pdb files?
   
       - name: Upload Artifacts
