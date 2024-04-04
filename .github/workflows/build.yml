@@ -72,3 +72,4 @@ jobs:
           # TODO: add version to filename?
           name: ${{github.event.repository.name}}-${{inputs.build-configuration}}
           path: ${{github.workspace}}/${{inputs.artifact-root}}
+          if-no-files-found: error
