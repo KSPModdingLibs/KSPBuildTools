@@ -22,6 +22,7 @@ on:
 
 env:
   KSP_ROOT: /tmp/ksp
+  RELEASE_STAGING: /tmp/release
 
 defaults:
   run:
@@ -63,13 +64,14 @@ jobs:
         run: msbuild /p:Configuration=${{inputs.build-configuration}} /p:KSPRoot="${{env.KSP_ROOT}}" /p:ManagedRelativePath=KSP_x64_Data/Managed ${{env.SOLUTION_FILE_PATH}}
 
       - name: Assemble Release
-        run: echo "TODO"
-        # TODO: copy license/readme/changelog etc? copy to temp location? delete PDBs?
+        run: |
+          cp ${{github.workspace}}/${{inputs.artifact-root}} ${{env.RELEASE_STAGING}}/${{inputs.artifact-root}}
+          # TODO: license, readme, additional files?  delete pdb files?
   
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           # TODO: add version to filename?
           name: ${{github.event.repository.name}}-${{inputs.build-configuration}}
-          path: ${{github.workspace}}/${{inputs.artifact-root}}
+          path: ${{env.RELEASE_STAGING}}
           if-no-files-found: error
