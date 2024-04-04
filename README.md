@@ -16,7 +16,7 @@ What it does:
 - Sets up Visual Studio's debugging start actions so you can launch KSP directly from VS
 - Designed to be used by the [Build github workflow](#build-workflow)
 
-To use it, copy this file somewhere into your repository and add the following where you would normally have assembly references.  You should remove ALL the existing assembly references to `System`, `Assembly-CSharp`, and `Unity`.
+To use it, copy this file somewhere into your repository and add the following in your .csproj file where you would normally have assembly references.  You should remove ALL the existing assembly references to `System`, `Assembly-CSharp`, and `Unity`.
 
 ```xml
 <Import Project="$(SolutionDir)KSPCommon.props" />
@@ -40,9 +40,9 @@ This is the directory where compiled binaries should be copied.  This is relativ
 
 #### `KSPRoot`
 
-Default value: `$(RefencePath)` or `C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program`
+Default value: `$(ReferencePath)` or `C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program`
 
-The root directory of a KSP installation.  This should be customized in a `.props.user` file.
+The root directory of a KSP installation.  This should be customized in a `.props.user` file - or set the Reference Path of the project to your ksp install root.
 
 ### Customization
 
