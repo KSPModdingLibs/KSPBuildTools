@@ -10,6 +10,9 @@ on:
       build-configuration:
         type: string
         default: Release
+      artifact-root:
+        type: string
+        default: GameData
       ksp-zip-url:
         type: string
         default: https://github.com/KSPModStewards/KSPCommon/raw/main/KSP-1.12.5.zip
@@ -58,14 +61,14 @@ jobs:
       - name: Build Mod Solution
         working-directory: ${{env.GITHUB_WORKSPACE}}
         run: msbuild /p:Configuration=${{inputs.build-configuration}} /p:KSPRoot="${{env.KSP_ROOT}}" /p:ManagedRelativePath=KSP_x64_Data/Managed ${{env.SOLUTION_FILE_PATH}}
-      
+
       - name: Assemble Release
         run: echo "TODO"
-        # TODO: copy license/readme/changelog etc? copy to temp location?
+        # TODO: copy license/readme/changelog etc? copy to temp location? delete PDBs?
   
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           # TODO: add version to filename?
-          name: ${github.event.repository.name}
-          path: ${GITHUB_WORKSPACE}/GameData
+          name: ${{github.event.repository.name}}-${{inputs.build-configuration}}
+          path: ${{github.workspace}}/${{inputs.artifact-root}}
