@@ -1,12 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!--Parse KSP platform-specific paths and set the start action-->
+  
+  <!--import solution-wide props if it exists -->
+  <Import Condition=" Exists('$(SolutionName).props') " Project="$(SolutionName).props"/>
+
+  <!-- The following properties can be customized per-mod in SolutionName.props-->
+  <PropertyGroup>
+    <!-- The root directory of the mod repository -->
+    <RepoRootPath Condition = " '$(RepoRootPath)' == '' ">$(SolutionDir.TrimEnd([System.IO.Path]::DirectorySeparatorChar))</RepoRootPath>
+    <BinariesOutputRelativePath Condition = " '$(BinariesOutputRelativePath)' == '' ">GameData\$(SolutionName)</BinariesOutputRelativePath>
+
+    <KSPRoot Condition = " '$(KSPRoot)' == '' ">$(ReferencePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar))</KSPRoot>
+    <!--If the reference path isn't set, use the default steam location, but this will be incorrect in lots of cases-->
+    <KSPRoot Condition = "'$(KSPRoot)' == '' ">C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program</KSPRoot>
+  </PropertyGroup>
+
+  <!--Import a props.user file if it exists, so that KSPRoot can be set globally for the whole mod if desired-->
+  <Import Condition=" Exists('KSPCommon.props.user') " Project="KSPCommon.props.user"/>
+  
+  <!--Parse KSP platform-specific paths -->
+  <PropertyGroup Condition = " '$(ManagedRelativePath)' == '' ">
+    <ManagedRelativePath Condition = "$([MSBuild]::IsOsPlatform('Windows'))">KSP_x64_Data\Managed</ManagedRelativePath>
+    <ManagedRelativePath Condition = "$([MSBuild]::IsOsPlatform('OSX'))">KSP.app\Contents\Resources\Data\Managed</ManagedRelativePath>
+    <ManagedRelativePath Condition = "$([MSBuild]::IsOsPlatform('Linux'))">KSP_Data\Managed</ManagedRelativePath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <KSPExecutable Condition = "$([MSBuild]::IsOsPlatform('Windows'))">KSP_x64.exe</KSPExecutable>
+    <KSPExecutable Condition = "$([MSBuild]::IsOsPlatform('OSX'))">KSP.app</KSPExecutable>
+    <KSPExecutable Condition = "$([MSBuild]::IsOsPlatform('Linux'))">KSP.x86_64</KSPExecutable>
+    <ManagedPath>$(KSPRoot)\$(ManagedRelativePath)</ManagedPath>
+  </PropertyGroup>
+  
+  <!-- set the start action so that you can launch directly from VS -->
   <PropertyGroup>
     <StartAction>Program</StartAction>
     <StartProgram>$(KSPRoot)\$(KSPExecutable)</StartProgram>
     <StartWorkingDirectory>$(KSPRoot)</StartWorkingDirectory>
-    <KSPCommonPropsImported>true</KSPCommonPropsImported>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
+
   <!--Import references-->
   <ItemGroup>
     <Reference Include="$(ManagedPath)\System.dll">
@@ -30,4 +62,25 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
+
+  <!--Common stuff that would normally go in a Targets file-->
+
+  <!--MSBuild targets-->
+  <!-- this might not be the best way to specify these since there can only be one BeforeBuild or AfterBuild target-->
+  <Target Name="BeforeBuildScript">
+  </Target>
+  <Target Name="PostBuildScript" AfterTargets="Build">
+    <CallTarget Targets="CopyBinariesToRepo" />
+  </Target>
+
+  <!--Custom Targets-->
+
+  <!-- this probably isn't the best way to do this, because it doesn't necessarily get run when switching build configs (debug/release)-->
+  <!-- make sure to always to a rebuild when switching configs and you should be fine -->
+  <Target Name="CopyBinariesToRepo">
+    <ItemGroup>
+      <BinariesToCopy Include="$(TargetDir)\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(BinariesToCopy)" DestinationFolder="$(RepoRootPath)\$(BinariesOutputRelativePath)" />
+  </Target>
 </Project>
