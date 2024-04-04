@@ -66,7 +66,7 @@ jobs:
       - name: Assemble Release
         run: |
           mkdir ${{env.RELEASE_STAGING}}
-          cp -r ${{github.workspace}}/${{inputs.artifact-root}} ${{env.RELEASE_STAGING}}/${{inputs.artifact-root}}
+          # cp -r ${{github.workspace}}/${{inputs.artifact-root}} ${{env.RELEASE_STAGING}}/${{inputs.artifact-root}}
           # TODO: delete pdb files?
           for artifact in { ${{inputs.artifacts}} }
           do
