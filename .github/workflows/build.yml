@@ -18,7 +18,11 @@ on:
         required: false
 
 env:
-  KSP_ROOT: ${{env.GITHUB_WORKSPACE}}/ksp
+  KSP_ROOT: /tmp/ksp
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   build:
@@ -36,32 +40,26 @@ jobs:
           dotnet-version: 5.x
   
       - name: Download KSP Libs
-        shell: bash
         run: |
           wget ${{ inputs.ksp-zip-url }} -O /tmp/ksp.zip
           unzip -P "${{ secrets.ksp-zip-password }}" /tmp/ksp.zip -d "${{ env.KSPRoot }}"
   
       - name: Install Dependencies
-        shell: bash
         run: echo "TODO"
   
       - name: Update Version
-        shell: bash
         run: echo "TODO"
         # TODO: fetch tag, datetime, etc
   
       - name: Restore NuGet Packages
-        shell: bash
         working-directory: ${{env.GITHUB_WORKSPACE}}
         run: nuget restore ${{env.SOLUTION_FILE_PATH}}
   
       - name: Build Mod Solution
-        shell: bash
         working-directory: ${{env.GITHUB_WORKSPACE}}
         run: msbuild /p:Configuration=${{inputs.build-configuration}} /p:KSPRoot="${{env.KSP_ROOT}}" /p:ManagedRelativePath=KSP_x64_Data/Managed ${{env.SOLUTION_FILE_PATH}}
       
       - name: Assemble Release
-        shell: bash
         run: echo "TODO"
         # TODO: copy license/readme/changelog etc? copy to temp location?
   
