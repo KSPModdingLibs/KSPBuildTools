@@ -68,7 +68,7 @@ jobs:
           mkdir ${{env.RELEASE_STAGING}}
           # cp -r ${{github.workspace}}/${{inputs.artifact-root}} ${{env.RELEASE_STAGING}}/${{inputs.artifact-root}}
           # TODO: delete pdb files?
-          for artifact in "{ ${{inputs.artifacts}} }"
+          for artifact in ${{inputs.artifacts}}
           do
             cp -r ${{github.workspace}}/$artifact ${{env.RELEASE_STAGING}}/$artifact
           done
