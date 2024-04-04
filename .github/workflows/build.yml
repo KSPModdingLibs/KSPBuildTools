@@ -15,7 +15,7 @@ on:
         default: GameData
       ksp-zip-url:
         type: string
-        default: https://github.com/KSPModStewards/KSPCommon/raw/main/KSP-1.12.5.zip
+        default: https://github.com/KSPModdingLibs/KSPBuildTools/raw/main/KSP-1.12.5.zip
     secrets:
       ksp-zip-password:
         required: false
