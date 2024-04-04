@@ -67,10 +67,7 @@ jobs:
         run: |
           mkdir ${{env.RELEASE_STAGING}}
           # TODO: delete pdb files?
-          for artifact in " ${{inputs.artifacts}} "
-          do
-            cp -r ${{github.workspace}}/$artifact ${{env.RELEASE_STAGING}}/$artifact
-          done
+          cp -r ${{inputs.artifacts}} ${{env.RELEASE_STAGING}}
   
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
