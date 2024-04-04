@@ -65,6 +65,7 @@ jobs:
 
       - name: Assemble Release
         run: |
+          mkdir ${{env.RELEASE_STAGING}}
           cp -r ${{github.workspace}}/${{inputs.artifact-root}} ${{env.RELEASE_STAGING}}/${{inputs.artifact-root}}
           # TODO: license, readme, additional files?  delete pdb files?
   
