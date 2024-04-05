@@ -31,5 +31,7 @@ runs:
         else
           FILES=${{inputs.files}}
         fi
-        $GITHUB_WORKSPACE/${{inputs.ksp-build-tools-root}}/update-version.sh ${{inputs.version-string}} $FILES
+        SCRIPT="$GITHUB_WORKSPACE/${{inputs.ksp-build-tools-root}}/update-version.sh"
+        chmod +x $SCRIPT
+        $SCRIPT ${{inputs.version-string}} $FILES
 
