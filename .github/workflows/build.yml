@@ -12,7 +12,11 @@ on:
         default: Release
       artifacts:
         type: string
-        default: GameData
+        default: |
+          GameData
+          LICENSE*
+          README*
+          CHANGELOG*
       ksp-zip-url:
         type: string
         default: https://github.com/KSPModdingLibs/KSPBuildTools/raw/main/KSP-1.12.5.zip
@@ -67,7 +71,7 @@ jobs:
         run: |
           mkdir ${{env.RELEASE_STAGING}}
           # TODO: delete pdb files?
-          cp -r ${{inputs.artifacts}} ${{env.RELEASE_STAGING}}
+          cp -r -v ${{inputs.artifacts}} ${{env.RELEASE_STAGING}} || :
   
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
