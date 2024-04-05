@@ -17,9 +17,9 @@ runs:
   steps:
     - name: checkout kspbuildtools
       uses: actions/checkout@v4
-      working-directory: ${{env.KSPBUILDTOOLS_ROOT}}
       with:
         repository: KSPModdingLibs/KSPBuildTools
+        path: ${{env.KSPBUILDTOOLS_ROOT}}
       sparse-checkout: update-version.sh
       sparse-checkout-cone-mode: false
 
