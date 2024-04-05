@@ -10,7 +10,7 @@ inputs:
     type: string
   ksp-build-tools-root:
     type: string
-    default: /tmp/kspbuildtools
+    default: tmp/kspbuildtools #note this is relative to the *mod*'s repository
 
 runs:
   using: composite
@@ -31,5 +31,5 @@ runs:
         else
           FILES=${{inputs.files}}
         fi
-        ${{inputs.ksp-build-tools-root}}/update-version.sh ${{inputs.version-string}} $FILES
+        ${{GITHUB_WORKSPACE}}/${{inputs.ksp-build-tools-root}}/update-version.sh ${{inputs.version-string}} $FILES
 
