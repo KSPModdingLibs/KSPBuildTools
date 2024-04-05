@@ -1,0 +1,32 @@
+name: update-version
+
+on:
+  workflow-call:
+    inputs:
+      version-string:
+        type: string
+      template-extension:
+        type: string
+        default: .versiontemplate
+      files:
+        type: string
+        default: "**/*${{inputs-template-extension}}"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout mod repo
+        uses: actions/checkout@v4
+        with:
+          # working around a bug in checkout action: https://github.com/actions/checkout/issues/1418#issuecomment-1899122964
+          ref: "${{ github.head_ref || github.ref }}"
+    
+      - name: update version
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/update-version@main
+        with:
+          ${{toJson(inputs)}} #chatgpt tells me this works, we'll see

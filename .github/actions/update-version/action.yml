@@ -2,12 +2,28 @@ name: update-version
 
 inputs:
   version-string:
-    required: true
+    type: string
   template-extension:
+    type: string
     default: .versiontemplate
   files:
-    default: **/*${{inputs.template-extension}}
+    type: string
+    default: "**/*${{inputs-template-extension}}"
+
+env:
+  KSPBUILDTOOLS_ROOT: /tmp/kspbuildtools
 
 runs:
-  using: bash
-  main: update-version.sh ${{inputs.version-string}} ${{inputs.template-extension}} ${{inputs.files}}
+  using: composite
+  steps:
+    - name: checkout kspbuildtools
+      uses: actions/checkout@v4
+      working-directory: ${{env.KSPBUILDTOOLS_ROOT}}
+      with:
+        repository: KSPModdingLibs/KSPBuildTools
+      sparse-checkout: update-version.sh
+      sparse-checkout-cone-mode: false
+
+    - name: update version
+      run: ${{env.KSPBUILDTOOLS_ROOT}}/update-version.sh ${{inputs.version-string}} ${{inputs.files}}
+
