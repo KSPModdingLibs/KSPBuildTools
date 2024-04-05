@@ -1,7 +1,7 @@
 name: update-version
 
 on:
-  workflow-call:
+  workflow_call:
     inputs:
       version-string:
         type: string
