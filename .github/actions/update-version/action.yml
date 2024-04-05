@@ -24,6 +24,7 @@ runs:
         sparse-checkout-cone-mode: false
 
     - name: update version
+      working-directory: ${{ github.workspace }}
       shell: bash
       run: |
         if [ -n "${{inputs.files}}" ]; then
@@ -31,7 +32,7 @@ runs:
         else
           FILES=${{inputs.files}}
         fi
-        SCRIPT="$GITHUB_WORKSPACE/${{inputs.ksp-build-tools-root}}/update-version.sh"
+        SCRIPT="${{inputs.ksp-build-tools-root}}/update-version.sh"
         chmod +x $SCRIPT
         $SCRIPT ${{inputs.version-string}} $FILES
 
