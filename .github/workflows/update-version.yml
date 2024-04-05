@@ -29,4 +29,6 @@ jobs:
       - name: update version
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/update-version@main
         with:
-          ${{toJson(inputs)}} #chatgpt tells me this works, we'll see
+          version-string: ${{inputs.version-string}}
+          template-extension: ${{inputs.template-extension}}
+          files: ${{inputs.files}}
