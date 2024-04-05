@@ -8,17 +8,18 @@ inputs:
     default: .versiontemplate
   files:
     type: string
+  ksp-build-tools-root:
+    type: string
+    default: /tmp/kspbuildtools
 
 runs:
   using: composite
-  env:
-    KSPBUILDTOOLS_ROOT: /tmp/kspbuildtools
   steps:
     - name: checkout kspbuildtools
       uses: actions/checkout@v4
       with:
         repository: KSPModdingLibs/KSPBuildTools
-        path: ${{env.KSPBUILDTOOLS_ROOT}}
+        path: ${{inputs.ksp-build-tools-root}}
         sparse-checkout: update-version.sh
         sparse-checkout-cone-mode: false
 
@@ -30,5 +31,5 @@ runs:
         else
           FILES=${{inputs.files}}
         fi
-        ${{env.KSPBUILDTOOLS_ROOT}}/update-version.sh ${{inputs.version-string}} $FILES
+        ${{inputs.ksp-build-tools-root}}/update-version.sh ${{inputs.version-string}} $FILES
 
