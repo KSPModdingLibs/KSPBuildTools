@@ -20,8 +20,8 @@ runs:
       with:
         repository: KSPModdingLibs/KSPBuildTools
         path: ${{env.KSPBUILDTOOLS_ROOT}}
-      sparse-checkout: update-version.sh
-      sparse-checkout-cone-mode: false
+        sparse-checkout: update-version.sh
+        sparse-checkout-cone-mode: false
 
     - name: update version
       run: |
