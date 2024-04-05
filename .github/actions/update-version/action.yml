@@ -8,7 +8,7 @@ inputs:
     default: .versiontemplate
   files:
     type: string
-    default: "**/*${{inputs-template-extension}}"
+    default: "**/*${{inputs.template-extension}}"
 
 env:
   KSPBUILDTOOLS_ROOT: /tmp/kspbuildtools
