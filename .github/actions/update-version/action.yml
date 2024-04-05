@@ -1,0 +1,13 @@
+name: update-version
+
+inputs:
+  version-string:
+    required: true
+  template-extension:
+    default: .versiontemplate
+  files:
+    default: **/*${{inputs.template-extension}}
+
+runs:
+  using: bash
+  main: update-version.sh ${{inputs.version-string}} ${{inputs.template-extension}} ${{inputs.files}}
