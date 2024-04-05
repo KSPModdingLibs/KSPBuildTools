@@ -8,7 +8,6 @@ inputs:
     default: .versiontemplate
   files:
     type: string
-    default: "**/*${{inputs.template-extension}}"
 
 env:
   KSPBUILDTOOLS_ROOT: /tmp/kspbuildtools
@@ -25,5 +24,11 @@ runs:
       sparse-checkout-cone-mode: false
 
     - name: update version
-      run: ${{env.KSPBUILDTOOLS_ROOT}}/update-version.sh ${{inputs.version-string}} ${{inputs.files}}
+      run: |
+        if [-n "${{inputs.files}}" ]; then
+          FILES="**/*${{inputs.template-extension}}"
+        else
+          FILES=${{inputs.files}}
+        fi
+        ${{env.KSPBUILDTOOLS_ROOT}}/update-version.sh ${{inputs.version-string}} $FILES
 
