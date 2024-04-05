@@ -9,11 +9,10 @@ inputs:
   files:
     type: string
 
-env:
-  KSPBUILDTOOLS_ROOT: /tmp/kspbuildtools
-
 runs:
   using: composite
+  env:
+    KSPBUILDTOOLS_ROOT: /tmp/kspbuildtools
   steps:
     - name: checkout kspbuildtools
       uses: actions/checkout@v4
