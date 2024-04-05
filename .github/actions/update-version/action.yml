@@ -26,7 +26,7 @@ runs:
     - name: update version
       shell: bash
       run: |
-        if [-n "${{inputs.files}}" ]; then
+        if [ -n "${{inputs.files}}" ]; then
           FILES="**/*${{inputs.template-extension}}"
         else
           FILES=${{inputs.files}}
