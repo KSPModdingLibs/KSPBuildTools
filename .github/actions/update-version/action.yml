@@ -31,5 +31,5 @@ runs:
         else
           FILES=${{inputs.files}}
         fi
-        ${{GITHUB_WORKSPACE}}/${{inputs.ksp-build-tools-root}}/update-version.sh ${{inputs.version-string}} $FILES
+        $GITHUB_WORKSPACE/${{inputs.ksp-build-tools-root}}/update-version.sh ${{inputs.version-string}} $FILES
 
