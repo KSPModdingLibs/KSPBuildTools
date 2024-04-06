@@ -8,22 +8,31 @@ inputs:
     default: .versiontemplate
   files:
     type: string
-    default: "**/*${{inputs-template-extension}}"
-
-env:
-  KSPBUILDTOOLS_ROOT: /tmp/kspbuildtools
+  ksp-build-tools-root:
+    type: string
+    default: tmp/kspbuildtools #note this is relative to the *mod*'s repository
 
 runs:
   using: composite
   steps:
     - name: checkout kspbuildtools
       uses: actions/checkout@v4
-      working-directory: ${{env.KSPBUILDTOOLS_ROOT}}
       with:
         repository: KSPModdingLibs/KSPBuildTools
-      sparse-checkout: update-version.sh
-      sparse-checkout-cone-mode: false
+        path: ${{inputs.ksp-build-tools-root}}
+        sparse-checkout: update-version.sh
+        sparse-checkout-cone-mode: false
 
     - name: update version
-      run: ${{env.KSPBUILDTOOLS_ROOT}}/update-version.sh ${{inputs.version-string}} ${{inputs.files}}
+      working-directory: ${{ github.workspace }}
+      shell: bash
+      run: |
+        if [ -n "${{inputs.files}}" ]; then
+          FILES=**/*${{inputs.template-extension}}
+        else
+          FILES=${{inputs.files}}
+        fi
+        SCRIPT="${{inputs.ksp-build-tools-root}}/update-version.sh"
+        chmod +x $SCRIPT
+        $SCRIPT ${{inputs.version-string}} $FILES
 

@@ -1,7 +1,7 @@
 name: update-version
 
 on:
-  workflow-call:
+  workflow_call:
     inputs:
       version-string:
         type: string
@@ -10,7 +10,6 @@ on:
         default: .versiontemplate
       files:
         type: string
-        default: "**/*${{inputs-template-extension}}"
 
 defaults:
   run:
@@ -29,4 +28,6 @@ jobs:
       - name: update version
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/update-version@main
         with:
-          ${{toJson(inputs)}} #chatgpt tells me this works, we'll see
+          version-string: ${{inputs.version-string}}
+          template-extension: ${{inputs.template-extension}}
+          files: ${{inputs.files}}

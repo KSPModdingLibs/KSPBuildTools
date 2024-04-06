@@ -24,6 +24,9 @@ TOKENS["VERSION_MINOR"]="$(echo $VERSION_FULL | cut -f 2 -d '.')"
 TOKENS["VERSION_PATCH"]="$(echo $VERSION_FULL | cut -f 3 -d '.')"
 TOKENS["VERSION_BUILD"]="$(echo $VERSION_FULL | cut -f 4 -d '.')"
 
+pwd
+ls
+
 SED_COMMAND="-e "
 
 for KEY in "${!TOKENS[@]}"; do
