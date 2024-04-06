@@ -29,5 +29,5 @@ runs:
       run: |
         SCRIPT="${{inputs.ksp-build-tools-root}}/update-version.sh"
         chmod +x $SCRIPT
-        $SCRIPT ${{inputs.version-string}} ${{inputs.template-extension}} ${FILES}
+        $SCRIPT ${{inputs.version-string}} ${{inputs.template-extension}} ${{inputs.files}}
 
