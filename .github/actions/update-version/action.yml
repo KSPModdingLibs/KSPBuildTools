@@ -28,7 +28,7 @@ runs:
       shell: bash
       run: |
         if [ -n "${{inputs.files}}" ]; then
-          FILES="**/*${{inputs.template-extension}}"
+          FILES=**/*${{inputs.template-extension}}
         else
           FILES=${{inputs.files}}
         fi
