@@ -27,12 +27,7 @@ runs:
       working-directory: ${{ github.workspace }}
       shell: bash
       run: |
-        if [ -n "${{inputs.files}}" ]; then
-          FILES=**/*${{inputs.template-extension}}
-        else
-          FILES=${{inputs.files}}
-        fi
         SCRIPT="${{inputs.ksp-build-tools-root}}/update-version.sh"
         chmod +x $SCRIPT
-        $SCRIPT ${{inputs.version-string}} $FILES
+        $SCRIPT ${{inputs.version-string}} ${FILES}
 
