@@ -4,6 +4,15 @@ shopt -s globstar
 
 VERSION_STRING="$1"; shift
 TEMPLATE_EXTENSION="$1"; shift
+if [ "$#" -eq 0 ]; then
+	FILES=**/*$TEMPLATE_EXTENSION
+else
+	FILES=$@
+fi
+
+pwd
+ls
+echo $FILES
 
 declare -A TOKENS
 
@@ -22,7 +31,7 @@ for KEY in "${!TOKENS[@]}"; do
 	SED_COMMAND="${SED_COMMAND}s/@${KEY}@/${TOKENS[$KEY]}/g;"
 done
 
-for FILENAME in $@; do
+for FILENAME in $FILES; do
 	NEW_FILENAME="${FILENAME%$TEMPLATE_EXTENSION}"
 	echo "transforming $FILENAME -> $NEW_FILENAME"
 	sed "${SED_COMMAND}" "${FILENAME}" > "${NEW_FILENAME}"
