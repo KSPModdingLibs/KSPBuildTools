@@ -10,7 +10,6 @@ on:
         default: .versiontemplate
       files:
         type: string
-        default: "**/*${{inputs.template-extension}}"
 
 defaults:
   run:
