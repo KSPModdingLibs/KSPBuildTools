@@ -1,0 +1,76 @@
+name: create-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version-string:
+        type: string
+        required: true
+        # TODO: pull this from a tag?  Or should this workflow create a new tag?
+      version-template-extension:
+        type: string
+        default: .versiontemplate
+      version-template-files:
+        type: string
+      build-configuration:
+        type: string
+        default: Release
+      artifacts:
+        type: string
+        default: GameData LICENSE* README* CHANGELOG*
+      ksp-zip-url:
+        type: string
+    secrets:
+      ksp-zip-password:
+        required: false
+
+env:
+  KSP_ROOT: /tmp/ksp
+  RELEASE_STAGING: /tmp/release
+  RELEASE_TAG: ${{ inputs.version-string }}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Mod Repo
+        uses: actions/checkout@v4
+        with:
+          # working around a bug in checkout action: https://github.com/actions/checkout/issues/1418#issuecomment-1899122964
+          ref: "${{ github.head_ref || github.ref }}"
+
+      - name: update-version
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/update-version@main
+        with:
+          version-string: ${{ inputs.version-string }}
+          template-extension: ${{ inputs.version-template-extension }}
+          files: ${{ inputs.version-template-files }}
+          git-stage: true
+          delete-template-files: true
+
+      - name: commit-version-and-tag
+        working-directory: ${{ github.workspace }}
+        run: |
+          git commit -m "bump version to ${{ inputs.version-string }}"
+          git tag -f -a ${{ env.RELEASE_TAG }}
+
+      - name: compile
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@main
+        with:
+          build-configuration: ${{ inputs.build-configuration }}
+          ksp-zip-url: ${{ inputs.ksp-zip-url }}
+          ksp-zip-password: ${{ secrets.ksp-zip-password }}
+
+      - name: assemble-release
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/assemble-release@main
+        with:
+          artifacts: ${{ inputs.artifacts }}
+          output-file-name: ${{ github.event.repository.name }}-${{ inputs.version-string }}
+      
+      - name: create-release
+        run: |
+          gh release create ${{ env.RELEASE_TAG }} --draft --target ${{ github.ref_name }}
