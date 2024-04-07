@@ -42,3 +42,5 @@ jobs:
 
       - name: assemble-release
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/assemble-release@main
+        with:
+          artifacts: ${{ inputs.artifacts }}
