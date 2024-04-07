@@ -3,9 +3,6 @@ name: build
 on:
   workflow_call:
     inputs:
-      solution-path:
-        type: string
-        default: .
       build-configuration:
         type: string
         default: Release
@@ -36,42 +33,13 @@ jobs:
         with:
           # working around a bug in checkout action: https://github.com/actions/checkout/issues/1418#issuecomment-1899122964
           ref: "${{ github.head_ref || github.ref }}"
-  
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 5.x
-  
-      - name: Download KSP Libs
-        run: |
-          wget ${{ inputs.ksp-zip-url }} -O /tmp/ksp.zip
-          unzip -P "${{ secrets.ksp-zip-password }}" /tmp/ksp.zip -d "${{ env.KSP_ROOT }}"
-  
-      - name: Install Dependencies
-        run: echo "TODO"
-  
-      - name: Update Version
-        run: echo "TODO"
-        # TODO: fetch tag, datetime, etc
-  
-      - name: Restore NuGet Packages
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: nuget restore ${{env.SOLUTION_FILE_PATH}}
-  
-      - name: Build Mod Solution
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: msbuild /p:Configuration=${{inputs.build-configuration}} /p:KSPRoot="${{env.KSP_ROOT}}" /p:ManagedRelativePath=KSP_x64_Data/Managed ${{env.SOLUTION_FILE_PATH}}
 
-      - name: Assemble Release
-        run: |
-          mkdir ${{env.RELEASE_STAGING}}
-          # TODO: delete pdb files?
-          cp -r -v ${{inputs.artifacts}} ${{env.RELEASE_STAGING}} || :
-  
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+      - name: compile
+        uses: ./.github/actions/compile
         with:
-          # TODO: add version to filename?
-          name: ${{github.event.repository.name}}-${{inputs.build-configuration}}
-          path: ${{env.RELEASE_STAGING}}
-          if-no-files-found: error
+          build-configuration: ${{ inputs.build-configuration }}
+          ksp-zip-url: ${{ inputs.ksp-zip-url }}
+          ksp-zip-password: ${{ secrets.ksp-zip-password }}
+
+      - name: assemble-release
+        uses: ./.github/actions/assemble-release

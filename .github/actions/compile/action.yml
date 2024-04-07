@@ -1,0 +1,40 @@
+name: compile
+
+inputs:
+  build-configuration:
+    type: string
+    default: Release
+  ksp-zip-url:
+    type: string
+    default: https://github.com/KSPModdingLibs/KSPBuildTools/raw/main/KSP-1.12.5.zip
+  ksp-zip-password:
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 5.x
+
+    - name: Download KSP Libs
+      shell: bash
+      run: |
+        wget ${{ inputs.ksp-zip-url }} -O /tmp/ksp.zip
+        unzip -P "${{ inputs.ksp-zip-password }}" /tmp/ksp.zip -d "${{ env.KSP_ROOT }}"
+
+    - name: Install Dependencies
+      shell: bash
+      run: echo "TODO"
+
+    - name: Restore NuGet Packages
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: nuget restore ${{ env.SOLUTION_FILE_PATH }}
+
+    - name: Build Mod Solution
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: msbuild /p:Configuration=${{ inputs.build-configuration }} /p:KSPRoot="${{ env.KSP_ROOT }}" /p:ManagedRelativePath=KSP_x64_Data/Managed ${{ env.SOLUTION_FILE_PATH }}
+
