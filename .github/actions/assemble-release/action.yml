@@ -29,6 +29,6 @@ runs:
       id: upload-artifact
       uses: actions/upload-artifact@v4
       with:
-        path: ${{ inputs.output-file-name }}
+        path: ${{ env.RELEASE_STAGING }}
         name: ${{ inputs.output-file-name }}
         if-no-files-found: error
