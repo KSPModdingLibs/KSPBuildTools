@@ -23,7 +23,8 @@ runs:
         mkdir ${{ env.RELEASE_STAGING }}
         # TODO: delete pdb files?  run some kind of assembly script?
         cp -r -v ${{ inputs.artifacts }} ${{ env.RELEASE_STAGING }} || :
-        zip -r ${{ inputs.output-file-name }} ${{ env.RELEASE_STAGING }}
+        cd ${{ env.RELEASE_STAGING }}
+        zip -r ${{ github.workspace }}/${{ inputs.output-file-name }} .
 
     - name: Upload Artifact
       id: upload-artifact
