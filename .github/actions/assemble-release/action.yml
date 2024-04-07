@@ -6,7 +6,7 @@ inputs:
     default: GameData LICENSE* README* CHANGELOG*
   output-file-name:
     type: string
-    default: ${{ github.event.repository.name }}
+    default: ${{ github.event.repository.name }}.zip
 
 outputs:
   artifact-id:
@@ -23,11 +23,11 @@ runs:
         mkdir ${{ env.RELEASE_STAGING }}
         # TODO: delete pdb files?  run some kind of assembly script?
         cp -r -v ${{ inputs.artifacts }} ${{ env.RELEASE_STAGING }} || :
+        zip -r ${{ inputs.output-file-name }} ${{ env.RELEASE_STAGING }}
 
     - name: Upload Artifact
       id: upload-artifact
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ inputs.output-file-name }}
-        path: ${{ env.RELEASE_STAGING }}
+        path: ${{ inputs.output-file-name }}
         if-no-files-found: error
