@@ -12,8 +12,6 @@ on:
       ksp-zip-url:
         type: string
         default: https://github.com/KSPModdingLibs/KSPBuildTools/raw/main/KSP-1.12.5.zip
-      version-string:
-        type: string
     secrets:
       ksp-zip-password:
         required: false
@@ -36,12 +34,6 @@ jobs:
           # working around a bug in checkout action: https://github.com/actions/checkout/issues/1418#issuecomment-1899122964
           ref: "${{ github.head_ref || github.ref }}"
 
-      - name: update-version
-        if: ${{ inputs.version-string != '' }}
-        uses: ./.github/actions/update-version
-        with:
-          version-string: ${{ inputs.version-string }}
-
       - name: compile
         uses: ./.github/actions/compile
         with:
@@ -51,6 +43,3 @@ jobs:
 
       - name: assemble-release
         uses: ./.github/actions/assemble-release
-        with:
-          artifacts: ${{ inputs.artifacts }}
-          output-file-name: ${{ github.event.repository.name }}-${{ inputs.version-string || github.ref }}-${{ inputs.build-configuration }}
