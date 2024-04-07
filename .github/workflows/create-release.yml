@@ -57,7 +57,7 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git commit -m "bump version to ${{ inputs.version-string }}"
-          git tag -f -a ${{ env.RELEASE_TAG }}
+          git tag -f -a ${{ env.RELEASE_TAG }} -m ${{ env.RELEASE_TAG }}
           git push
 
       - name: compile
