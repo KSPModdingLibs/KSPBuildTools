@@ -6,7 +6,7 @@ inputs:
     default: GameData LICENSE* README* CHANGELOG*
   output-file-name:
     type: string
-    default: ${{ github.event.repository.name }}.zip
+    default: ${{ github.event.repository.name }}
 
 outputs:
   artifact-id:
@@ -24,7 +24,7 @@ runs:
         # TODO: delete pdb files?  run some kind of assembly script?
         cp -r -v ${{ inputs.artifacts }} ${{ env.RELEASE_STAGING }} || :
         cd ${{ env.RELEASE_STAGING }}
-        zip -r ${{ github.workspace }}/${{ inputs.output-file-name }} .
+        zip -r ${{ github.workspace }}/${{ inputs.output-file-name }}.zip .
 
     - name: Upload Artifact
       id: upload-artifact

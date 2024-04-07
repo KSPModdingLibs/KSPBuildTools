@@ -28,7 +28,7 @@ env:
   KSP_ROOT: /tmp/ksp
   RELEASE_STAGING: /tmp/release
   RELEASE_TAG: ${{ inputs.version-string }}
-  ARTIFACT_FILENAME: ${{ github.event.repository.name }}-${{ inputs.version-string }}.zip
+  ARTIFACT_FILENAME: ${{ github.event.repository.name }}-${{ inputs.version-string }}
 
 defaults:
   run:
@@ -79,4 +79,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create ${{ env.RELEASE_TAG }} --draft --target ${{ github.ref_name }} --title ${{ env.RELEASE_TAG }} "${{ env.ARTIFACT_FILENAME }}"
+          gh release create ${{ env.RELEASE_TAG }} --draft --target ${{ github.ref_name }} --title ${{ env.RELEASE_TAG }} "${{ env.ARTIFACT_FILENAME }}.zip"

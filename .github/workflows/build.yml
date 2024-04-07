@@ -44,4 +44,4 @@ jobs:
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/assemble-release@main
         with:
           artifacts: ${{ inputs.artifacts }}
-          output-file-name: ${{ github.event.repository.name }}-${{ inputs.build-configuration }}.zip
+          output-file-name: ${{ github.event.repository.name }}-${{ inputs.build-configuration }}
