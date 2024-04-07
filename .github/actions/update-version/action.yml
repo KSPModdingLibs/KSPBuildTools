@@ -11,6 +11,12 @@ inputs:
   ksp-build-tools-root:
     type: string
     default: tmp/kspbuildtools #note this is relative to the *mod*'s repository
+  git-stage:
+    type: boolean
+    default: false
+  delete-template-files:
+    type: boolean
+    default: false
 
 runs:
   using: composite
@@ -29,5 +35,5 @@ runs:
       run: |
         SCRIPT="${{inputs.ksp-build-tools-root}}/update-version.sh"
         chmod +x $SCRIPT
-        $SCRIPT ${{inputs.version-string}} ${{inputs.template-extension}} ${{inputs.files}}
+        $SCRIPT -g ${{ inputs.git-stage }} -d ${{ inputs.delete-template-files }} ${{inputs.version-string}} ${{inputs.template-extension}} ${{inputs.files}}
 
