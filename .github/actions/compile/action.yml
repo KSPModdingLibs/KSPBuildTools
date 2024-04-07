@@ -21,8 +21,8 @@ runs:
     - name: Download KSP Libs
       shell: bash
       run: |
-        wget ${{ inputs.ksp-zip-url }} -O /tmp/ksp.zip
-        unzip -P "${{ inputs.ksp-zip-password }}" /tmp/ksp.zip -d "${{ env.KSP_ROOT }}"
+        wget --quiet ${{ inputs.ksp-zip-url }} -O /tmp/ksp.zip
+        unzip -q -P "${{ inputs.ksp-zip-password }}" /tmp/ksp.zip -d "${{ env.KSP_ROOT }}"
 
     - name: Install Dependencies
       shell: bash
