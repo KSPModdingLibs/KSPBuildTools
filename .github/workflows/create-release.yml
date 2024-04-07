@@ -68,6 +68,7 @@ jobs:
           ksp-zip-password: ${{ secrets.ksp-zip-password }}
 
       - name: assemble-release
+        id: assemble-release
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/assemble-release@main
         with:
           artifacts: ${{ inputs.artifacts }}
@@ -77,4 +78,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create ${{ env.RELEASE_TAG }} --draft --target ${{ github.ref_name }}
+          gh release create ${{ env.RELEASE_TAG }} --draft --target ${{ github.ref_name }} --title ${{ env.RELEASE_TAG }} "${{ steps.assemble-release.outputs.artifact-url }}"
