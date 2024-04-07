@@ -3,8 +3,10 @@ name: assemble-release
 inputs:
   artifacts:
     type: string
+    default: GameData LICENSE* README* CHANGELOG*
   output-file-name:
     type: string
+    default: ${{ github.event.repository.name }}
 
 runs:
   using: composite
