@@ -6,7 +6,7 @@ inputs:
     default: Release
   ksp-zip-url:
     type: string
-    default: https://github.com/KSPModdingLibs/KSPBuildTools/raw/main/KSP-1.12.5.zip
+    default: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
   ksp-zip-password:
     type: string
 
