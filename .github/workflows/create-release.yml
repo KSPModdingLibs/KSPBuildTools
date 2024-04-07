@@ -40,8 +40,7 @@ jobs:
       - name: Checkout Mod Repo
         uses: actions/checkout@v4
         with:
-          # working around a bug in checkout action: https://github.com/actions/checkout/issues/1418#issuecomment-1899122964
-          ref: "${{ github.head_ref || github.ref }}"
+          ref: "${{ github.ref }}"
 
       - name: update-version
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/update-version@main
@@ -55,8 +54,11 @@ jobs:
       - name: commit-version-and-tag
         working-directory: ${{ github.workspace }}
         run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
           git commit -m "bump version to ${{ inputs.version-string }}"
           git tag -f -a ${{ env.RELEASE_TAG }}
+          git push
 
       - name: compile
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@main
