@@ -1,0 +1,15 @@
+name: validate
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        
+      - name: Validate config files
+        uses: KSP-CKAN/KSPMMCfgParser@master
