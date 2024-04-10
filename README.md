@@ -58,7 +58,7 @@ You can copy this file to your own mod repo to use it locally, and it's also use
 
 ## Usage
 
-`update-version.sh VERSION_STRING TEMPLATE_EXTENSION [FILES]`
+`update-version.sh [-g (true|false)] [-d (true|false)] VERSION_STRING TEMPLATE_EXTENSION [FILES]`
 
 Example:
 
@@ -84,6 +84,18 @@ This is a file extension that indicates which files the script should consider. 
 **Optional.**
 
 This is a list of files to process.  If omitted, the script will process all files in the subtree that end with `TEMPLATE_EXTENSION`.
+
+### `-g (true|false)`
+
+**Optional.** Default: false
+
+If true, calls `git add` on each of the modified files (but does not commit).
+
+### `-d (true|false)`
+
+**Optional.** Default: false
+
+If true, deletes the template file after processing (if the file was not updated in-place).
 
 ## Tokens
 
