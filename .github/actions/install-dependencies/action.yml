@@ -3,6 +3,13 @@ name: update-version
 inputs:
   dependency-identifiers:
     type: string
+    required: true
+  ckan-compatible-versions:
+    type: string
+    default: "1.12 1.11 1.10 1.9 1.8"
+  ckan-filters:
+    type: string
+    default: ".dds .png .bmp .mu .mbm .jpg .wav"
 
 runs:
   using: composite
@@ -20,23 +27,19 @@ runs:
       run: |
         ckan instance fake --set-default KSP ${{ env.KSP_ROOT }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
         ckan update
-
-    - name: ckan-add-filters
-      shell: bash
-      run: |
-        ckan filter add .dds
-        ckan filter add .png
-        ckan filter add .mu
-        ckan filter add .bmp
-        ckan filter add .mbm
-        ckan filter add .jpg
-        ckan filter add .wav
+        for version in ${{ inputs.ckan-compatible-versions }}; do
+          ckan compatibility add $version
+        done
+        for filter in ${{ inputs.ckan-filters }}; do
+          ckan filter add $filter
+        done
 
     - name: ckan-install-mod
       shell: bash
       run: |
-        ckan install --no-recommends --headless ModuleManager
-        ckan install --no-recommends --headless MoneroFlags
+        for identifier in ${{ iniuts.dependency-identifiers }}; do
+          ckan install --no-recommends --headless $identifier
+        done
 
     - name: debug
       shell: bash
