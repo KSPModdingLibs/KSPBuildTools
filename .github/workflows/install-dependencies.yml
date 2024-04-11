@@ -18,5 +18,8 @@ jobs:
     steps:
       - name: install-dependencies
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@main
-        
+        with:
+          dependency-identifiers: |
+            ModuleManager
+            MoneroFlags
       
