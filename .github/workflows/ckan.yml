@@ -17,6 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: install-dependencies
-        uses: KSPModdingLibs/KSPBuildTools/install-dependencies@main
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@main
         env: ${{ env.KSP_ROOT }}
       
