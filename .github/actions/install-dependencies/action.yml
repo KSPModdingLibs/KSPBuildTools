@@ -28,7 +28,7 @@ runs:
         ckan instance fake --set-default KSP ${{ env.KSP_ROOT }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
         ckan update
         for version in ${{ inputs.ckan-compatible-versions }}; do
-          ckan compatibility add $version
+          ckan compat add $version
         done
         for filter in ${{ inputs.ckan-filters }}; do
           ckan filter add $filter
