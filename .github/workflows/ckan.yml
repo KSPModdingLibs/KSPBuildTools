@@ -26,7 +26,8 @@ jobs:
       - name: ckan-setup-instance
         run: |
           ckan instance fake --set-default KSP ${{ env.KSP_ROOT }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
+          ckan update
 
       - name: ckan-install-mod
         run: |
-          ckan install --no-recommends --headless ModuleManager
+          ckan install -d -v --no-recommends --headless ModuleManager
