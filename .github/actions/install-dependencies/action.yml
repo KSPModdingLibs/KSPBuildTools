@@ -30,13 +30,14 @@ runs:
         
         IFS= read -r -a versions <<< "${{ inputs.ckan-compatible-versions }}"
         for version in "${versions[@]}"; do
-          ckan compat add $version
+          echo $version
+          ckan compat add "$version"
         done 
         
         IFS= read -r -a filters <<< "${{ inputs.ckan-filters }}"
         for filter in "${filters[@]}"; do
-          ckan filter add $filter
-        done <<< 
+          ckan filter add "$filter"
+        done
 
     - name: ckan-install-mod
       shell: bash
