@@ -1,4 +1,8 @@
 {
     "name": "KSPBuildTools Build Workflow",
-    "description": "Builds and packages a KSP mod"
+    "description": "Builds and packages a KSP mod",
+    "categories": [
+        "ci",
+        "C#"
+    ]
 }
