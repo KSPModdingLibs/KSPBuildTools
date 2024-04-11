@@ -1,0 +1,32 @@
+# playground for ckan
+
+name: ckan
+
+on:
+  workflow_dispatch
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  KSP_ROOT: /tmp/ksp
+
+jobs:
+  ckan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ckan-install
+        run: |
+          sudo curl -sS -o /usr/share/keyrings/ksp-ckan-archive-keyring.gpg https://raw.githubusercontent.com/KSP-CKAN/CKAN/master/debian/ksp-ckan.gpg
+          echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/ksp-ckan-archive-keyring.gpg] https://ksp-ckan.s3-us-west-2.amazonaws.com/deb stable main' | sudo tee /etc/apt/sources.list.d/ksp-ckan.list > /dev/null
+          sudo apt update
+          sudo apt install ckan
+
+      - name: ckan-setup-instance
+        run: |
+          ckan.exe instance fake --set-default KSP ${{ env.KSP_ROOT }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
+
+      - name: ckan-install-mod
+        run: |
+          ckan.exe install --no-recommends --headless ModuleManager
