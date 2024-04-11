@@ -6,10 +6,22 @@ inputs:
     required: true
   ckan-compatible-versions:
     type: string
-    default: 1.12 1.11 1.10 1.9 1.8
+    default: |
+      1.12
+      1.11
+      1.10
+      1.9
+      1.8
   ckan-filters:
     type: string
-    default: .dds .png .bmp .mu .mbm .jpg .wav
+    default: |
+      .dds
+      .png
+      .bmp
+      .mu 
+      .mbm
+      .jpg
+      .wav
 
 runs:
   using: composite
@@ -27,24 +39,22 @@ runs:
       run: |
         ckan instance fake --set-default KSP ${{ env.KSP_ROOT }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
         ckan update
+        IFS=$'\n'
         
-        IFS= read -r -a versions <<< "${{ inputs.ckan-compatible-versions }}"
-        for version in $versions; do
-          echo $version
+        for version in "${{ inputs.ckan-compatible-versions }}"; do
           ckan compat add "$version"
         done 
         
-        IFS= read -r -a filters <<< "${{ inputs.ckan-filters }}"
-        for filter in $filters; do
+        for filter in "${{ inputs.ckan-filters }}"; do
           ckan filter add "$filter"
         done
 
     - name: ckan-install-mod
       shell: bash
       run: |
-        IFS= read -r -a identifiers <<< "${{ inputs.dependency-identifiers }}"
-        for identifier in $identifiers; do
-          ckan install --no-recommends --headless $identifier
+        IFS=$'\n'
+        for identifier in "${{ inputs.dependency-identifiers }}"; do
+          ckan install --no-recommends --headless "$identifier"
         done
 
     - name: debug
