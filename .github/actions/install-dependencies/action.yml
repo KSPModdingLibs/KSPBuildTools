@@ -29,13 +29,13 @@ runs:
         ckan update
         
         IFS= read -r -a versions <<< "${{ inputs.ckan-compatible-versions }}"
-        for version in "${versions[@]}"; do
+        for version in $versions; do
           echo $version
           ckan compat add "$version"
         done 
         
         IFS= read -r -a filters <<< "${{ inputs.ckan-filters }}"
-        for filter in "${filters[@]}"; do
+        for filter in $filters; do
           ckan filter add "$filter"
         done
 
@@ -43,7 +43,7 @@ runs:
       shell: bash
       run: |
         IFS= read -r -a identifiers <<< "${{ inputs.dependency-identifiers }}"
-        for identifier in "${identifiers[@]}"; do
+        for identifier in $identifiers; do
           ckan install --no-recommends --headless $identifier
         done
 
