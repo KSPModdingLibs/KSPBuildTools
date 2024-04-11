@@ -28,9 +28,20 @@ jobs:
           ckan instance fake --set-default KSP ${{ env.KSP_ROOT }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
           ckan update
 
+      - name: ckan-add-filters
+        run: |
+          ckan filter add .dds
+          ckan filter add .png
+          ckan filter add .mu
+          ckan filter add .bmp
+          ckan filter add .mbm
+          ckan filter add .jpg
+          ckan filter add .wav
+
       - name: ckan-install-mod
         run: |
           ckan install --no-recommends --headless ModuleManager
+          ckan install --no-recommends --headless MoneroFlags
 
       - name: debug
-        run: ls ${{ env.KSP_ROOT }}
+        run: ls -R ${{ env.KSP_ROOT }}/GameData
