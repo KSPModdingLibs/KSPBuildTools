@@ -39,21 +39,22 @@ runs:
       run: |
         ckan instance fake --set-default KSP ${{ env.KSP_ROOT }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
         ckan update
-        IFS=$'\n'
         
-        for version in "${{ inputs.ckan-compatible-versions }}"; do
+        versions="${{ inputs.ckan-compatible-versions }}"
+        for version in $versions; do
           ckan compat add "$version"
         done 
         
-        for filter in "${{ inputs.ckan-filters }}"; do
+        filters="${{ inputs.ckan-filters }}"
+        for filter in $filters; do
           ckan filter add "$filter"
         done
 
     - name: ckan-install-mod
       shell: bash
       run: |
-        IFS=$'\n'
-        for identifier in "${{ inputs.dependency-identifiers }}"; do
+        identifiers="${{ inputs.dependency-identifiers }}"
+        for identifier in $identifiers; do
           ckan install --no-recommends --headless "$identifier"
         done
 
