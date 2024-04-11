@@ -30,4 +30,7 @@ jobs:
 
       - name: ckan-install-mod
         run: |
-          ckan install -d -v --no-recommends --headless ModuleManager
+          ckan install --no-recommends --headless ModuleManager
+
+      - name: debug
+        run: ls ${{ env.KSP_ROOT }}
