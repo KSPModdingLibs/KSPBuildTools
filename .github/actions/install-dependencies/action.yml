@@ -37,7 +37,7 @@ runs:
     - name: ckan-install-mod
       shell: bash
       run: |
-        for identifier in ${{ iniuts.dependency-identifiers }}; do
+        for identifier in ${{ inputs.dependency-identifiers }}; do
           ckan install --no-recommends --headless $identifier
         done
 
