@@ -156,6 +156,8 @@ Performs validation to help check for errors.  Right now it just invokes CKAN's 
 
 # Github Actions
 
+These are smaller units of tasks that can be combined in workflows to help automate testing, building, and releasing mods.
+
 ## [assemble-release](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/assemble-release/action.yml)
 
 Packages a mod for release or upload.  Uses `actions/upload-artifact` so the output is attached to the workflow job and can be used by other workflow jobs.
@@ -184,7 +186,7 @@ Outputs:
 
 ## [compile](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/compile/action.yml)
 
-Compiles C# code using `msbuild` into a mod assembly.  This action will install any dependent mods (TODO) and restore NuGet packages.
+Compiles C# code using `msbuild` into a mod assembly.  This action will install any dependent mods and restore NuGet packages.
 
 Environment:
 
@@ -205,8 +207,10 @@ Inputs:
 
   If the ksp library zip is encrypted, this is the password.  It should be stored in your repository's secrets.
 
+* All inputs from [`install-dependencies`](#install-dependencies)
 
-##[install-dependencies](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/install-dependencies/action.yml)
+
+## [install-dependencies](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/install-dependencies/action.yml)
 
 Uses CKAN to install any dependent mods so that your code can be compiled against them.
 
@@ -224,7 +228,7 @@ Inputs:
 
   A list of install filters (files that should *NOT* be installed).  Defaults to `.dds .png .bmp .mu .mbm .jpg .wav` so that large content files can be skipped - only DLL files should be necessary for compilation.
 
-##[update-version](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/update-version/action.yml)
+## [update-version](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/update-version/action.yml)
 
 Runs [update-version.sh](#update-version.sh) to replace version tokens in several text files.  TODO: support in-repo installs of KSPBuildTools.
 
