@@ -1,4 +1,5 @@
 # playground for ckan
+# this workflow isnt very useful on its own except as a testbed for the install-dependencies action
 
 name: ckan
 
