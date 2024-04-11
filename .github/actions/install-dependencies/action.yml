@@ -1,0 +1,43 @@
+name: update-version
+
+inputs:
+  dependency-identifiers:
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - name: ckan-install
+      shell: bash
+      run: |
+        sudo curl -sS -o /usr/share/keyrings/ksp-ckan-archive-keyring.gpg https://raw.githubusercontent.com/KSP-CKAN/CKAN/master/debian/ksp-ckan.gpg
+        echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/ksp-ckan-archive-keyring.gpg] https://ksp-ckan.s3-us-west-2.amazonaws.com/deb stable main' | sudo tee /etc/apt/sources.list.d/ksp-ckan.list > /dev/null
+        sudo apt update
+        sudo apt install ckan
+
+    - name: ckan-setup-instance
+      shell: bash
+      run: |
+        ckan instance fake --set-default KSP ${{ env.KSP_ROOT }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
+        ckan update
+
+    - name: ckan-add-filters
+      shell: bash
+      run: |
+        ckan filter add .dds
+        ckan filter add .png
+        ckan filter add .mu
+        ckan filter add .bmp
+        ckan filter add .mbm
+        ckan filter add .jpg
+        ckan filter add .wav
+
+    - name: ckan-install-mod
+      shell: bash
+      run: |
+        ckan install --no-recommends --headless ModuleManager
+        ckan install --no-recommends --headless MoneroFlags
+
+    - name: debug
+      shell: bash
+      run: ls -R ${{ env.KSP_ROOT }}/GameData
