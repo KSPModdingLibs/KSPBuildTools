@@ -11,6 +11,8 @@ on:
         default: GameData LICENSE* README* CHANGELOG*
       ksp-zip-url:
         type: string
+      dependency-identifiers:
+        type: string
     secrets:
       ksp-zip-password:
         required: false
@@ -35,10 +37,10 @@ jobs:
 
       - name: compile
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@main
-        with:
-          build-configuration: ${{ inputs.build-configuration }}
-          ksp-zip-url: ${{ inputs.ksp-zip-url }}
-          ksp-zip-password: ${{ secrets.ksp-zip-password }}
+        #with:
+          #build-configuration: ${{ inputs.build-configuration }}
+          #ksp-zip-url: ${{ inputs.ksp-zip-url }}
+          #ksp-zip-password: ${{ secrets.ksp-zip-password }}
 
       - name: assemble-release
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/assemble-release@main

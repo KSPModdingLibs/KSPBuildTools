@@ -9,6 +9,8 @@ inputs:
     default: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
   ksp-zip-password:
     type: string
+  dependency-identifiers:
+    type: string
 
 runs:
   using: composite
@@ -25,8 +27,8 @@ runs:
         unzip -q -P "${{ inputs.ksp-zip-password }}" /tmp/ksp.zip -d "${{ env.KSP_ROOT }}"
 
     - name: Install Dependencies
-      shell: bash
-      run: echo "TODO"
+      if: inputs.dependency-identifiers != ''
+      uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@main
 
     - name: Restore NuGet Packages
       shell: bash
