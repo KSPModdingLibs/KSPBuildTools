@@ -41,7 +41,7 @@ jobs:
       - name: Checkout Mod Repo
         uses: actions/checkout@v4
         with:
-          ref: "${{ github.ref }}"
+          submodules: true
 
       - name: update-version
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/update-version@main
