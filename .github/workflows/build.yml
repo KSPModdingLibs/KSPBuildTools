@@ -32,8 +32,7 @@ jobs:
       - name: Checkout Mod Repo
         uses: actions/checkout@v4
         with:
-          # working around a bug in checkout action: https://github.com/actions/checkout/issues/1418#issuecomment-1899122964
-          ref: "${{ github.head_ref || github.ref }}"
+          submodules: true
 
       - name: compile
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@main
