@@ -18,6 +18,7 @@ runs:
 
     - name: dump contexts
       shell: bash
+      if: env.ACTIONS_STEP_DEBUG
       run: |
         echo "${{ toJson(env) }}"
         echo "${{ toJson(github )}}"
