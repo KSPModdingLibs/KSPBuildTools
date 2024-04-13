@@ -15,6 +15,15 @@ inputs:
 runs:
   using: composite
   steps:
+
+    - name: dump contexts
+      shell: bash
+      run: |
+        echo "${{ toJson(env) }}"
+        echo "${{ toJson(github )}}"
+        echo "${{ toJson(job) }}"
+        echo "${{ toJson(steps) }}"
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
