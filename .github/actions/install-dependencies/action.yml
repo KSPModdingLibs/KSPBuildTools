@@ -60,4 +60,9 @@ runs:
 
     - name: debug
       shell: bash
-      run: ls -R ${{ env.KSP_ROOT }}/GameData
+      run: |
+        ls -R ${{ env.KSP_ROOT }}/GameData
+        echo "${{ toJson(env) }}"
+        echo "${{ toJson(github )}}"
+        echo "${{ toJson(job) }}"
+        echo "${{ toJson(steps) }}"
