@@ -59,6 +59,7 @@ runs:
         done
 
     - name: debug
+      if: env.ACTIONS_STEP_DEBUG
       shell: bash
       run: |
         ls -R ${{ env.KSP_ROOT }}/GameData
