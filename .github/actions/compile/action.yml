@@ -34,6 +34,8 @@ runs:
     - name: Install Dependencies
       if: inputs.dependency-identifiers != ''
       uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@main
+      with:
+        dependency-identifiers: ${{ inputs.dependency-identifiers }}
 
     - name: Download KSP Libs
       shell: bash
