@@ -53,10 +53,7 @@ runs:
     - name: ckan-install-mod
       shell: bash
       run: |
-        identifiers="${{ inputs.dependency-identifiers }}"
-        for identifier in $identifiers; do
-          ckan install --no-recommends --headless "$identifier"
-        done
+        ckan install --no-recommends --headless "${{ inputs.dependency-identifiers }}"
 
     - name: debug
       if: env.ACTIONS_STEP_DEBUG
