@@ -1,4 +1,4 @@
-name: update-version
+name: install-dependencies
 
 inputs:
   dependency-identifiers:
