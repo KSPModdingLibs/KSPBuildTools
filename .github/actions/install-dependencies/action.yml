@@ -53,7 +53,7 @@ runs:
     - name: ckan-install-mod
       shell: bash
       run: |
-        ckan install --no-recommends --headless "${{ inputs.dependency-identifiers }}"
+        ckan install --no-recommends --headless ${{ inputs.dependency-identifiers }}
 
     - name: debug
       if: env.ACTIONS_STEP_DEBUG
