@@ -57,7 +57,7 @@ for FILENAME in $FILES; do
 	if $GIT_STAGE; then
 		git add ${NEW_FILENAME}
 	fi
-	if [ $DELETE_TEMPLATE_FILES && $FILENAME -ne $NEW_FILENAME ] ; then
+	if [ "$DELETE_TEMPLATE_FILES" == "true" ] && [ "$FILENAME" != "$NEW_FILENAME" ]; then
 		rm ${FILENAME}
 	fi
 done
