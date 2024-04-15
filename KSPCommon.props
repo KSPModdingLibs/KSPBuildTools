@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   
   <!--import solution-wide props if it exists -->
-  <Import Condition=" Exists('$(SolutionName).props') " Project="$(SolutionName).props"/>
+  <Import Condition=" Exists('$(SolutionDir)$(SolutionName).props') " Project="$(SolutionName).props"/>
 
   <!-- The following properties can be customized per-mod in SolutionName.props-->
   <PropertyGroup>
