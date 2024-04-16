@@ -25,6 +25,8 @@ runs:
         cp -r -v ${{ inputs.artifacts }} ${{ env.RELEASE_STAGING }} || :
         cd ${{ env.RELEASE_STAGING }}
         zip -r ${{ github.workspace }}/${{ inputs.output-file-name }}.zip .
+        ARTIFACT_FILENAME="${{ inputs.output-file-name }}"
+        echo "ARTIFACT_FILENAME=$ARTIFACT_FILENAME" >> $GITHUB_ENV
 
     - name: Upload Artifact
       id: upload-artifact
