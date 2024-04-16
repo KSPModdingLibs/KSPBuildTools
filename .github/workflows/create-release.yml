@@ -20,6 +20,11 @@ on:
         default: GameData LICENSE* README* CHANGELOG*
       ksp-zip-url:
         type: string
+      changelog-input-file:
+        type: string
+        default: CHANGELOG.md
+      changelog-output-file:
+        type: string
     secrets:
       ksp-zip-password:
         required: false
@@ -49,8 +54,8 @@ jobs:
           version-string: ${{ inputs.version-string }}
           template-extension: ${{ inputs.version-template-extension }}
           files: ${{ inputs.version-template-files }}
-          git-stage: true
-          delete-template-files: true
+          changelog-input-file: ${{ inputs.changelog-input-file }}
+          changelog-output-file: ${{ inputs.changelog-output-file }}
 
       - name: commit-version-and-tag
         working-directory: ${{ github.workspace }}
