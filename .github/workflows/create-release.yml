@@ -84,4 +84,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create $VERSION_STRING --draft --target ${{ github.ref_name }} --title $VERSION_STRING $ARTIFACT_FILENAME.zip"
+          gh release create $VERSION_STRING --draft --target ${{ github.ref_name }} --title $VERSION_STRING $ARTIFACT_FILENAME.zip
