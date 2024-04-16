@@ -33,7 +33,6 @@ env:
   KSP_ROOT: /tmp/ksp
   RELEASE_STAGING: /tmp/release
   VERSION_STRING: ${{ inputs.version-string }} #note this may be modified by update-version if it is one of the special tokens
-  ARTIFACT_FILENAME: ${{ github.event.repository.name }}-${{ inputs.version-string }}
 
 defaults:
   run:
@@ -65,6 +64,7 @@ jobs:
           git commit -m "bump version to $VERSION_STRING"
           git tag -f -a $VERSION_STRING -m $VERSION_STRING
           git push
+          ARTIFACT_FILENAME="${{ github.event.repository.name }}-$VERSION_STRING"
 
       - name: compile
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@main
@@ -78,10 +78,10 @@ jobs:
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/assemble-release@main
         with:
           artifacts: ${{ inputs.artifacts }}
-          output-file-name: ${{ env.ARTIFACT_FILENAME}}
+          output-file-name: $ARTIFACT_FILENAME
 
       - name: create-release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create $VERSION_STRING --draft --target ${{ github.ref_name }} --title $VERSION_STRING "${{ env.ARTIFACT_FILENAME }}.zip"
+          gh release create $VERSION_STRING --draft --target ${{ github.ref_name }} --title $VERSION_STRING $ARTIFACT_FILENAME.zip"
