@@ -19,6 +19,8 @@ inputs:
 
 runs:
   using: composite
+  env:
+    YACLOG_PATH: ${{ inputs.changelog-input-file }}
   steps:
     - name: checkout kspbuildtools
       uses: actions/checkout@v4
@@ -35,8 +37,12 @@ runs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install yaclog yaclog-ksp
-        yaclog --path ${{ inputs.changelog-input-file }} release -f ${{ inputs.version-string }}
-        yaclog-ksp --path ${{ inputs.changelog-input-file }} -n ${{ github.event.repository.name }} -o ${{ inputs.changelog-output-file }}
+        ver=$(yaclog show -n)
+        if ["$ver" != "Unreleased"]; then
+          yaclog entry -p "There is nothing permanent except change"
+        fi
+        yaclog release -f ${{ inputs.version-string }}
+        yaclog-ksp -n ${{ github.event.repository.name }} -o ${{ inputs.changelog-output-file }}
         git add ${{ inputs.changelog-output-file }}
 
     - name: update version
