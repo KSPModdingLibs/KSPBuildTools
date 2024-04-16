@@ -62,7 +62,7 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git commit -m "bump version to $VERSION_STRING"
-          git tag -f -a $VERSION_STRING -m $VERSION_STRING
+          git tag -f -a "$VERSION_STRING" -m "$VERSION_STRING"
 
       - name: compile
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@main
@@ -76,11 +76,11 @@ jobs:
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/assemble-release@main
         with:
           artifacts: ${{ inputs.artifacts }}
-          output-file-name: ${{ github.event.repository.name }}-$VERSION_STRING
+          output-file-name: ${{ github.event.repository.name }}-${{ env.VERSION_STRING }}
 
       - name: create-release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           git push
-          gh release create $VERSION_STRING --draft --target ${{ github.ref_name }} --title $VERSION_STRING $ARTIFACT_FILENAME.zip
+          gh release create "$VERSION_STRING" --draft --target ${{ github.ref_name }} --title "$VERSION_STRING" "$ARTIFACT_FILENAME.zip"
