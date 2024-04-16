@@ -32,7 +32,7 @@ on:
 env:
   KSP_ROOT: /tmp/ksp
   RELEASE_STAGING: /tmp/release
-  RELEASE_TAG: ${{ inputs.version-string }}
+  VERSION_STRING: ${{ inputs.version-string }} #note this may be modified by update-version if it is one of the special tokens
   ARTIFACT_FILENAME: ${{ github.event.repository.name }}-${{ inputs.version-string }}
 
 defaults:
@@ -62,8 +62,8 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git commit -m "bump version to ${{ inputs.version-string }}"
-          git tag -f -a ${{ env.RELEASE_TAG }} -m ${{ env.RELEASE_TAG }}
+          git commit -m "bump version to $VERSION_STRING"
+          git tag -f -a $VERSION_STRING -m $VERSION_STRING
           git push
 
       - name: compile
@@ -84,4 +84,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create ${{ env.RELEASE_TAG }} --draft --target ${{ github.ref_name }} --title ${{ env.RELEASE_TAG }} "${{ env.ARTIFACT_FILENAME }}.zip"
+          gh release create $VERSION_STRING --draft --target ${{ github.ref_name }} --title $VERSION_STRING "${{ env.ARTIFACT_FILENAME }}.zip"
