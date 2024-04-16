@@ -30,14 +30,14 @@ runs:
 
     - name: update-changelog
       working-directory: ${{ github.workspace }}
-      if: ${{ hashFiles(inputs.changelog-input-file) != '' }}
+      if: ${{ hashFiles( inputs.changelog-input-file ) != '' }}
       shell: bash
       run: |
         python -m pip install --upgrade pip
         python -m pip install yaclog yaclog-ksp
         yaclog release --path ${{ inputs.changelog-input-file }} -f ${{ inputs.version-string }}
-        yaclog-ksp -n ${{ github.event.repository.name }} -o ${{ changelog-output-file }};
-        git add ${{ changelog-output-file }}
+        yaclog-ksp -n ${{ github.event.repository.name }} -o ${{ inputs.changelog-output-file }};
+        git add ${{ inputs.changelog-output-file }}
 
     - name: update version
       working-directory: ${{ github.workspace }}
