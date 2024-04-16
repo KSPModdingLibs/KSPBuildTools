@@ -24,9 +24,6 @@ outputs:
 
 runs:
   using: composite
-  env:
-    YACLOG_PATH: ${{ inputs.changelog-input-file }}
-    VERSION_STRING: ${{ inputs.version-string }}
   steps:
     - name: checkout kspbuildtools
       uses: actions/checkout@v4
@@ -40,6 +37,9 @@ runs:
       working-directory: ${{ github.workspace }}
       if: ${{ hashFiles( inputs.changelog-input-file ) != '' }}
       shell: bash
+      env:
+        YACLOG_PATH: ${{ inputs.changelog-input-file }}
+        VERSION_STRING: ${{ inputs.version-string }}
       run: |
         python -m pip install --upgrade pip
         python -m pip install yaclog yaclog-ksp
