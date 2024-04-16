@@ -11,12 +11,6 @@ inputs:
   ksp-build-tools-root:
     type: string
     default: tmp/kspbuildtools #note this is relative to the *mod*'s repository
-  git-stage:
-    type: boolean
-    default: false
-  delete-template-files:
-    type: boolean
-    default: false
   changelog-input-file:
     type: string
     default: CHANGELOG.md
@@ -43,9 +37,7 @@ runs:
         python -m pip install yaclog yaclog-ksp
         yaclog release --path ${{ inputs.changelog-input-file }} -f ${{ inputs.version-string }}
         yaclog-ksp -n ${{ github.event.repository.name }} -o ${{ changelog-output-file }};
-        if ${{git-stage}}; then
-          git add ${{ changelog-output-file }}
-        fi
+        git add ${{ changelog-output-file }}
 
     - name: update version
       working-directory: ${{ github.workspace }}
@@ -53,5 +45,5 @@ runs:
       run: |
         SCRIPT="${{inputs.ksp-build-tools-root}}/update-version.sh"
         chmod +x $SCRIPT
-        $SCRIPT -g ${{ inputs.git-stage }} -d ${{ inputs.delete-template-files }} ${{inputs.version-string}} ${{inputs.template-extension}} ${{inputs.files}}
+        $SCRIPT -g true -d true ${{inputs.version-string}} ${{inputs.template-extension}} ${{inputs.files}}
 
