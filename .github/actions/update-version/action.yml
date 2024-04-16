@@ -49,7 +49,9 @@ runs:
         fi
         yaclog release -f ${{ inputs.version-string }}
         VERSION_STRING=$(yaclog show -n)
+        RELEASE_NOTES=$(yaclog show -mb)
         echo "VERSION_STRING=$VERSION_STRING" >> "$GITHUB_ENV"
+        echo "RELEASE_NOTES=$RELEASE_NOTES" >> "$GITHUB_ENV"
         yaclog-ksp -n ${{ github.event.repository.name }} -o ${{ inputs.changelog-output-file }}
         git add ${{ inputs.changelog-output-file }} ${{ inputs.changelog-input-file }}
 
