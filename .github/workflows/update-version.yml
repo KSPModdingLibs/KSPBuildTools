@@ -1,7 +1,7 @@
 name: update-version
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       version-string:
         type: string
@@ -9,6 +9,11 @@ on:
         type: string
         default: .versiontemplate
       files:
+        type: string
+      changelog-input-file:
+        type: string
+        default: CHANGELOG.md
+      changelog-output-file:
         type: string
 
 defaults:
@@ -30,3 +35,5 @@ jobs:
           version-string: ${{inputs.version-string}}
           template-extension: ${{inputs.template-extension}}
           files: ${{inputs.files}}
+          changelog-input-file: ${{ inputs.changelog-input-file }}
+          changelog-output-file: ${{ inputs.changelog-input-file }}
