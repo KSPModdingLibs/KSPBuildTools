@@ -16,11 +16,13 @@ runs:
   steps:
     - name: get-release-info
       shell: bash
-      run: 
+      run: |
         gh release view --json assets,body,tagName > release.json
-        echo ASSET_NAME=$(jq -r '.assets[0].name' release.json) >> $GITHUB_ENV
+        echo ARTIFACT_FILENAME=$(jq -r '.assets[0].name' release.json) >> $GITHUB_ENV
         echo RELEASE_NOTES=$(jq -r .body release.json) >> $GITHUB_ENV
-        echo RELEASE_TAG=$(jq -r .tagName release.json) >> $GITHUB_ENV
+        RELEASE_TAG=$(jq -r .tagName release.json)
+        echo VERSION_STRING=$RELEASE_TAG >> $GITHUB_ENV
+        gh release download $RELEASE_TAG
 
     - name: test
       shell: bash
