@@ -24,6 +24,6 @@ jobs:
       - name: setup-inputs
         run: |
           # see https://dev.to/leading-edje/masking-input-parameters-in-github-actions-1ci
-          SPACEDOCK_PASSWORD=$(jq -r '.inputs.spacedock-password' $GITHUB_EVENT_PATH)
+          SPACEDOCK_PASSWORD=$(jq -r ".inputs.spacedock-password" $GITHUB_EVENT_PATH)
           echo ::add-mask::$SPACEDOCK_PASSWORD
           echo SPACEDOCK_PASSWORD=$SPACEDOCK_PASSWORD >> $GITHUB_ENV
