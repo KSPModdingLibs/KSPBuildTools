@@ -12,7 +12,6 @@ on:
         default: 3102 # hardcoded to KSP1 gameid.  retrieve from https://spacedock.info/api/games
       mod-id:
         type: number
-        required: true
 
 env:
   SPACEDOCK_USERNAME: ${{ inputs.spacedock-username || github.triggering_actor }}
