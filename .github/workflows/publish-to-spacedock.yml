@@ -23,8 +23,15 @@ jobs:
     steps:
       - name: setup-inputs
         run: |
-          cat $GITHUB_EVENT_PATH
           # see https://dev.to/leading-edje/masking-input-parameters-in-github-actions-1ci
           SPACEDOCK_PASSWORD=$(jq -r '.inputs."spacedock-password"' $GITHUB_EVENT_PATH)
           echo ::add-mask::$SPACEDOCK_PASSWORD
           echo SPACEDOCK_PASSWORD=$SPACEDOCK_PASSWORD >> $GITHUB_ENV
+      
+      - name: publish
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/publish-to-spacedock@main
+        with:
+          spacedock-username: ${{ env.SPACEDOCK_USERNAME }}
+          spacedock-password: ${{ env.SPACEDOCK_PASSWORD }}
+          game-id: ${{ inputs.game-id }}
+          mod-id: ${{ env.SPACEDOCK_MOD_ID }}
