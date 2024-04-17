@@ -16,6 +16,9 @@ runs:
   steps:
     - name: get-release-info
       shell: bash
+      env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
       run: |
         gh release view --json assets,body,tagName > release.json
         echo ARTIFACT_FILENAME=$(jq -r '.assets[0].name' release.json) >> $GITHUB_ENV
