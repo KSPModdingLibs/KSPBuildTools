@@ -1,0 +1,28 @@
+name: publish-to-spacedock
+
+inputs:
+  spacedock-username:
+    type: string
+  spacedock-password:
+    type: string
+  game-id:
+    type: number
+    default: 3102 # hardcoded to KSP1 gameid.  retrieve from https://spacedock.info/api/games
+  mod-id:
+    type: number
+
+runs:
+  using: composite
+  steps:
+    - name: get-release-info
+      if: false
+      shell: bash
+      run: 
+        gh release view
+
+    - name: upload-to-spacedock
+      if: false
+      uses: KSP2Community/spacedock-upload@v1.0.0
+      with:
+        username: ${{ env.SPACEDOCK_USERNAME }}
+        password: ${{ env.SPACEDOCK_PASSWORD }}

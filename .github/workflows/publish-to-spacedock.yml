@@ -28,15 +28,3 @@ jobs:
           SPACEDOCK_PASSWORD=$(jq -r '.inputs.spacedock-password' $GITHUB_EVENT_PATH)
           echo ::add-mask::$SPACEDOCK_PASSWORD
           echo SPACEDOCK_PASSWORD=$SPACEDOCK_PASSWORD >> $GITHUB_ENV
-
-      - name: get-release-info
-        if: false
-        run: 
-          gh release view
-
-      - name: upload-to-spacedock
-        if: false
-        uses: KSP2Community/spacedock-upload@v1.0.0
-        with:
-          username: ${{ env.SPACEDOCK_USERNAME }}
-          password: ${{ env.SPACEDOCK_PASSWORD }}
