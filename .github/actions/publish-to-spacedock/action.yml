@@ -15,10 +15,17 @@ runs:
   using: composite
   steps:
     - name: get-release-info
-      if: false
       shell: bash
       run: 
-        gh release view
+        gh release view --json assets,body,tagName > release.json
+        echo ASSET_NAME=$(jq -r '.assets[0].name' release.json) >> $GITHUB_ENV
+        echo RELEASE_NOTES=$(jq -r .body release.json) >> $GITHUB_ENV
+        echo RELEASE_TAG=$(jq -r .tagName release.json) >> $GITHUB_ENV
+
+    - name: test
+      shell: bash
+      run:
+        printenv
 
     - name: upload-to-spacedock
       if: false
