@@ -5,17 +5,19 @@ on:
     inputs:
       spacedock-username:
         type: string
-        default: ${{ github.actor || vars.SPACEDOCK_USERNAME }}
       spacedock-password:
         type: string
-        default: ${{ secrets.SPACEDOCK_PASSWORD }}
       game-id:
         type: number
         default: 3102 # hardcoded to KSP1 gameid.  retrieve from https://spacedock.info/api/games
       mod-id:
         type: number
         required: true
-        default: ${{ vars.SPACEDOCK_MOD_ID }}
+
+env:
+  SPACEDOCK_USERNAME: ${{ inputs.spacedock-username || github.triggering_actor }}
+  SPACEDOCK_PASSWORD: ${{ inputs.spacedock-password || secrets.SPACEDOCK_PASSWORD }}
+  SPACEDOCK_MOD_ID: ${{ inputs.mod-id || vars.SPACEDOCK_MOD_ID }}
 
 jobs:
   publish-to-spacedock:
@@ -37,5 +39,5 @@ jobs:
         if: false
         uses: KSP2Community/spacedock-upload@v1.0.0
         with:
-          username: ${{ inputs.spacedock-username }}
+          username: ${{ env.SPACEDOCK_USERNAME }}
           password: ${{ env.SPACEDOCK_PASSWORD }}
