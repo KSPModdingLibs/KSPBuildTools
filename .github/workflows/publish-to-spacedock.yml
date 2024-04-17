@@ -30,6 +30,8 @@ jobs:
       
       - name: publish
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/publish-to-spacedock@main
+        env:
+          GH_TOKEN: ${{ github.token }}
         with:
           spacedock-username: ${{ env.SPACEDOCK_USERNAME }}
           spacedock-password: ${{ env.SPACEDOCK_PASSWORD }}
