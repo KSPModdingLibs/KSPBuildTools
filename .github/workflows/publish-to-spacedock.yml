@@ -15,7 +15,6 @@ on:
 
 env:
   SPACEDOCK_USERNAME: ${{ inputs.spacedock-username || github.triggering_actor }}
-  SPACEDOCK_PASSWORD: ${{ inputs.spacedock-password || secrets.SPACEDOCK_PASSWORD }}
   SPACEDOCK_MOD_ID: ${{ inputs.mod-id || vars.SPACEDOCK_MOD_ID }}
 
 jobs:
