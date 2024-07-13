@@ -20,6 +20,8 @@ on:
         default: GameData LICENSE* README* CHANGELOG*
       ksp-zip-url:
         type: string
+      dependency-identifiers:
+        type: string
       changelog-input-file:
         type: string
         default: CHANGELOG.md
@@ -70,6 +72,7 @@ jobs:
           build-configuration: ${{ inputs.build-configuration }}
           ksp-zip-url: ${{ inputs.ksp-zip-url }}
           ksp-zip-password: ${{ secrets.ksp-zip-password }}
+          dependency-identifiers: ${{ inputs.dependency-identifiers }}
 
       - name: assemble-release
         id: assemble-release
