@@ -17,10 +17,15 @@ inputs:
     default: CHANGELOG.md
   changelog-output-file:
     type: string
+  release-notes-output-file:
+    type: string
+    default: tmp/release-notes.md
 
 outputs:
   version-string:
     value: ${{ steps.result.outputs.version-string }}
+  release-notes-output-file:
+    value: ${{ inputs.release-notes-output-file }}
 
 runs:
   using: composite
@@ -49,14 +54,9 @@ runs:
         fi
         yaclog release -f ${{ inputs.version-string }}
         VERSION_STRING=$(yaclog show -n)
-        RELEASE_NOTES=$(yaclog show -mb)
+        $(yaclog show -mb) > ${{ inputs.release-notes-output-file }}
         echo "VERSION_STRING=$VERSION_STRING" >> "$GITHUB_ENV"
-        # echo "RELEASE_NOTES=$RELEASE_NOTES" >> "$GITHUB_ENV"
-        {
-          echo 'RELEASE_NOTES<<EOL'
-          echo $RELEASE_NOTES
-          echo EOL
-        } >> "$GITHUB_ENV"
+        echo "RELEASE_NOTES_FILE=${{ inputs.release-notes-output-file }}" >> "$GITHUB_ENV"
         yaclog-ksp -n ${{ github.event.repository.name }} -o ${{ inputs.changelog-output-file }}
         git add ${{ inputs.changelog-output-file }} ${{ inputs.changelog-input-file }}
 
