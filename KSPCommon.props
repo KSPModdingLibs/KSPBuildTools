@@ -61,5 +61,9 @@
       <Name>Assembly-CSharp</Name>
       <Private>False</Private>
     </Reference>
+    <Reference Include="$(ManagedPath)\Assembly-CSharp-firstpass.dll">
+      <Name>Assembly-CSharp-firstpass</Name>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
 </Project>
