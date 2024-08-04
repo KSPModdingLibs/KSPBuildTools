@@ -11,6 +11,8 @@ inputs:
     type: string
   dependency-identifiers:
     type: string
+  solution-file-path:
+    type: string
 
 runs:
   using: composite
@@ -46,10 +48,10 @@ runs:
     - name: Restore NuGet Packages
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: nuget restore ${{ env.SOLUTION_FILE_PATH }}
+      run: nuget restore ${{ inputs.solution-file-path }}
 
     - name: Build Mod Solution
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: msbuild /p:Configuration=${{ inputs.build-configuration }} /p:KSPRoot=${{ env.KSP_ROOT }} /p:ManagedRelativePath=KSP_x64_Data/Managed ${{ env.SOLUTION_FILE_PATH }}
+      run: msbuild /p:Configuration=${{ inputs.build-configuration }} /p:KSPRoot=${{ env.KSP_ROOT }} /p:ManagedRelativePath=KSP_x64_Data/Managed ${{ inputs.solution-file-path }}
 
