@@ -20,6 +20,7 @@ on:
         default: GameData LICENSE* README* CHANGELOG*
       ksp-zip-url:
         type: string
+        default: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
       dependency-identifiers:
         type: string
       changelog-input-file:
