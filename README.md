@@ -6,16 +6,16 @@ To use it, either:
 
   `git submodule add https://github.com/KSPModdingLibs/KSPBuildTools.git`
 
-* For the github actions and workflows, you can directly reference this repository from your own workflows.  TODO: provide starter workflows
+* For the github actions and workflows, you can directly reference this repository from your own workflows.  [This repo](https://github.com/KSPModdingLibs/.github/tree/main/workflow-templates) contains workflow templates that you can start from.
 * Or you can copy the files you want into your own repository and use them however you like - though that will make it harder to get updates
 
 Most things in this repository will work best if you have a directory in your repository that corresponds to the directory that the user will install into GameData (or several such directories).  Placing these into a GameData folder in your repository is recommended but not required.
 
 While working on your mod, I recommend that you create a junction or symlink from the game's GameData folder pointing at the content folder in your repository.  That way any changes you make will be immediately available and you don't need to deploy or copy anything.  If you'd like to see other workflows supported please ask!
 
-# KSPCommon.props
+# KSPCommon.targets
 
-This is a [msbuild](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-concepts) property file that you can include in your .csproj files.
+This is a [msbuild](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-concepts) targets file that you can include in your .csproj files.
 
 What it does:
 
@@ -27,13 +27,16 @@ What it does:
 - Sets up Visual Studio's debugging start actions so you can launch KSP directly from VS
 - Designed to be used by the [Build github workflow](#compile-action)
 
-To use it, import KSPCommon.props in your .csproj file where you would normally have assembly references.  You should remove ALL the existing assembly references to `System`, `Assembly-CSharp`, and `Unity`.
+To use it, import KSPCommon.targets in your .csproj file after it imports Microsoft.CSharp.targets.  You should remove ALL the existing assembly references to `System`, `Assembly-CSharp`, and `Unity`.
 
 ```xml
-<Import Project="$(SolutionDir)KSPBuildTools\KSPCommon.props" />
+<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+<Import Project="$(SolutionDir)KSPBuildTools\KSPCommon.targets" />
 ```
 
-Here's an example from [RasterPropMonitor](https://github.com/JonnyOThan/RasterPropMonitor/blob/a8baf7a5e1a8915b640ea85a15c221433005632c/RasterPropMonitor/RasterPropMonitor.csproj#L57).
+Here's an example from [kOS](https://github.com/KSP-KOS/KOS/blob/22808556c090ebe63cb96452e43bb224cff4c27e/src/kOS/kOS.csproj#L260).
+
+Note that `KSPCommon.targets` makes use of `KSPCommon.props` for advanced users, which sets all the below properties but does not include the build targets.  If you only want the properties and not the targets, you can use `KSPCommon.props` instead.
 
 The following properties are exposed to be customized per mod, project, or user.  Properties that represent directories should *not* include a trailing slash.
 
@@ -41,25 +44,27 @@ The following properties are exposed to be customized per mod, project, or user.
 
 Default value: `$(SolutionDir)`
 
-This specifies the root directory of your mod repository.
+This specifies the root directory of your mod repository.  Generally you'll want to set this to be relative to `$(SolutionDir)`.
 
 #### `BinariesOutputRelativePath`
 
 Default value: `GameData\$(SolutionName)`
 
-This is the directory where compiled binaries should be copied.  This is relative to the `RepoRootPath`.  The binaries will be copied after each build
+This is the directory where compiled binaries should be copied.  This is relative to the `RepoRootPath`.  The binaries will be copied after each build.
 
 #### `KSPRoot`
 
-Default value: `$(ReferencePath)` or `C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program`
+This property should be set to the root directory of your KSP install.  If it is not specified, then `KSPCommon.props` will try some defaults:
 
-The root directory of a KSP installation.  This should be customized in a `.props.user` file - or set the Reference Path of the project to your ksp install root.
+- If `$(ReferencePath)` is set, then that becomes the value of the `KSPRoot` property.  This is the best way for individual developers to specify where their KSP install is, because the `$(ReferencePath)` is typically stored in the `.csproj.user` file that is not committed to version control.  NOTE: `.csproj.user` files are imported by `Microsoft.CSharp.targets` which is why it's important for `KSPCommon.targets` to be placed *afterwards*.  If it comes first, you won't be able to use `$(ReferencePath)`.
+- If `$(SolutionDir)KSP/buildID.txt` exists, then `$(SolutionDir)KSP` becomes the value of the `KSPRoot` property.  This could be a full copy of a KSP install, or just a symlink or junction to one.
+- If `KSPRoot` still isn't set, then it will default to `C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program` on Windows or `$(HOME)/Library/Application Support/Steam/steamapps/common/Kerbal Space Program` on OSX.
 
 ### Customization
 
 Properties can be customized at several points:
 
-- Per-project properties should be set in the `.csproj` file before importing `KSPCommon.props`
+- Per-project properties should be set in the `.csproj` file before importing `KSPCommon.targets`
 - Per-mod properties for mods with more than one `.csproj` file should be set in `$(SolutionName).props` which will be imported by `KSPCommon.props`
 - Per-user properties should be set in `KSPCommon.props.user`.  This is usually where you want to set the path to your KSP installation.  You should have `.user` files added to your `.gitignore` file.
 
@@ -127,7 +132,7 @@ These are full-blown workflows that can be triggered from your own repository on
 
 ## [build](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/workflows/build.yml)
 
-Compiles a KSP mod and upload the results as a workflow artifact.  It's meant to be suitable for continuous integration builds, as it simply compiles whatever is in the repository without updating version numbers etc.
+Compiles a KSP mod and uploads the results as a workflow artifact.  It's meant to be suitable for continuous integration builds, as it simply compiles whatever is in the repository without updating version numbers etc.
 
 For details:
 
@@ -190,18 +195,25 @@ Compiles C# code using `msbuild` into a mod assembly.  This action will install 
 
 Environment:
 
-* `SOLUTION_FILE_PATH`
 * `KSP_ROOT`
+
+  The path to use as the root of a KSP install.  Dependencies will be downloaded here and the `ksp-zip-url` libraries will be extracted here.  This is generally set by the `build` or `assemble-release` workflows.
 
 Inputs:
 
 * `build-configuration`
 
-  The project configuration to build.  Usually "Release"
+  The project configuration to build.  Defaults to `Release`.
+
+* `solution-file-path`
+
+  The path to the solution file to build.  Defaults to empty, which will invoke `msbuild` on the root directory of the repo and builds any `*.sln` file it finds there.
 
 * `ksp-zip-url`
 
-  A url for a zip file that contains the assemblies from the game to link against.  This should either be stripped so that it only contains public interfaces, or encrypted so that the libraries are not being redistributed unprotected.  TODO: provide a common stripped zip file
+  A url for a zip file that contains the assemblies from the game to link against.  This should either be stripped so that it only contains public interfaces, or encrypted so that the libraries are not being redistributed unprotected.
+
+  Defaults to `https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip` which contains stripped versions of the libraries and should be suitable for most users.
 
 * `ksp-zip-password`
 
@@ -230,7 +242,7 @@ Inputs:
 
 ## [update-version](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/update-version/action.yml)
 
-Runs [update-version.sh](#update-version.sh) to replace version tokens in several text files.  TODO: support in-repo installs of KSPBuildTools.
+Runs [update-version.sh](#update-version.sh) to replace version tokens in several text files.  TODO: support in-repo installs of KSPBuildTools.  NOTE: this section is out of date and needs to be updated
 
 Inputs:
 
