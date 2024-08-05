@@ -27,7 +27,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <KSPExecutable Condition = "$([MSBuild]::IsOsPlatform('Windows'))">KSP_x64.exe</KSPExecutable>
-    <KSPExecutable Condition = "$([MSBuild]::IsOsPlatform('OSX'))">KSP.app</KSPExecutable>
+    <KSPExecutable Condition = "$([MSBuild]::IsOsPlatform('OSX'))">KSP.app/Contents/MacOS/KSP</KSPExecutable>
     <KSPExecutable Condition = "$([MSBuild]::IsOsPlatform('Linux'))">KSP.x86_64</KSPExecutable>
     <ManagedPath>$(KSPRoot)\$(ManagedRelativePath)</ManagedPath>
   </PropertyGroup>
