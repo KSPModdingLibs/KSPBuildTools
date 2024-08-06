@@ -20,4 +20,9 @@
     </ItemGroup>
     <Copy SourceFiles="@(BinariesToCopy)" DestinationFolder="$(RepoRootPath)\$(BinariesOutputRelativePath)" />
   </Target>
+
+  <!-- Use CKAN to install mods for any references tagged with a CKAN ID-->
+  <Target Name="CKANInstall">
+    <Exec Command="CKAN install --headless --gamedir $(KSPROOT) %(Reference.CKANID)" Condition=" '%(Reference.CKANID)' != '' "/>
+  </Target>
 </Project>
