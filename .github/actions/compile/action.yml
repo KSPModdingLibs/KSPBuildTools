@@ -11,6 +11,9 @@ inputs:
     type: string
   dependency-identifiers:
     type: string
+  dependency-msbuild-target:
+    type: string
+    default: CKANInstall
   solution-file-path:
     type: string
 
@@ -38,6 +41,12 @@ runs:
       uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@main
       with:
         dependency-identifiers: ${{ inputs.dependency-identifiers }}
+
+    - name: Install Dependencies With MSBuild
+      if: inputs.dependency-msbuild-target != ''
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: msbuild /t:{{ inputs.dependency-msbuild-target }} /p:KSPRoot=${{ env.KSP_ROOT }} ${{ inputs.solution-file-path }}
 
     - name: Download KSP Libs
       shell: bash
