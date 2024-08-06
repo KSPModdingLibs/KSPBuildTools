@@ -23,6 +23,6 @@
 
   <!-- Use CKAN to install mods for any references tagged with a CKAN ID-->
   <Target Name="CKANInstall">
-    <Exec Command="CKAN install --headless --gamedir $(KSPROOT) %(Reference.CKANID)" Condition=" '%(Reference.CKANID)' != '' "/>
+    <Exec Command="CKAN install --no-recommends --headless --gamedir $(KSPROOT) %(Reference.CKANID)" Condition=" '%(Reference.CKANID)' != '' "/>
   </Target>
 </Project>
