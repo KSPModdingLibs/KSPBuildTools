@@ -21,8 +21,9 @@
     <Copy SourceFiles="@(BinariesToCopy)" DestinationFolder="$(RepoRootPath)\$(BinariesOutputRelativePath)" />
   </Target>
 
-  <!-- Use CKAN to install mods for any references tagged with a CKAN ID-->
+  <!-- Use CKAN to install mods for any references tagged with a CKAN Identifier -->
   <Target Name="CKANInstall">
-    <Exec Command="ckan install --no-recommends --headless --gamedir $(KSPROOT) %(Reference.CKANID)" Condition=" '%(Reference.CKANID)' != '' "/>
+    <Exec Command="ckan compat add --headless --gamedir $(KSPROOT) $(CKANCompatibleVersions)" Condition=" '$(CKANCompatibleVersions)' != '' "/>
+    <Exec Command="ckan install --no-recommends --headless --gamedir $(KSPROOT) %(Reference.CKANIdentifier)" Condition=" '%(Reference.CKANIdentifier)' != '' "/>
   </Target>
 </Project>
