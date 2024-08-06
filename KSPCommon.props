@@ -17,6 +17,9 @@
     <!--If the reference path isn't set, use the default steam location, but this will be incorrect in lots of cases-->
     <KSPRoot Condition = "('$(KSPRoot)' == '') And ($([MSBuild]::IsOsPlatform('Windows')))">C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program</KSPRoot>
     <KSPRoot Condition = "('$(KSPRoot)' == '') And ($([MSBuild]::IsOsPlatform('OSX')))">$(HOME)/Library/Application Support/Steam/steamapps/common/Kerbal Space Program</KSPRoot>
+
+    <!-- default CKAN compatibility versions -->
+    <CKANCompatibleVersions Condition="('$(CKANCompatibleVersions)' == '')">1.12 1.11 1.10 1.9 1.8</CKANCompatibleVersions>
   </PropertyGroup>
 
   <!--Import a props.user file if it exists, so that KSPRoot can be set globally for the whole mod if desired-->
