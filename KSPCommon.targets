@@ -2,9 +2,8 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Condition=" '$(KSPCommonPropsImported)' == '' " Project ="KSPCommon.props" />
 
-  <!--MSBuild targets-->
-  <!-- this might not be the best way to specify these since there can only be one BeforeBuild or AfterBuild target-->
-  <Target Name="BeforeBuildScript">
+  <!-- Pre/post build targets -->
+  <Target Name="BeforeBuildScript" BeforeTargets="Build">
   </Target>
   <Target Name="PostBuildScript" AfterTargets="Build">
     <CallTarget Targets="CopyBinariesToRepo" />
@@ -13,7 +12,7 @@
   <!--Custom Targets-->
 
   <!-- this probably isn't the best way to do this, because it doesn't necessarily get run when switching build configs (debug/release)-->
-  <!-- make sure to always to a rebuild when switching configs and you should be fine -->
+  <!-- make sure to always do a rebuild when switching configs and you should be fine -->
   <Target Name="CopyBinariesToRepo">
     <ItemGroup>
       <BinariesToCopy Include="$(TargetDir)\*.*" />
