@@ -46,7 +46,7 @@ runs:
       if: inputs.dependency-msbuild-target != ''
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: msbuild /t:{{ inputs.dependency-msbuild-target }} /p:KSPRoot=${{ env.KSP_ROOT }} ${{ inputs.solution-file-path }}
+      run: msbuild /t:${{ inputs.dependency-msbuild-target }} /p:KSPRoot=${{ env.KSP_ROOT }} ${{ inputs.solution-file-path }}
 
     - name: Download KSP Libs
       shell: bash
