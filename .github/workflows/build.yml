@@ -14,6 +14,8 @@ on:
         default: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
       dependency-identifiers:
         type: string
+      msbuild-dependency-target:
+        type: string
       solution-file-path:
         type: string
     secrets:
@@ -44,6 +46,7 @@ jobs:
           ksp-zip-url: ${{ inputs.ksp-zip-url }}
           ksp-zip-password: ${{ secrets.ksp-zip-password }}
           dependency-identifiers: ${{ inputs.dependency-identifiers }}
+          msbuild-dependency-target: ${{ inputs.msbuild-dependency-target }}
           solution-file-path: ${{ inputs.solution-file-path }}
 
       - name: assemble-release

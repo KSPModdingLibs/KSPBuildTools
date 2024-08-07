@@ -3,7 +3,10 @@ name: install-dependencies
 inputs:
   dependency-identifiers:
     type: string
-    required: true
+  msbuild-dependency-target:
+    type: string
+  solution-file-path:
+    type: string
   ckan-compatible-versions:
     type: string
     default: |
@@ -51,10 +54,23 @@ runs:
         done
 
     - name: ckan-install-mod
+      if: inputs.dependency-identifiers != ''
       shell: bash
       run: |
         identifiers="${{ inputs.dependency-identifiers}}"
         ckan install --no-recommends --headless $identifiers
+
+    - name: Setup .NET
+      if: inputs.msbuild-dependency-target != ''
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 5.x
+
+    - name: msbuild-dependency-target
+      if: inputs.msbuild-dependency-target != ''
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: msbuild /t:${{ inputs.msbuild-dependency-target }} /p:KSPRoot=${{ env.KSP_ROOT }} ${{ inputs.solution-file-path }}
 
     - name: debug
       if: env.ACTIONS_STEP_DEBUG
