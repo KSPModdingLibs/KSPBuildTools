@@ -25,7 +25,7 @@
     <ItemGroup>
       <CKANCompatibleVersionItems Include="$(CKANCompatibleVersions)"/>
     </ItemGroup>
-    <Exec Command="ckan compat add --headless --gamedir $(KSPROOT) %(CKANCompatibleVersionItems)" Condition=" '$(CKANCompatibleVersions)' != '' "/>
+    <Exec Command="ckan compat add --headless --gamedir $(KSPROOT) %(CKANCompatibleVersionItems.Identity)" Condition=" '$(CKANCompatibleVersions)' != '' "/>
     <Exec Command="ckan install --no-recommends --headless --gamedir $(KSPROOT) %(Reference.CKANIdentifier)" Condition=" '%(Reference.CKANIdentifier)' != '' "/>
   </Target>
 </Project>
