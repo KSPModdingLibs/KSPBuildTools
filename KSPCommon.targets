@@ -23,9 +23,9 @@
   <!-- Use CKAN to install mods for any references tagged with a CKAN Identifier -->
   <Target Name="CKANInstall">
     <ItemGroup>
-      <CKANCompatibleVersionItems Include="$(CKANCompatibleVersions)"/>
+      <CKANCompatibleVersionItems Include="$(CKANCompatibleVersions.Split(' '))"/>
     </ItemGroup>
-    <Exec Command="ckan compat add --headless --gamedir $(KSPROOT) %(CKANCompatibleVersionItems)" Condition=" '$(CKANCompatibleVersions)' != '' "/>
+    <Exec Command="ckan compat add --headless --gamedir $(KSPROOT) %(CKANCompatibleVersionItems.Identity)" Condition=" '$(CKANCompatibleVersions)' != '' "/>
     <Exec Command="ckan install --no-recommends --headless --gamedir $(KSPROOT) %(Reference.CKANIdentifier)" Condition=" '%(Reference.CKANIdentifier)' != '' "/>
   </Target>
 </Project>
