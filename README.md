@@ -25,6 +25,7 @@ What it does:
 - Provides a standard way to copy output files that works on all operating systems
 - Sets the debug symbols format to portable so that you can [debug your mod](https://gist.github.com/gotmachine/d973adcb9ae413386291170fa346d043)
 - Sets up Visual Studio's debugging start actions so you can launch KSP directly from VS
+- Includes a target for installing dependencies with CKAN
 - Designed to be used by the [Build github workflow](#compile-action)
 
 To use it, import KSPCommon.targets in your .csproj file after it imports Microsoft.CSharp.targets.  You should remove ALL the existing assembly references to `System`, `Assembly-CSharp`, and `Unity`.
@@ -60,6 +61,12 @@ This property should be set to the root directory of your KSP install.  If it is
 - If `$(SolutionDir)KSP/buildID.txt` exists, then `$(SolutionDir)KSP` becomes the value of the `KSPRoot` property.  This could be a full copy of a KSP install, or just a symlink or junction to one.
 - If `KSPRoot` still isn't set, then it will default to `C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program` on Windows or `$(HOME)/Library/Application Support/Steam/steamapps/common/Kerbal Space Program` on OSX.
 
+#### `CKANCompatibleVersions`
+
+Default value: `1.12 1.11 1.10 1.9 1.8`
+
+Used by the `CKANInstall` target to set additional KSP versions to treat as compatible when installing dependencies.
+
 ### Customization
 
 Properties can be customized at several points:
@@ -67,6 +74,29 @@ Properties can be customized at several points:
 - Per-project properties should be set in the `.csproj` file before importing `KSPCommon.targets`
 - Per-mod properties for mods with more than one `.csproj` file should be set in `$(SolutionName).props` which will be imported by `KSPCommon.props`
 - Per-user properties should be set in `KSPCommon.props.user`.  This is usually where you want to set the path to your KSP installation.  You should have `.user` files added to your `.gitignore` file.
+
+### Referencing Dependencies
+
+Referencing assemblies (DLLs) from other mods should be done with a HintPath relative to `$(KSPRoot)`.  In addition, you can include the CKAN identifier of the mod to make it installable with the `CKANInstall` target.
+
+Example from [Shabby](https://github.com/KSPModdingLibs/Shabby/blob/e61ec5084b83c7e6941e62f43439cdd28fe867e6/Source/Shabby.csproj#L30):
+
+```
+    <Reference Include="0Harmony, Culture=neutral, PublicKeyToken=null">
+      <HintPath>$(KSPRoot)/GameData/000_Harmony/0Harmony.dll</HintPath>
+      <CKANIdentifier>Harmony2</CKANIdentifier>
+    </Reference>
+```
+
+### CKANInstall target
+
+This is a build target that you can invoke with msbuild to install all the dependencies of your mod using CKAN.  Each dependency should be marked with its `CKANIdentifier` as shown above.  Dependencies will be installed in `$(KSPRoot)`.  It may also be invoked from the [`install-dependencies`](#install-dependencies) action.
+
+Example usage:
+
+```
+msbuild -t:CKANInstall
+```
 
 # update-version.sh
 
@@ -143,7 +173,7 @@ For details:
 
 ## [create-release](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/workflows/create-release.yml)
 
-Builds and packages a new version of mod.
+Builds and packages a new version of mod.  You can reference this workflow in your own repository on `workflow-dispatch` and have the user type in a version number.  Then it does the rest!
 
 After running `update-version`, this workflow commits the version file changes and creates a new tag.  Then it runs `compile` and `assemble-release`.  And then finally it creates a draft github release with the packaged mod attached.
 
@@ -224,13 +254,18 @@ Inputs:
 
 ## [install-dependencies](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/install-dependencies/action.yml)
 
-Uses CKAN to install any dependent mods so that your code can be compiled against them.
+Uses CKAN to install any dependent mods so that your code can be compiled against them.  At least one of `dependency-identifiers` or `msbuild-dependency-target` should be specified, or this action won't do anything.
 
 Inputs:
 
 * `dependency-identifiers`
 
-  A list of mod identifiers to install
+  Optional.  A list of mod identifiers to install
+
+* `msbuild-dependency-target`
+
+  Optional.  The name of a msbuild target to build in order to install dependencies.
+  If your dependencies are specified in the .csproj file using `CKANIdentifier` and you're using the standard `KSPCommon.targets` file, then you should set this to `CKANInstall`.
 
 * `ckan-compatible-versions`
 
@@ -242,26 +277,41 @@ Inputs:
 
 ## [update-version](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/update-version/action.yml)
 
-Runs [update-version.sh](#update-version.sh) to replace version tokens in several text files.  TODO: support in-repo installs of KSPBuildTools.  NOTE: this section is out of date and needs to be updated
+Uses `yaclog` and `yaclog-ksp` to update a changelog and get release notes.  Then runs [update-version.sh](#update-version.sh) to replace version tokens in several text files.  All modifications will be staged to git but not committed.
 
 Inputs:
 
 * `version-string`
+
+  Required.  A version number in major.minor.patch.build form, or one of the special strings `--major` `--minor` `--patch` which will increment the version based on the most recent entry in the changelog file.
+
+* `changelog-input-file`
+
+  Optional.  Default: `CHANGELOG.md`
+
+  The name of a changelog file to use.  Should be formatted according to [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), with a `## Unreleased` section at the top for changes that are pending release.  `yaclog release` will be invoked which replaces the `## Unreleased` section with the version number and the date stamp.
+
+* `changelog-output-file`
+
+  Optional.  If specified, this action will run `yaclog-ksp` on the changelog input file which generates a changelog .cfg file suitable for [Kerbal Changelog](https://github.com/HebaruSan/KerbalChangelog/blob/master/README.md).  As such, `changelog-output-file` should be somewhere in your mod's artifact path so that it will be included when the mod is installed.
+
+* `release-notes-output-file`
+
+  Optional.  If specified, uses `yaclog` to save the most recent changelog info in markdown format to this file.  This can then be used by the [`assemble-release` action](#assemble-release).
+
 * `template-extension`
+
+  Corresponds to the input to `update-version.sh`. Defaults to `.versiontemplate`
+  
 * `files`
 
-  Correspond to the inputs to `update-version.sh`.
-
-* `git-stage`
-
-  Corresponds to the `-g` input to `update-version.sh`.
-
-* `delete-template-files`
-
-  Corresponds to the `-d` input to `update-version.sh`.
+  Corresponds to the input to `update-version.sh`.
 
 * `ksp-build-tools-root`
 
   Where to download `update-version.sh`.
 
-  
+Outputs:
+
+* The final version string is saved in `VERSION_STRING` as an environment variable and `outputs.version-string`
+* The path to the release notes file is saved in `RELEASE_NOTES_FILE` as an environment variable and `outputs-release-notes-output-file`
