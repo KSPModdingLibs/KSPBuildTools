@@ -39,6 +39,14 @@ Here's an example from [kOS](https://github.com/KSP-KOS/KOS/blob/22808556c090ebe
 
 Note that `KSPCommon.targets` makes use of `KSPCommon.props` for advanced users, which sets all the below properties but does not include the build targets.  If you only want the properties and not the targets, you can use `KSPCommon.props` instead.
 
+### Customization
+
+Properties can be customized at several points:
+
+- Per-project properties should be set in the `.csproj` file before importing `KSPCommon.targets`
+- Per-mod properties for mods with more than one `.csproj` file should be set in `$(SolutionName).props` which will be imported by `KSPCommon.props`
+- Per-user properties should be set in `KSPCommon.props.user`.  This is usually where you want to set the path to your KSP installation.  You should have `.user` files added to your `.gitignore` file.
+
 The following properties are exposed to be customized per mod, project, or user.  Properties that represent directories should *not* include a trailing slash.
 
 #### `RepoRootPath`
@@ -67,24 +75,17 @@ Default value: `1.12 1.11 1.10 1.9 1.8`
 
 Used by the `CKANInstall` target to set additional KSP versions to treat as compatible when installing dependencies.
 
-### Customization
-
-Properties can be customized at several points:
-
-- Per-project properties should be set in the `.csproj` file before importing `KSPCommon.targets`
-- Per-mod properties for mods with more than one `.csproj` file should be set in `$(SolutionName).props` which will be imported by `KSPCommon.props`
-- Per-user properties should be set in `KSPCommon.props.user`.  This is usually where you want to set the path to your KSP installation.  You should have `.user` files added to your `.gitignore` file.
-
 ### Referencing Dependencies
 
-Referencing assemblies (DLLs) from other mods should be done with a HintPath relative to `$(KSPRoot)`.  In addition, you can include the CKAN identifier of the mod to make it installable with the `CKANInstall` target.
+Referencing assemblies (DLLs) from other mods should be done with a HintPath relative to `$(KSPRoot)`.  These should be placed *after* importing `KSPCommon.targets` so that `$(KSPRoot)` will be defined.  In addition, you can include the CKAN identifier of the mod to make it installable with the `CKANInstall` target.
 
 Example from [Shabby](https://github.com/KSPModdingLibs/Shabby/blob/e61ec5084b83c7e6941e62f43439cdd28fe867e6/Source/Shabby.csproj#L30):
 
 ```
-    <Reference Include="0Harmony, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="0Harmony">
       <HintPath>$(KSPRoot)/GameData/000_Harmony/0Harmony.dll</HintPath>
       <CKANIdentifier>Harmony2</CKANIdentifier>
+      <Private>false</Private>
     </Reference>
 ```
 
