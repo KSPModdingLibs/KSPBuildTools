@@ -173,9 +173,11 @@ For details:
 
 ## [create-release](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/workflows/create-release.yml)
 
-Builds and packages a new version of mod.  You can reference this workflow in your own repository on `workflow-dispatch` and have the user type in a version number.  Then it does the rest!
+Builds and packages a new version of mod.  You can reference this workflow in your own repository on `workflow-dispatch` and have the developer type in a version number.  Then it does the rest!  
 
-After running `update-version`, this workflow commits the version file changes and creates a new tag.  Then it runs `compile` and `assemble-release`.  And then finally it creates a draft github release with the packaged mod attached.
+**Note that this action DOES commit files to git (updated changelogs, version files, etc) so if you're testing it out you should do it on a separate branch.**
+
+After running `update-version`, this workflow commits the changelog and version file changes and creates a new tag.  Then it runs `compile` and `assemble-release`.  And then finally it creates a draft github release with the packaged mod attached.
 
 For details:
 
@@ -277,7 +279,7 @@ Inputs:
 
 ## [update-version](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/update-version/action.yml)
 
-Uses `yaclog` and `yaclog-ksp` to update a changelog and get release notes.  Then runs [update-version.sh](#update-version.sh) to replace version tokens in several text files.  All modifications will be staged to git but not committed.
+Uses [yaclog](https://yaclog.readthedocs.io/en/latest/index.html) and [yaclog-ksp](https://pypi.org/project/yaclog-ksp/) to update a changelog and get release notes.  Then runs [update-version.sh](#update-version.sh) to replace version tokens in several text files.  All modifications will be staged to git but not committed.
 
 Inputs:
 
