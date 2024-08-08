@@ -22,7 +22,10 @@
 
   <!-- Use CKAN to install mods for any references tagged with a CKAN Identifier -->
   <Target Name="CKANInstall">
-    <Exec Command="ckan compat add --headless --gamedir $(KSPROOT) $(CKANCompatibleVersions)" Condition=" '$(CKANCompatibleVersions)' != '' "/>
+    <ItemGroup>
+      <CKANCompatibleVersionItems Include="$(CKANCompatibleVersions)"/>
+    </ItemGroup>
+    <Exec Command="ckan compat add --headless --gamedir $(KSPROOT) %(CKANCompatibleVersionItems)" Condition=" '$(CKANCompatibleVersions)' != '' "/>
     <Exec Command="ckan install --no-recommends --headless --gamedir $(KSPROOT) %(Reference.CKANIdentifier)" Condition=" '%(Reference.CKANIdentifier)' != '' "/>
   </Target>
 </Project>
