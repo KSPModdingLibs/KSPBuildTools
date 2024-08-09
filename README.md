@@ -50,7 +50,7 @@ Properties can be customized at several points:
 
 #### Per-User properties (not committed to version control)
 
-- Per-user per-project properties should be set in the `.props.user` file adjacent to each csproj file.  This is typically where you set the `$(ReferencePath)` pointing to your KSP install (this can be set from inside VS!)
+- Per-user per-project properties should be set in the `.csproj.user` file adjacent to each csproj file.  This is typically where you set the `$(ReferencePath)` pointing to your KSP install (this can be set from inside VS!)
 - Per-user properties for the whole mod should be set in `$(SolutionName).props.user`.  If you have multiple projects in the solution, you can set `$(KSPRoot)` in here so that you don't have to set it for each project.
 
 You should have `.user` files added to your `.gitignore` file.
