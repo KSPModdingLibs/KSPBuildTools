@@ -43,9 +43,17 @@ Note that `KSPCommon.targets` makes use of `KSPCommon.props` for advanced users,
 
 Properties can be customized at several points:
 
+#### Canonical properties (committed to version control)
+
 - Per-project properties should be set in the `.csproj` file before importing `KSPCommon.targets`
-- Per-mod properties for mods with more than one `.csproj` file should be set in `$(SolutionName).props` which will be imported by `KSPCommon.props`
-- Per-user properties should be set in `KSPCommon.props.user`.  This is usually where you want to set the path to your KSP installation.  You should have `.user` files added to your `.gitignore` file.
+- Properties for the whole mod should be set in `$(SolutionName).props` which will be imported by `KSPCommon.props`
+
+#### Per-User properties (not committed to version control)
+
+- Per-user per-project properties should be set in the `.props.user` file adjacent to each csproj file.  This is typically where you set the `$(ReferencePath)` pointing to your KSP install (this can be set from inside VS!)
+- Per-user properties for the whole mod should be set in `$(SolutionName).props.user`.  If you have multiple projects in the solution, you can set `$(KSPRoot)` in here so that you don't have to set it for each project.
+
+You should have `.user` files added to your `.gitignore` file.
 
 The following properties are exposed to be customized per mod, project, or user.  Properties that represent directories should *not* include a trailing slash.
 
