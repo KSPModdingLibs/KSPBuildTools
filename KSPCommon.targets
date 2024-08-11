@@ -28,4 +28,18 @@
     <Exec Command="ckan compat add --headless --gamedir $(KSPROOT) %(CKANCompatibleVersionItems.Identity)" Condition=" '$(CKANCompatibleVersions)' != '' "/>
     <Exec Command="ckan install --no-recommends --headless --gamedir $(KSPROOT) %(Reference.CKANIdentifier)" Condition=" '%(Reference.CKANIdentifier)' != '' "/>
   </Target>
+
+  <!--  For use like so: `msbuild -t:"GetRequiredExternalTools" -verbosity:minimal -nologo`, then pipe into your destination of choice -->
+  <Target Name="GetRequiredExternalTools">
+    <ItemGroup>
+      <CKANIdentifiers Include="%(Reference.CKANIdentifier)"/>
+      <RequiredExternalTool Include="CKAN" Condition="@(CKANIdentifiers) != ''"/>
+    </ItemGroup>
+
+    <Message Text="@(RequiredExternalTool)" Importance="high"/>
+  </Target>
+
+
+
+
 </Project>
