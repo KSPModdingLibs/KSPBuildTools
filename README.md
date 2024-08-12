@@ -6,7 +6,6 @@ To use it, either:
 
   `git submodule add https://github.com/KSPModdingLibs/KSPBuildTools.git`
 
-* For the github actions and workflows, you can directly reference this repository from your own workflows.  [This repo](https://github.com/KSPModdingLibs/.github/tree/main/workflow-templates) contains workflow templates that you can start from.
 * Or you can copy the files you want into your own repository and use them however you like - though that will make it harder to get updates
 
 Most things in this repository will work best if you have a directory in your repository that corresponds to the directory that the user will install into GameData (or several such directories).  Placing these into a GameData folder in your repository is recommended but not required.

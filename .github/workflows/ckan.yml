@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: install-dependencies
-        uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@main
+        uses: ./KSPBuildTools/.github/actions/install-dependencies
         with:
           dependency-identifiers: |
             ModuleManager

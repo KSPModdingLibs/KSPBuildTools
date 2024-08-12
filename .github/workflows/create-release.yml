@@ -51,7 +51,7 @@ jobs:
           submodules: true
 
       - name: update-version
-        uses: KSPModdingLibs/KSPBuildTools/.github/actions/update-version@main
+        uses: ./KSPBuildTools/.github/actions/update-version
         with:
           version-string: ${{ inputs.version-string }}
           template-extension: ${{ inputs.version-template-extension }}
@@ -68,7 +68,7 @@ jobs:
           git tag -f -a "$VERSION_STRING" -m "$VERSION_STRING"
 
       - name: compile
-        uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@main
+        uses: ./KSPBuildTools/.github/actions/compile
         with:
           build-configuration: ${{ inputs.build-configuration }}
           ksp-zip-url: ${{ inputs.ksp-zip-url }}
@@ -77,7 +77,7 @@ jobs:
 
       - name: assemble-release
         id: assemble-release
-        uses: KSPModdingLibs/KSPBuildTools/.github/actions/assemble-release@main
+        uses: ./KSPBuildTools/.github/actions/assemble-release
         with:
           artifacts: ${{ inputs.artifacts }}
           output-file-name: ${{ github.event.repository.name }}-${{ env.VERSION_STRING }}

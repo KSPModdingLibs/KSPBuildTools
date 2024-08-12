@@ -13,6 +13,6 @@ on:
 
 jobs:
   build:
-    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/build.yml@main
+    uses: ./KSPBuildTools/.github/workflows/build.yml
     with:
       ksp-zip-url: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
