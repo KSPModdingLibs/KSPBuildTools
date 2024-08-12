@@ -1,5 +1,25 @@
 name: "Setup CKAN"
 
+inputs:
+  ckan-compatible-versions:
+    type: string
+    default: |
+      1.12
+      1.11
+      1.10
+      1.9
+      1.8
+  ckan-filters:
+    type: string
+    default: |
+      .dds
+      .png
+      .bmp
+      .mu 
+      .mbm
+      .jpg
+      .wav
+
 runs:
   using: composite
   steps:
@@ -26,10 +46,3 @@ runs:
         for filter in $filters; do
           ckan filter add "$filter"
         done
-
-    - name: ckan-install-mod
-      if: inputs.dependency-identifiers != ''
-      shell: bash
-      run: |
-        identifiers="${{ inputs.dependency-identifiers}}"
-        ckan install --no-recommends --headless $identifiers
