@@ -30,7 +30,7 @@ runs:
 
     - name: Set REQUIRED_TOOLS environment variable
       shell: bash
-      run: echo "REQUIRED_TOOLS=${{ inputs.required-tools }}" >> $GITHUB_ENV"
+      run: echo "REQUIRED_TOOLS=${{ inputs.required-tools }}" >> "$GITHUB_ENV"
 
     - name: Get Required Tools From MSBuild
       if: inputs.msbuild-required-tools-target != ''
