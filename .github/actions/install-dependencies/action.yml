@@ -40,7 +40,7 @@ runs:
     - name: ckan-setup-instance
       shell: bash
       run: |
-        ckan instance fake --set-default KSP ${{ env.KSP_ROOT }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
+        ckan instance fake --set-default KSP ${{ env.KSPRoot }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
         ckan update
         
         versions="${{ inputs.ckan-compatible-versions }}"
@@ -70,13 +70,13 @@ runs:
       if: inputs.msbuild-dependency-target != ''
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: msbuild /t:${{ inputs.msbuild-dependency-target }} /p:KSPRoot=${{ env.KSP_ROOT }} ${{ inputs.solution-file-path }}
+      run: msbuild /t:${{ inputs.msbuild-dependency-target }} ${{ inputs.solution-file-path }}
 
     - name: debug
       if: env.ACTIONS_STEP_DEBUG
       shell: bash
       run: |
-        ls -R ${{ env.KSP_ROOT }}/GameData
+        ls -R ${{ env.KSPRoot }}/GameData
         echo "${{ toJson(env) }}"
         echo "${{ toJson(github )}}"
         echo "${{ toJson(job) }}"

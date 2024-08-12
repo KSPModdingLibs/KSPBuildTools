@@ -47,7 +47,7 @@ runs:
       shell: bash
       run: |
         wget --quiet ${{ inputs.ksp-zip-url }} -O /tmp/ksp.zip
-        unzip -q -P "${{ inputs.ksp-zip-password }}" /tmp/ksp.zip -d "${{ env.KSP_ROOT }}"
+        unzip -q -P "${{ inputs.ksp-zip-password }}" /tmp/ksp.zip -d "${{ env.KSPRoot }}"
 
     - name: Restore NuGet Packages
       shell: bash
@@ -57,5 +57,5 @@ runs:
     - name: Build Mod Solution
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: msbuild /p:Configuration=${{ inputs.build-configuration }} /p:KSPRoot=${{ env.KSP_ROOT }} /p:ManagedRelativePath=KSP_x64_Data/Managed ${{ inputs.solution-file-path }}
+      run: msbuild /p:Configuration=${{ inputs.build-configuration }} /p:ManagedRelativePath=KSP_x64_Data/Managed ${{ inputs.solution-file-path }}
 
