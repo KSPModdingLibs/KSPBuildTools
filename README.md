@@ -236,7 +236,7 @@ Compiles C# code using `msbuild` into a mod assembly.  This action will install 
 
 Environment:
 
-* `KSP_ROOT`
+* `KSPRoot`
 
   The path to use as the root of a KSP install.  Dependencies will be downloaded here and the `ksp-zip-url` libraries will be extracted here.  This is generally set by the `build` or `assemble-release` workflows.
 

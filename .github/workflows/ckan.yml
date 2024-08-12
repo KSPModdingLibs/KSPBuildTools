@@ -11,7 +11,7 @@ defaults:
     shell: bash
 
 env:
-  KSP_ROOT: /tmp/ksp
+  KSPRoot: /tmp/ksp
 
 jobs:
   ckan:
