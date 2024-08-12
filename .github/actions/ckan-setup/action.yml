@@ -1,0 +1,35 @@
+name: "Setup CKAN"
+
+runs:
+  using: composite
+  steps:
+    - name: ckan-install
+      shell: bash
+      run: |
+        sudo curl -sS -o /usr/share/keyrings/ksp-ckan-archive-keyring.gpg https://raw.githubusercontent.com/KSP-CKAN/CKAN/master/debian/ksp-ckan.gpg
+        echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/ksp-ckan-archive-keyring.gpg] https://ksp-ckan.s3-us-west-2.amazonaws.com/deb stable main' | sudo tee /etc/apt/sources.list.d/ksp-ckan.list > /dev/null
+        sudo apt update
+        sudo apt install ckan
+
+    - name: ckan-setup-instance
+      shell: bash
+      run: |
+        ckan instance fake --set-default KSP ${{ env.KSPRoot }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
+        ckan update
+
+        versions="${{ inputs.ckan-compatible-versions }}"
+        for version in $versions; do
+          ckan compat add "$version"
+        done 
+
+        filters="${{ inputs.ckan-filters }}"
+        for filter in $filters; do
+          ckan filter add "$filter"
+        done
+
+    - name: ckan-install-mod
+      if: inputs.dependency-identifiers != ''
+      shell: bash
+      run: |
+        identifiers="${{ inputs.dependency-identifiers}}"
+        ckan install --no-recommends --headless $identifiers
