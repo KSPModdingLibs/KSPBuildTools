@@ -35,7 +35,7 @@ runs:
     - name: Get Required Tools From MSBuild
       if: inputs.msbuild-required-tools-target != ''
       shell: bash
-      run: echo "REQUIRED_TOOLS=\"$REQUIRED_TOOLS;$(msbuild ${{ inputs.solution-file-path }} -t:${{ inputs.msbuild-required-tools-target }} -verbosity:minimal -nologo)\"" >> "$GITHUB_ENV"
+      run: echo "REQUIRED_TOOLS=\"$REQUIRED_TOOLS;$(dotnet msbuild ${{ inputs.solution-file-path }} -t:${{ inputs.msbuild-required-tools-target }} -verbosity:minimal -nologo)\"" >> "$GITHUB_ENV"
 
     - uses: ./.github/actions/ckan-setup.yml
       if: contains(env.REQUIRED_TOOLS, 'CKAN')
@@ -44,7 +44,7 @@ runs:
       if: inputs.msbuild-dependency-target != ''
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: msbuild -t:${{ inputs.msbuild-dependency-target }} ${{ inputs.solution-file-path }}
+      run: dotnet msbuild -t:${{ inputs.msbuild-dependency-target }} ${{ inputs.solution-file-path }}
 
     - name: debug
       if: env.ACTIONS_STEP_DEBUG

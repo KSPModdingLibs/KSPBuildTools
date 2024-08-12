@@ -57,5 +57,5 @@ runs:
     - name: Build Mod Solution
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: msbuild /p:Configuration=${{ inputs.build-configuration }} /p:ManagedRelativePath=KSP_x64_Data/Managed ${{ inputs.solution-file-path }}
+      run: dotnet msbuild /p:Configuration=${{ inputs.build-configuration }} /p:ManagedRelativePath=KSP_x64_Data/Managed ${{ inputs.solution-file-path }}
 
