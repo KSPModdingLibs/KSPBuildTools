@@ -51,7 +51,8 @@ runs:
         for version in $VERSIONS; do
         ckan compat add "$version"
         done
-      env: VERSIONS=${{ inputs.ckan-compatible-versions }}
+      env:
+        - VERSIONS: inputs.ckan-compatible-versions
 
     - name: Setup CKAN Filters
       shell: bash
@@ -60,10 +61,12 @@ runs:
         for filter in $FILTERS; do
         ckan filter add "$filter"
         done
-      env: FILTERS=${{ inputs.ckan-filters }}
+      env:
+        - FILTERS: inputs.ckan-filters
 
     - name: Install CKAN Mods
       shell: bash
       if: inputs.dependency-identifiers != ''
       run: ckan install --no-recommends --headless $IDENTIFIERS
-      env: IDENTIFIERS=${{ inputs.dependency-identifiers }}
+      env:
+        - IDENTIFIERS: inputs.dependency-identifiers
