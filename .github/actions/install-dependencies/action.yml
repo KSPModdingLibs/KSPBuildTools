@@ -37,7 +37,7 @@ runs:
       shell: bash
       run: echo "REQUIRED_TOOLS=\"$REQUIRED_TOOLS;$(dotnet msbuild ${{ inputs.solution-file-path }} -t:${{ inputs.msbuild-required-tools-target }} -verbosity:minimal -nologo)\"" >> "$GITHUB_ENV"
 
-    - uses: ./.github/actions/ckan-setup.yml
+    - uses: KSPModdingLibs/KSPBuildTools/.github/actions/ckan-setup@${{github.action_ref}}
       if: contains(env.REQUIRED_TOOLS, 'CKAN')
 
     - name: msbuild-dependency-target

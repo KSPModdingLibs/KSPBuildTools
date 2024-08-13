@@ -37,7 +37,7 @@ runs:
 
     - name: Install Dependencies
       if: inputs.dependency-identifiers != '' || inputs.msbuild-dependency-target != ''
-      uses: ./KSPBuildTools/.github/actions/install-dependencies
+      uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@${{github.action_ref}}
       with:
         dependency-identifiers: ${{ inputs.dependency-identifiers }}
         msbuild-dependency-target: ${{ inputs.msbuild-dependency-target }}
