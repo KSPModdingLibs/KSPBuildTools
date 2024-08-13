@@ -51,7 +51,7 @@ runs:
         for version in $VERSIONS; do
         ckan compat add "$version"
         done
-      env: VERSIONS=${{ inputs.ckan-compatible-versions }
+      env: VERSIONS=${{ inputs.ckan-compatible-versions }}
 
     - name: Setup CKAN Filters
       shell: bash
