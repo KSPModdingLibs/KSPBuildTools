@@ -15,7 +15,7 @@ runs:
       if: inputs.msbuild-dependency-target != ''
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: dotnet msbuild -t:${{ inputs.msbuild-dependency-target }} ${{ inputs.solution-file-path }}
+      run: msbuild -t:${{ inputs.msbuild-dependency-target }} ${{ inputs.solution-file-path }}
 
     - name: Debug
       if: env.ACTIONS_STEP_DEBUG
