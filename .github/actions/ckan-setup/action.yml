@@ -2,6 +2,7 @@ name: "Setup CKAN"
 
 inputs:
   ckan-compatible-versions:
+    description: KSP versions to mark as compatible
     type: string
     default: |
       1.12
@@ -9,7 +10,9 @@ inputs:
       1.10
       1.9
       1.8
+
   ckan-filters:
+    description: CKAN filters to enable
     type: string
     default: |
       .dds
@@ -20,10 +23,14 @@ inputs:
       .jpg
       .wav
 
+  dependency-identifiers:
+    description: CKAN mod identifiers to install
+    type: string
+
 runs:
   using: composite
   steps:
-    - name: ckan-install
+    - name: Install CKAN
       shell: bash
       run: |
         sudo curl -sS -o /usr/share/keyrings/ksp-ckan-archive-keyring.gpg https://raw.githubusercontent.com/KSP-CKAN/CKAN/master/debian/ksp-ckan.gpg
@@ -31,18 +38,32 @@ runs:
         sudo apt update
         sudo apt install ckan
 
-    - name: ckan-setup-instance
+    - name: Setup CKAN Instance
       shell: bash
       run: |
         ckan instance fake --set-default KSP ${{ env.KSPRoot }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
         ckan update
 
-        versions="${{ inputs.ckan-compatible-versions }}"
-        for version in $versions; do
-          ckan compat add "$version"
-        done 
-
-        filters="${{ inputs.ckan-filters }}"
-        for filter in $filters; do
-          ckan filter add "$filter"
+    - name: Setup CKAN Compatible Versions
+      shell: bash
+      if: inputs.ckan-compatible-versions != ''
+      run: |
+        for version in $VERSIONS; do
+        ckan compat add "$version"
         done
+      env: VERSIONS=${{ inputs.ckan-compatible-versions }
+
+    - name: Setup CKAN Filters
+      shell: bash
+      if: inputs.ckan-filters != ''
+      run: |
+        for filter in $FILTERS; do
+        ckan filter add "$filter"
+        done
+      env: FILTERS=${{ inputs.ckan-filters }}
+
+    - name: Install CKAN Mods
+      shell: bash
+      if: inputs.dependency-identifiers != ''
+      run: ckan install --no-recommends --headless $IDENTIFIERS
+      env: IDENTIFIERS=${{ inputs.dependency-identifiers }}

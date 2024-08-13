@@ -30,7 +30,7 @@ jobs:
           submodules: true
     
       - name: update version
-        uses: ./KSPBuildTools/.github/actions/update-version
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/update-version@main
         with:
           version-string: ${{inputs.version-string}}
           template-extension: ${{inputs.template-extension}}

@@ -22,13 +22,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: setup-inputs
-        uses: ./KSPBuildTools/.github/actions/mask-input
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/mask-input@main
         with:
           input-name: spacedock-password
           output-variable-name: SPACEDOCK_PASSWORD
       
       - name: publish
-        uses: ./KSPBuildTools/.github/actions/publish-to-spacedock
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/publish-to-spacedock@main
         with:
           spacedock-username: ${{ env.SPACEDOCK_USERNAME }}
           spacedock-password: ${{ env.SPACEDOCK_PASSWORD }}

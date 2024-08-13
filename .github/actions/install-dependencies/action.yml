@@ -1,52 +1,23 @@
-name: Install Dependencies
+name: Install Dependencies via MSBuild
+description: Install dependencies using MSBuild
 
 inputs:
-  msbuild-required-tools-target:
-    description: msbuild target to call to get a list of required external tools
-    default: GetRequiredExternalTools
-  required-tools:
-    description: external tools to install, in addition to the ones returned by `msbuild-required-tools-target`
   msbuild-dependency-target:
+    default: "CKANInstall"
     description: msbuild target to install dependencies
   solution-file-path:
     description: path to the .sln file
-  ckan-compatible-versions:
-    description: KSP versions for CKAN to be compatible with
-    default: |
-      1.12
-      1.11
-      1.10
-      1.9
-      1.8
 
 runs:
   using: composite
   steps:
-    - name: Setup .NET
-      if: inputs.msbuild-dependency-target != '' && inputs.msbuild-required-tools-target != ''
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 5.x
-
-    - name: Set REQUIRED_TOOLS environment variable
-      shell: bash
-      run: echo "REQUIRED_TOOLS=${{ inputs.required-tools }}" >> "$GITHUB_ENV"
-
-    - name: Get Required Tools From MSBuild
-      if: inputs.msbuild-required-tools-target != ''
-      shell: bash
-      run: echo "REQUIRED_TOOLS=\"$REQUIRED_TOOLS;$(dotnet msbuild ${{ inputs.solution-file-path }} -t:${{ inputs.msbuild-required-tools-target }} -verbosity:minimal -nologo)\"" >> "$GITHUB_ENV"
-
-    - uses: KSPModdingLibs/KSPBuildTools/.github/actions/ckan-setup@${{github.action_ref}}
-      if: contains(env.REQUIRED_TOOLS, 'CKAN')
-
-    - name: msbuild-dependency-target
+    - name: Run MSBuild Dependency Target
       if: inputs.msbuild-dependency-target != ''
       shell: bash
       working-directory: ${{ github.workspace }}
       run: dotnet msbuild -t:${{ inputs.msbuild-dependency-target }} ${{ inputs.solution-file-path }}
 
-    - name: debug
+    - name: Debug
       if: env.ACTIONS_STEP_DEBUG
       shell: bash
       run: |
