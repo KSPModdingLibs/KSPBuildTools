@@ -43,7 +43,7 @@ runs:
       run: |
         mkdir -p $HOME/ckan
         echo '$HOME/ckan' >> $GITHUB_PATH
-        wget https://github.com/KSP-CKAN/CKAN/releases/${{ env.CKAN_VERSION_SLUG }}/download/ckan.exe
+        curl https://github.com/KSP-CKAN/CKAN/releases/${{ env.CKAN_VERSION_SLUG }}/download/ckan.exe -o ${{ env.PWD }}/ckan.exe
         sudo echo 'mono ${{ env.PWD }}/ckan.exe $@' > $HOME/ckan/ckan
         sudo chmod +x $HOME/ckan/ckan
       env:
@@ -53,7 +53,7 @@ runs:
       shell: bash
       run: |
         ${{ runner.debug && 'echo "$PATH"' }}
-        ${{ runner.debug && 'ls $HOME/ckan' }}
+        ${{ runner.debug && 'ls -la $HOME/ckan' }}
         ckan instance fake --set-default KSP ${{ env.KSPRoot }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
         ckan update
 
