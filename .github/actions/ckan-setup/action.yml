@@ -50,7 +50,7 @@ runs:
         ${{ runner.debug && 'cat $CKAN_DIR/ckan' }}
       env:
         CKAN_VERSION_SLUG: ${{ inputs.ckan-version == 'latest' && 'latest' || 'tags/${{ inputs.ckan-version}}'}}
-        CKAN_DIR: '${{ env.HOME }}/ckan'
+        CKAN_DIR: '${{ github.workspace }}/ckan'
 
     - name: Setup CKAN Instance
       shell: bash
