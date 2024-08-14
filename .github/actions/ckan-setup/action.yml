@@ -45,7 +45,7 @@ runs:
         sudo echo 'mono ${{ env.PWD }}/ckan.exe $@' > $HOME/tools/ckan
         sudo chmod +x $HOME/tools/ckan
         echo '$HOME/tools' >> $GITHUB_PATH
-      with:
+      env:
         CKAN_VERSION_SLUG: ${{ inputs.ckan-version == 'latest' && '/releases/latest' || '/releases/tags/${{ inputs.ckan-version}}'}}
 
     - name: Setup CKAN Instance
