@@ -41,13 +41,16 @@ runs:
     - name: Install CKAN
       shell: bash
       run: |
-        mkdir -p $HOME/ckan
-        echo '$HOME/ckan' >> $GITHUB_PATH
-        curl https://github.com/KSP-CKAN/CKAN/releases/${{ env.CKAN_VERSION_SLUG }}/download/ckan.exe -o ${{ env.PWD }}/ckan.exe
-        sudo echo 'mono ${{ env.PWD }}/ckan.exe $@' > $HOME/ckan/ckan
-        sudo chmod +x $HOME/ckan/ckan
+        set -u
+        mkdir -p "$CKAN_DIR"
+        echo "$CKAN_DIR" >> "$GITHUB_PATH"
+        curl https://github.com/KSP-CKAN/CKAN/releases/${{ env.CKAN_VERSION_SLUG }}/download/ckan.exe -o "$CKAN_DIR/ckan.exe"
+        sudo echo "mono $CKAN_DIR/ckan.exe \$@" > "$CKAN_DIR/ckan"
+        sudo chmod +x "$CKAN_DIR/ckan"
+        ${{ runner.debug && 'cat $CKAN_DIR/ckan' }}
       env:
         CKAN_VERSION_SLUG: ${{ inputs.ckan-version == 'latest' && 'latest' || 'tags/${{ inputs.ckan-version}}'}}
+        CKAN_DIR: '${{ env.HOME }}/ckan'
 
     - name: Setup CKAN Instance
       shell: bash
