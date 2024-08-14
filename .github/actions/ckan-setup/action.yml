@@ -44,12 +44,12 @@ runs:
         set -u
         mkdir -p "$CKAN_DIR"
         echo "$CKAN_DIR" >> "$GITHUB_PATH"
-        curl -L https://github.com/KSP-CKAN/CKAN/releases/${{ env.CKAN_VERSION_SLUG }}/download/ckan.exe -o "$CKAN_DIR/ckan.exe"
+        curl -L https://github.com/KSP-CKAN/CKAN/releases/${{ env.CKAN_VERSION_SLUG }}/ckan.exe -o "$CKAN_DIR/ckan.exe"
         sudo echo "mono $CKAN_DIR/ckan.exe \$@" > "$CKAN_DIR/ckan"
         sudo chmod +x "$CKAN_DIR/ckan"
         ${{ runner.debug && 'cat $CKAN_DIR/ckan' }}
       env:
-        CKAN_VERSION_SLUG: ${{ format(inputs.ckan-version == 'latest' && '{0}' || 'tags/v{0}', inputs.ckan-version)}}
+        CKAN_VERSION_SLUG: ${{ format(inputs.ckan-version == 'latest' && 'latest/download' || 'download/v{0}', inputs.ckan-version)}}
         CKAN_DIR: '${{ github.workspace }}/ckan'
 
     - name: Setup CKAN Instance
