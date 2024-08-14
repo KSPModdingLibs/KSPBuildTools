@@ -56,7 +56,7 @@ runs:
       shell: bash
       run: |
         ${{ runner.debug && 'echo "$PATH"' }}
-        ${{ runner.debug && 'ls -la $HOME/ckan' }}
+        ${{ runner.debug && 'ls -la $GITHUB_WORKSPACE/ckan' }}
         ckan instance fake --set-default KSP ${{ env.KSPRoot }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
         ckan update
 
