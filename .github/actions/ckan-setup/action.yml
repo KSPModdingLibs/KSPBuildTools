@@ -52,8 +52,8 @@ runs:
     - name: Setup CKAN Instance
       shell: bash
       run: |
-        ${{ env.RUNNER_DEBUG && 'echo "$PATH"' }}
-        ${{ env.RUNNER_DEBUG && 'ls $HOME/ckan' }}
+        ${{ runner.debug && 'echo "$PATH"' }}
+        ${{ runner.debug && 'ls $HOME/ckan' }}
         ckan instance fake --set-default KSP ${{ env.KSPRoot }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
         ckan update
 
