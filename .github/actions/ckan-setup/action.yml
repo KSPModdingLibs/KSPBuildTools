@@ -41,11 +41,11 @@ runs:
     - name: Install CKAN
       shell: bash
       run: |
-        wget https://github.com/KSP-CKAN/CKAN/releases/${{ env.CKAN_VERSION_SLUG }}/download/ckan.exe
         mkdir -p $HOME/ckan
         echo '$HOME/ckan' >> $GITHUB_PATH
-        sudo echo 'mono ${{ env.PWD }}/ckan.exe $@' > $HOME/tools/ckan
-        sudo chmod +x $HOME/tools/ckan
+        wget https://github.com/KSP-CKAN/CKAN/releases/${{ env.CKAN_VERSION_SLUG }}/download/ckan.exe
+        sudo echo 'mono ${{ env.PWD }}/ckan.exe $@' > $HOME/ckan/ckan
+        sudo chmod +x $HOME/ckan/ckan
       env:
         CKAN_VERSION_SLUG: ${{ inputs.ckan-version == 'latest' && 'latest' || 'tags/${{ inputs.ckan-version}}'}}
 
