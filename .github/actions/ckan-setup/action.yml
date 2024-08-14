@@ -30,15 +30,13 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Install CKAN APT Sources
+    - name: Install CKAN
       shell: bash
       run: |
         sudo curl -sS -o /usr/share/keyrings/ksp-ckan-archive-keyring.gpg https://raw.githubusercontent.com/KSP-CKAN/CKAN/master/debian/ksp-ckan.gpg
         echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/ksp-ckan-archive-keyring.gpg] https://ksp-ckan.s3-us-west-2.amazonaws.com/deb stable main' | sudo tee /etc/apt/sources.list.d/ksp-ckan.list > /dev/null
-
-    - uses: awalsh128/cache-apt-pkgs-action@v1
-      with:
-        packages: ckan
+        sudo apt update
+        sudo apt install ckan
 
     - name: Setup CKAN Instance
       shell: bash
