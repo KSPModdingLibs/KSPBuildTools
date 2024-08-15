@@ -20,12 +20,161 @@
     <Copy SourceFiles="@(BinariesToCopy)" DestinationFolder="$(RepoRootPath)\$(BinariesOutputRelativePath)" />
   </Target>
 
+	
   <!-- Use CKAN to install mods for any references tagged with a CKAN Identifier -->
-  <Target Name="CKANInstall">
-    <ItemGroup>
-      <CKANCompatibleVersionItems Include="$(CKANCompatibleVersions.Split(' '))"/>
-    </ItemGroup>
-    <Exec Command="ckan compat add --headless --gamedir $(KSPROOT) %(CKANCompatibleVersionItems.Identity)" Condition=" '$(CKANCompatibleVersions)' != '' "/>
-    <Exec Command="ckan install --no-recommends --headless --gamedir $(KSPROOT) %(Reference.CKANIdentifier)" Condition=" '%(Reference.CKANIdentifier)' != '' "/>
-  </Target>
+	<Target Name="CKANInstall"
+			Inputs="@(Reference);@(CKANMod)"
+			Outputs="$(KSPRoot)\ckan-installed-mods.cache">
+
+		<!-- CKAN compatible Versions Setup -->
+		<ItemGroup>
+			<CKANCompatibleVersionItems Include="$(CKANCompatibleVersions.Split(' '))"/>
+		</ItemGroup>
+		
+		<!-- Logging Files -->
+		<PropertyGroup>
+			<LogFileName>ckan-auto-installed-mods.log</LogFileName>
+			<CacheFileName>ckan-auto-installed-mods.cache</CacheFileName>
+		</PropertyGroup>
+		
+		<!-- Enclose KSPRoot in double quotes if necessary -->
+		<PropertyGroup>
+			<QuotedKSPRoot>$([System.String]::Copy('$(KSPRoot)').Trim('"'))</QuotedKSPRoot>
+			<QuotedKSPRoot>"$(QuotedKSPRoot)"</QuotedKSPRoot>
+		</PropertyGroup>
+		
+		<!-- Escape \ to become \\ as CKAN is unhappy otherwise-->
+		<PropertyGroup>
+			<QuotedEscapedKSPRoot>$([System.String]::Copy('$(QuotedKSPRoot)').Replace("\", "\\"))</QuotedEscapedKSPRoot>
+		</PropertyGroup>
+		
+		<!-- Create a list of CKAN identifiers from the current references and CKANMod group -->
+		<ItemGroup>
+			<CurrentReferences Include="%(Reference.CKANIdentifier)" Condition=" '%(Reference.CKANIdentifier)' != '' " />
+			<CurrentCKANMods Include="@(CKANMod)" />
+		</ItemGroup>
+
+		<!-- Combine both lists to get the full list of mods that should be installed -->
+		<ItemGroup>
+			<AllCurrentMods Include="@(CurrentReferences);@(CurrentCKANMods)" />
+		</ItemGroup>
+
+		<!-- Read the cache file (if it exists) into a list -->
+		<ReadLinesFromFile File="$(KSPRoot)\$(CacheFileName)" Condition="Exists('$(KSPRoot)\$(CacheFileName)')">
+			<Output TaskParameter="Lines" ItemName="CachedMods" />
+		</ReadLinesFromFile>
+
+		<!-- Determine mods to install (in current references but not in cache) -->
+		<ItemGroup>
+			<ModsToInstall Include="@(AllCurrentMods)" Exclude="@(CachedMods)" />
+		</ItemGroup>
+
+		<GetMetadataTask MyItemGroup="@(ModsToInstall)">
+			<Output TaskParameter="MetadataString" PropertyName="ModsToInstallString"/>
+		</GetMetadataTask>
+
+		<!-- Determine mods to remove (in cache but not in current references) -->
+		<ItemGroup>
+			<ModsToRemove Include="@(CachedMods)" Exclude="@(AllCurrentMods)" />
+		</ItemGroup>
+
+		<GetMetadataTask MyItemGroup="@(ModsToRemove)">
+			<Output TaskParameter="MetadataString" PropertyName="ModsToRemoveString"/>
+		</GetMetadataTask>
+
+		<!-- Prepare the commands to be written to the file -->
+		<PropertyGroup>
+			<CKANAddCompVersCommand>ckan compat add --headless --gamedir $(QuotedEscapedKSPRoot) %(CKANCompatibleVersionItems.Identity)</CKANAddCompVersCommand>
+			<CKANInstallCommand>ckan install --no-recommends --headless --gamedir $(QuotedEscapedKSPRoot) $(ModsToInstallString)</CKANInstallCommand>
+			<CKANRemoveCommand>ckan remove --headless --gamedir $(QuotedEscapedKSPRoot) $(ModsToRemoveString)</CKANRemoveCommand>
+		</PropertyGroup>
+		
+		<WriteLinesToFile File="$(KSPRoot)\$(LogFileName)" Lines="$([System.DateTime]::Now.ToString()) KSPBuiltTools : CKANAutoInstall Output" />
+
+			<!-- TODO: Compat adding is limited, not currently capable of regressing if removed in .csproj -->
+		<Exec Command="$(CKANAddCompVersCommand)"
+			  Condition="'$(CKANCompatibleVersions)' != '' And (@(ModsToInstall) != '' Or @(ModsToRemove) != '')">
+			<Output TaskParameter="ExitCode" PropertyName="CKANAddCompatExitCode" />
+			<Output TaskParameter="ConsoleOutput" PropertyName="CKANAddCompatOutput" />
+		</Exec>
+
+		<WriteLinesToFile File="$(KSPRoot)\$(LogFileName)" Condition="'$(CKANCompatibleVersions)' != '' And (@(ModsToInstall) != '' Or @(ModsToRemove) != '')" Lines="Running CKAN Add Compat with" />
+		<WriteLinesToFile File="$(KSPRoot)\$(LogFileName)" Condition="'$(CKANCompatibleVersions)' != '' And (@(ModsToInstall) != '' Or @(ModsToRemove) != '')" Lines="$(CKANAddCompVersCommand)" />
+		<WriteLinesToFile File="$(KSPRoot)\$(LogFileName)" Condition="'$(CKANCompatibleVersions)' != '' And (@(ModsToInstall) != '' Or @(ModsToRemove) != '')" Lines="$(CKANAddCompatOutput)" />
+		<WriteLinesToFile File="$(KSPRoot)\$(LogFileName)" Condition="'$(CKANCompatibleVersions)' != '' And (@(ModsToInstall) != '' Or @(ModsToRemove) != '')" Lines="Process finished with Exit Code $(CKANAddCompatExitCode)" />
+
+		<Exec Command="$(CKANInstallCommand)" Condition=" @(ModsToInstall) != '' " ConsoleToMsBuild="true">
+			<Output TaskParameter="ExitCode" PropertyName="CKANInstallExitCode" />
+			<Output TaskParameter="ConsoleOutput" PropertyName="CKANInstallOutput" />
+		</Exec>
+
+		<WriteLinesToFile File="$(KSPRoot)\$(LogFileName)" Condition=" @(ModsToInstall) != '' " Lines="Running CKAN Install with" />
+		<WriteLinesToFile File="$(KSPRoot)\$(LogFileName)" Condition=" @(ModsToInstall) != '' " Lines="$(CKANInstallCommand)" />
+		<WriteLinesToFile File="$(KSPRoot)\$(LogFileName)" Condition=" @(ModsToInstall) != '' " Lines="$(CKANInstallOutput)" />
+		<WriteLinesToFile File="$(KSPRoot)\$(LogFileName)" Condition=" @(ModsToInstall) != '' " Lines="Process finished with Exit Code $(CKANInstallExitCode)" />
+		
+		<Exec Command="$(CKANRemoveCommand)" Condition=" @(ModsToRemove) != '' " ConsoleToMsBuild="true">
+			<Output TaskParameter="ExitCode" PropertyName="CKANRemoveExitCode" />
+			<Output TaskParameter="ConsoleOutput" PropertyName="CKANRemoveOutput" />
+		</Exec>
+
+		<WriteLinesToFile File="$(KSPRoot)\$(LogFileName)" Condition=" @(ModsToRemove) != '' " Lines="Running CKAN Remove with" />
+		<WriteLinesToFile File="$(KSPRoot)\$(LogFileName)" Condition=" @(ModsToRemove) != '' " Lines="$(CKANRemoveCommand)" />
+		<WriteLinesToFile File="$(KSPRoot)\$(LogFileName)" Condition=" @(ModsToRemove) != '' " Lines="$(CKANRemoveOutput)" />
+		<WriteLinesToFile File="$(KSPRoot)\$(LogFileName)" Condition=" @(ModsToRemove) != '' " Lines="Process finished with Exit Code $(CKANRemoveExitCode)" />
+
+		<WriteLinesToFile File="$(KSPRoot)\$(LogFileName)" Condition=" @(ModsToRemove) == '' And @(ModsToInstall) == ''" Lines="No Mod Changes Detected" />
+
+
+		<!-- Write the updated list of installed mods to the cache file -->
+		<WriteLinesToFile File="$(KSPROOT)\$(CacheFileName)" Lines="@(AllCurrentMods)" Overwrite="true" />
+
+		<!-- DEBUGGING, the ugly way-->
+<!--	
+		<WriteLinesToFile File="$(KSPROOT)\ckan-autoinstall-debug.txt" Lines="$(KSPRoot)" Overwrite="true"/>
+		<WriteLinesToFile File="$(KSPROOT)\ckan-autoinstall-debug.txt" Lines="$(QuotedKSPRoot)" />
+		<WriteLinesToFile File="$(KSPROOT)\ckan-autoinstall-debug.txt" Lines=": CurrentReferences :" />
+		<WriteLinesToFile File="$(KSPROOT)\ckan-autoinstall-debug.txt" Lines="@(CurrentReferences)" />
+		<WriteLinesToFile File="$(KSPROOT)\ckan-autoinstall-debug.txt" Lines=": CurrentCKANMods :" />
+		<WriteLinesToFile File="$(KSPROOT)\ckan-autoinstall-debug.txt" Lines="@(CurrentCKANMods)" />
+		<WriteLinesToFile File="$(KSPROOT)\ckan-autoinstall-debug.txt" Lines=": AllCurrentMods :" />
+		<WriteLinesToFile File="$(KSPROOT)\ckan-autoinstall-debug.txt" Lines="@(AllCurrentMods)" />
+		<WriteLinesToFile File="$(KSPROOT)\ckan-autoinstall-debug.txt" Lines=": CachedMods :" />
+		<WriteLinesToFile File="$(KSPROOT)\ckan-autoinstall-debug.txt" Lines="@(CachedMods)" />
+		<WriteLinesToFile File="$(KSPROOT)\ckan-autoinstall-debug.txt" Lines=": ModsToInstall :" />
+		<WriteLinesToFile File="$(KSPROOT)\ckan-autoinstall-debug.txt" Lines="@(ModsToInstall)" />
+		<WriteLinesToFile File="$(KSPROOT)\ckan-autoinstall-debug.txt" Lines=": ModsToRemove :" />
+		<WriteLinesToFile File="$(KSPROOT)\ckan-autoinstall-debug.txt" Lines="@(ModsToRemove)" />
+-->
+	</Target>
+
+	
+	<!-- This exists to pull all the metadata into a normal list, therefore allowing @(name, ' ') to be used in the ckan command -->
+	<!-- With this we avoid executing ckan separately for every mod that should be added or removed -->
+	<!-- Thanks to https://stackoverflow.com/questions/17461175/how-to-get-all-the-metadata-keys-for-any-itemgroup-item , modified -->
+	<!-- This feels overcomplicated, but is the best solution I could find. -->
+	<UsingTask
+  TaskName="GetMetadataTask"
+  TaskFactory="CodeTaskFactory"
+  AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
+		<ParameterGroup>
+			<MyItemGroup ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+			<MetadataString Output="true" />
+		</ParameterGroup>
+		<Task>
+			<Using Namespace="System"/>
+			<Code Type="Fragment" Language="cs">
+				<![CDATA[
+          StringBuilder command = new StringBuilder();
+          foreach (ITaskItem item in MyItemGroup )
+          {
+              command.Append(item);
+			  command.Append(" ");
+          }
+          MetadataString = command.ToString();
+      ]]>
+			</Code>
+		</Task>
+	</UsingTask>
+
 </Project>
