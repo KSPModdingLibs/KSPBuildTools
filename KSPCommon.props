@@ -10,6 +10,9 @@
     <RepoRootPath Condition = " '$(RepoRootPath)' == '' ">$(SolutionDir.TrimEnd([System.IO.Path]::DirectorySeparatorChar))</RepoRootPath>
     <BinariesOutputRelativePath Condition = " '$(BinariesOutputRelativePath)' == '' ">GameData\$(SolutionName)</BinariesOutputRelativePath>
 
+    <!-- Default KSPRoot to the "KSP_ROOT" environment variable if it exists -->
+    <KSPRoot Condition=" '$(KSPRoot)' == '' And '$(KSP_ROOT)' != ''">$(KSP_ROOT)</KSPRoot>
+
     <!-- look for a KSP installation in SolutionDir -->
     <KSPRoot Condition = " '$(KSPRoot)' == '' And Exists('$(SolutionDir)KSP/buildID.txt')">$(SolutionDir)KSP</KSPRoot>
 

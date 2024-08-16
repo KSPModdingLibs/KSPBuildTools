@@ -24,7 +24,7 @@ on:
         required: false
 
 env:
-  KSPRoot: /tmp/ksp
+  KSP_ROOT: /tmp/ksp
   RELEASE_STAGING: /tmp/release
 
 defaults:

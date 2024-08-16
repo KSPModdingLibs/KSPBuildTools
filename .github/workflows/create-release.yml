@@ -33,7 +33,7 @@ on:
         required: false
 
 env:
-  KSPRoot: /tmp/ksp
+  KSP_ROOT: /tmp/ksp
   RELEASE_STAGING: /tmp/release
   VERSION_STRING: ${{ inputs.version-string }} #note this may be modified by update-version if it is one of the special tokens
 
