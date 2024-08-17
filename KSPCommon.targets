@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Condition=" '$(KSPCommonPropsImported)' == '' " Project ="KSPCommon.props" />
+  <Import Condition=" '$(KSPCommonPropsImported)' == '' " Project="KSPCommon.props"/>
 
   <!-- Pre/post build targets -->
   <Target Name="BeforeBuildScript" BeforeTargets="Build">
   </Target>
   <Target Name="PostBuildScript" AfterTargets="Build">
-    <CallTarget Targets="CopyBinariesToRepo" />
+    <CallTarget Targets="CopyBinariesToRepo"/>
   </Target>
 
   <!--Custom Targets-->
@@ -15,31 +15,49 @@
   <!-- make sure to always do a rebuild when switching configs and you should be fine -->
   <Target Name="CopyBinariesToRepo">
     <ItemGroup>
-      <BinariesToCopy Include="$(TargetDir)\*.*" />
+      <BinariesToCopy Include="$(TargetDir)\*.*"/>
     </ItemGroup>
-    <Copy SourceFiles="@(BinariesToCopy)" DestinationFolder="$(RepoRootPath)\$(BinariesOutputRelativePath)" />
+    <Copy SourceFiles="@(BinariesToCopy)" DestinationFolder="$(RepoRootPath)\$(BinariesOutputRelativePath)"/>
   </Target>
 
   <!-- Use CKAN to install mods for any references tagged with a CKAN Identifier -->
-  <Target Name="CKANInstall">
+  <Target Name="CKANInstall" BeforeTargets="_GenerateRestoreProjectSpec;Restore">
     <ItemGroup>
-      <CKANCompatibleVersionItems Include="$(CKANCompatibleVersions.Split(' '))"/>
+      <_CKANCompatibleVersionItems Include="$(CKANCompatibleVersions.Split(' '))"/>
+      <_CKANDependency Include="%(Reference.CKANIdentifier)"/>
+      <_CKANDependency Include="@(CKANDependency)"/>
     </ItemGroup>
-    <Exec Command="ckan compat add --headless --gamedir $(KSPROOT) %(CKANCompatibleVersionItems.Identity)" Condition=" '$(CKANCompatibleVersions)' != '' "/>
-    <Exec Command="ckan install --no-recommends --headless --gamedir $(KSPROOT) %(Reference.CKANIdentifier)" Condition=" '%(Reference.CKANIdentifier)' != '' "/>
+
+    <PropertyGroup>
+      <_TempStagingFolder>"$([System.IO.Path]::Combine($([System.IO.Path]::GetTempPath()), $([System.IO.Path]::GetRandomFileName())))"</_TempStagingFolder>
+      <_CKANCommandFile>$(_TempStagingFolder)</_CKANCommandFile>
+      <_CKANDependencyList>"@(_CKANDependency, ' ')"</_CKANDependencyList>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <!-- Not using `ckan compat set` because as of 2024-08-16 it is still only available in the dev branch -->
+      <_CKANCommands Include="compat add --gamedir $(KSPROOT) %(_CKANCompatibleVersionItems.Identity)"
+                    Condition=" '$(CKANCompatibleVersions)' != '' "/>
+
+      <_CKANCommands Include="install --no-recommends --gamedir $(KSPROOT) $(_CKANDependencyList)"
+                    Condition=" '$(_CKANDependencyList)' != '' "/>
+    </ItemGroup>
+
+    <Message Text="Writing CKAN commands to $(_CKANCommandFile)"/>
+    <Message Text="@(_CKANCommands, '\n')" Importance="Low"/>
+    <WriteLinesToFile File="$(_CKANCommandFile)" Lines="@(_CKANCommands)"/>
+    <Exec Command="cat '$(_CKANCommandFile)' | ckan prompt --headless"/>
+    <RemoveDir Directories="$(_TempStagingFolder)"/>
   </Target>
 
   <!--  For use like so: `msbuild -t:"GetRequiredExternalTools" -verbosity:minimal -nologo`, then pipe into your destination of choice -->
   <Target Name="GetRequiredExternalTools">
     <ItemGroup>
-      <CKANIdentifiers Include="%(Reference.CKANIdentifier)"/>
-      <RequiredExternalTool Include="CKAN" Condition="@(CKANIdentifiers) != ''"/>
+      <CKANDependencyList Include="%(Reference.CKANIdentifier)"/>
+      <RequiredExternalTool Include="CKAN" Condition="@(CKANDependencyList) != ''"/>
     </ItemGroup>
-
     <Message Text="@(RequiredExternalTool)" Importance="high"/>
   </Target>
-
-
 
 
 </Project>
