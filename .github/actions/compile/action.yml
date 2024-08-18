@@ -22,7 +22,7 @@ runs:
 
     - name: dump contexts
       shell: bash
-      if: env.ACTIONS_STEP_DEBUG
+      if: runner.debug
       run: |
         echo "${{ toJson(env) }}"
         echo "${{ toJson(github )}}"
@@ -44,9 +44,12 @@ runs:
     - name: Restore Mod Solution
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: msbuild restore ${{ inputs.solution-file-path }}
+      run: msbuild -t:restore ${{ inputs.solution-file-path }} ${{ runner.debug && '-d:debug' }}
 
     - name: Build Mod Solution
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: msbuild /p:Configuration=${{ inputs.build-configuration }} /p:ManagedRelativePath=KSP_x64_Data/Managed ${{ inputs.solution-file-path }}
+      run: |
+        msbuild -p:Configuration=${{ inputs.build-configuration }} \
+        -p:ManagedRelativePath=KSP_x64_Data/Managed ${{ inputs.solution-file-path }} \
+        ${{ runner.debug && '-d:debug' }}
