@@ -2,11 +2,13 @@ name: "Setup CKAN"
 
 inputs:
   ckan-version:
-    description: CKAN version to install. set to 'latest' to always install the most recent version
-    default: 'latest'
+    description: | 
+      CKAN tag to install. set to an empty string to always install the most recent version. 
+      See https://github.com/KSP-CKAN/CKAN/tags for a list of available tags
+    default: ''
 
-  ckan-url:
-    description: URL of the CKAN github repository to pull from. Defaults to the mainline version
+  ckan-repo:
+    description: [HOST/]OWNER/REPO of the CKAN github repository to pull from. Defaults to the mainline version
     default: 'https://github.com/KSP-CKAN/CKAN'
 
   ckan-compatible-versions:
@@ -41,16 +43,9 @@ runs:
     - name: Install CKAN
       shell: bash
       run: |
-        set -u
-        mkdir -p "$CKAN_DIR"
-        echo "$CKAN_DIR" >> "$GITHUB_PATH"
-        curl -L https://github.com/KSP-CKAN/CKAN/releases/${{ env.CKAN_VERSION_SLUG }}/ckan.exe -o "$CKAN_DIR/ckan.exe"
-        sudo echo "mono $CKAN_DIR/ckan.exe \$@" > "$CKAN_DIR/ckan"
-        sudo chmod +x "$CKAN_DIR/ckan"
-        ${{ runner.debug && 'cat $CKAN_DIR/ckan' }}
-      env:
-        CKAN_VERSION_SLUG: ${{ format(inputs.ckan-version == 'latest' && 'latest/download' || 'download/v{0}', inputs.ckan-version)}}
-        CKAN_DIR: '${{ github.workspace }}/ckan'
+        gh release download ${{ inputs.ckan-version }} --repo ${{ ckan-repo }} --pattern 'ckan*.deb' -O ckan.deb
+        sudo apt install ckan.deb
+        ckan version
 
     - name: Setup CKAN Instance
       shell: bash
