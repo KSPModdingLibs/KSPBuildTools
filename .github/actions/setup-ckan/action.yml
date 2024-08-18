@@ -44,6 +44,7 @@ runs:
       shell: bash
       run: |
         gh release download ${{ inputs.ckan-version }} --repo ${{ inputs.ckan-repo }} --pattern 'ckan*.deb' -O ckan.deb
+        ${{ vars.act-local && 'sudo apt update' }}
         sudo apt install ./ckan.deb
         ckan version
       env:

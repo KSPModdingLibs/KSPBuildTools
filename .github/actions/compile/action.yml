@@ -33,7 +33,7 @@ runs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 5.x
+        dotnet-version: 7.x
 
     - name: Download KSP Libs
       shell: bash
@@ -44,12 +44,12 @@ runs:
     - name: Restore Mod Solution
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: msbuild -t:restore ${{ inputs.solution-file-path }} ${{ runner.debug && '-d:debug' }}
+      run: dotnet restore ${{ inputs.solution-file-path }} ${{ runner.debug && '-d:debug' }}
 
     - name: Build Mod Solution
       shell: bash
       working-directory: ${{ github.workspace }}
       run: |
-        msbuild -p:Configuration=${{ inputs.build-configuration }} \
+        dotnet msbuild -p:Configuration=${{ inputs.build-configuration }} \
         -p:ManagedRelativePath=KSP_x64_Data/Managed ${{ inputs.solution-file-path }} \
         ${{ runner.debug && '-d:debug' }}
