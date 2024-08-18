@@ -43,7 +43,7 @@ runs:
     - name: Install CKAN
       shell: bash
       run: |
-        gh release download ${{ inputs.ckan-version }} --repo ${{ ckan-repo }} --pattern 'ckan*.deb' -O ckan.deb
+        gh release download ${{ inputs.ckan-version }} --repo ${{ inputs.ckan-repo }} --pattern 'ckan*.deb' -O ckan.deb
         sudo apt install ckan.deb
         ckan version
 
