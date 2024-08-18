@@ -2,13 +2,13 @@ name: "Setup CKAN"
 
 inputs:
   ckan-version:
-    description: | 
+    description: >
       CKAN tag to install. set to an empty string to always install the most recent version. 
       See https://github.com/KSP-CKAN/CKAN/tags for a list of available tags
     default: ''
 
   ckan-repo:
-    description: [HOST/]OWNER/REPO of the CKAN github repository to pull from. Defaults to the mainline version
+    description: '[HOST/]OWNER/REPO of the CKAN github repository to pull from. Defaults to the mainline version'
     default: 'https://github.com/KSP-CKAN/CKAN'
 
   ckan-compatible-versions:
