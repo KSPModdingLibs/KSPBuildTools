@@ -29,8 +29,7 @@
     </ItemGroup>
 
     <PropertyGroup>
-      <_TempStagingFolder>"$([System.IO.Path]::Combine($([System.IO.Path]::GetTempPath()), $([System.IO.Path]::GetRandomFileName())))"</_TempStagingFolder>
-      <_CKANCommandFile>$(_TempStagingFolder)</_CKANCommandFile>
+      <_CKANCommandFile>$([System.IO.Path]::Combine($([System.IO.Path]::GetTempPath()), $([System.IO.Path]::GetRandomFileName())))</_CKANCommandFile>
       <_CKANDependencyList>"@(_CKANDependency, ' ')"</_CKANDependencyList>
     </PropertyGroup>
 
