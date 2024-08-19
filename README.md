@@ -90,21 +90,31 @@ Referencing assemblies (DLLs) from other mods should be done with a HintPath rel
 Example from [Shabby](https://github.com/KSPModdingLibs/Shabby/blob/e61ec5084b83c7e6941e62f43439cdd28fe867e6/Source/Shabby.csproj#L30):
 
 ```
+<ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>$(KSPRoot)/GameData/000_Harmony/0Harmony.dll</HintPath>
       <CKANIdentifier>Harmony2</CKANIdentifier>
       <Private>false</Private>
     </Reference>
+</ItemGroup>
 ```
 
 ### Installing Dependencies
 
-Dependencies are installed by the CKANInstall target, which automatically runs when the dotnet project is restored. Each dependency should be marked with its `CKANIdentifier` as shown above. Dependencies will be installed in `$(KSPRoot)`.
+Dependencies are installed by the CKANInstall target, which automatically runs when the dotnet project is restored. Dependencies will be installed in `$(KSPRoot)`.
 
 Example usage:
 
 ```
 msbuild -t:restore
+```
+
+Dependencies that get referenced in your assembly should be marked with its `CKANIdentifier` as shown above. If you want to install a dependency without referencing it, you can list it like so:
+
+```xml
+<ItemGroup>
+    <CKANDependency Include="ModuleManager"/>
+</ItemGroup>
 ```
 
 # update-version.sh
