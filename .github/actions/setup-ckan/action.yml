@@ -1,4 +1,5 @@
 name: "Setup CKAN"
+description: Installs CKAN and sets up a KSP installation
 
 inputs:
   ckan-version:
@@ -8,12 +9,11 @@ inputs:
     default: ''
 
   ckan-repo:
-    description: '[HOST/]OWNER/REPO of the CKAN github repository to pull from. Defaults to the mainline version'
+    description: HOST/OWNER/REPO of the CKAN github repository to pull from. Defaults to the mainline version
     default: 'https://github.com/KSP-CKAN/CKAN'
 
   ckan-compatible-versions:
-    description: KSP versions to mark as compatible
-    type: string
+    description: KSP versions to mark as compatible. newline-separated.
     default: |
       1.12
       1.11
@@ -22,8 +22,7 @@ inputs:
       1.8
 
   ckan-filters:
-    description: CKAN filters to enable
-    type: string
+    description: CKAN filters to enable. newline-separated
     default: |
       .dds
       .png
@@ -32,10 +31,6 @@ inputs:
       .mbm
       .jpg
       .wav
-
-  dependency-identifiers:
-    description: CKAN mod identifiers to install
-    type: string
 
 runs:
   using: composite
@@ -55,7 +50,7 @@ runs:
       run: |
         ${{ runner.debug && 'echo "$PATH"' }}
         ${{ runner.debug && 'ls -la $GITHUB_WORKSPACE/ckan' }}
-        ckan instance fake --set-default KSP ${{ env.KSPRoot }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
+        ckan instance fake --set-default KSP ${{ env.KSP_ROOT || '/tmp/ksp' }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
         ckan update
 
     - name: Setup CKAN Compatible Versions

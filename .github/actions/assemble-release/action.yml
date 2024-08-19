@@ -6,7 +6,7 @@ inputs:
     default: GameData LICENSE* README* CHANGELOG*
   output-file-name:
     type: string
-    default: ${{ github.event.repository.name }}
+    default: ${{ github.event.repository.name || 'release'}}
 
 outputs:
   artifact-id:
@@ -20,10 +20,10 @@ runs:
     - name: Assemble Release
       shell: bash
       run: |
-        mkdir ${{ env.RELEASE_STAGING }}
+        mkdir ${{ env.RELEASE_STAGING  || '/tmp/release'  }}
         # TODO: delete pdb files?  run some kind of assembly script?
-        cp -r -v ${{ inputs.artifacts }} ${{ env.RELEASE_STAGING }} || :
-        cd ${{ env.RELEASE_STAGING }}
+        cp -r -v ${{ inputs.artifacts }} ${{ env.RELEASE_STAGING  || '/tmp/release' }} || :
+        cd ${{ env.RELEASE_STAGING  || '/tmp/release' }}
         zip -r ${{ github.workspace }}/${{ inputs.output-file-name }}.zip .
         ARTIFACT_FILENAME="${{ inputs.output-file-name }}"
         echo "ARTIFACT_FILENAME=$ARTIFACT_FILENAME" >> $GITHUB_ENV
@@ -32,6 +32,6 @@ runs:
       id: upload-artifact
       uses: actions/upload-artifact@v4
       with:
-        path: ${{ env.RELEASE_STAGING }}
+        path: ${{ env.RELEASE_STAGING || '/tmp/release'}}
         name: ${{ inputs.output-file-name }}
         if-no-files-found: error

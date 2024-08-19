@@ -10,7 +10,7 @@ To use it, either:
 
 Most things in this repository will work best if you have a directory in your repository that corresponds to the directory that the user will install into GameData (or several such directories).  Placing these into a GameData folder in your repository is recommended but not required.
 
-While working on your mod, I recommend that you create a junction or symlink from the game's GameData folder pointing at the content folder in your repository.  That way any changes you make will be immediately available and you don't need to deploy or copy anything.  If you'd like to see other workflows supported please ask!
+While working on your mod, I recommend that you create a junction or symlink from the game's GameData folder pointing at the content folder in your repository.  That way any changes you make will be immediately available, and you don't need to deploy or copy anything.  If you'd like to see other workflows supported please ask!
 
 # KSPCommon.targets
 
@@ -27,11 +27,11 @@ What it does:
 - Includes a target for installing dependencies with CKAN
 - Designed to be used by the [Build github workflow](#compile-action)
 
-To use it, import KSPCommon.targets in your .csproj file after it imports Microsoft.CSharp.targets.  You should remove ALL the existing assembly references to `System`, `Assembly-CSharp`, and `Unity`.
+To use it, import `KSPCommon.targets` in your .csproj file after it imports Microsoft.CSharp.targets.  You should remove ALL the existing assembly references to `System`, `Assembly-CSharp`, and `Unity`.
 
 ```xml
-<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-<Import Project="$(SolutionDir)KSPBuildTools\KSPCommon.targets" />
+<Import Project="$(MSBuildToolsPath)/Microsoft.CSharp.targets" />
+<Import Project="$(SolutionDir)KSPBuildTools/KSPCommon.targets" />
 ```
 
 Here's an example from [kOS](https://github.com/KSP-KOS/KOS/blob/22808556c090ebe63cb96452e43bb224cff4c27e/src/kOS/kOS.csproj#L260).
@@ -52,7 +52,7 @@ Properties can be customized at several points:
 - Per-user per-project properties should be set in the `.csproj.user` file adjacent to each csproj file.  This is typically where you set the `$(ReferencePath)` pointing to your KSP install (this can be set from inside VS!)
 - Per-user properties for the whole mod should be set in `$(SolutionName).props.user`.  If you have multiple projects in the solution, you can set `$(KSPRoot)` in here so that you don't have to set it for each project.
 
-You should have `.user` files added to your `.gitignore` file.
+You should have `*.user` files added to your `.gitignore` file.
 
 The following properties are exposed to be customized per mod, project, or user.  Properties that represent directories should *not* include a trailing slash.
 
@@ -72,9 +72,10 @@ This is the directory where compiled binaries should be copied.  This is relativ
 
 This property should be set to the root directory of your KSP install.  If it is not specified, then `KSPCommon.props` will try some defaults:
 
-- If `$(ReferencePath)` is set, then that becomes the value of the `KSPRoot` property.  This is the best way for individual developers to specify where their KSP install is, because the `$(ReferencePath)` is typically stored in the `.csproj.user` file that is not committed to version control.  NOTE: `.csproj.user` files are imported by `Microsoft.CSharp.targets` which is why it's important for `KSPCommon.targets` to be placed *afterwards*.  If it comes first, you won't be able to use `$(ReferencePath)`.
+- If `$(ReferencePath)` is set, then that becomes the value of the `KSPRoot` property.  This is the best way for individual developers to specify where their KSP install is, because the `$(ReferencePath)` is typically stored in the `.csproj.user` file that is not committed to version control.  NOTE: `.csproj.user` files are imported by `Microsoft.CSharp.targets` which is why it's important for `KSPCommon.targets` to be placed *afterward*.  If it comes first, you won't be able to use `$(ReferencePath)`.
+- If the `KSP_ROOT` environment variable is set, then that becomes the value of the `KSPRoot` property. This is used in CI scripts like the compile action below.
 - If `$(SolutionDir)KSP/buildID.txt` exists, then `$(SolutionDir)KSP` becomes the value of the `KSPRoot` property.  This could be a full copy of a KSP install, or just a symlink or junction to one.
-- If `KSPRoot` still isn't set, then it will default to `C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program` on Windows or `$(HOME)/Library/Application Support/Steam/steamapps/common/Kerbal Space Program` on OSX.
+- If `KSPRoot` still isn't set, then it will default to `C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program` on Windows or `$(HOME)/Library/Application Support/Steam/steamapps/common/Kerbal Space Program` on macOS.
 
 #### `CKANCompatibleVersions`
 
@@ -84,7 +85,7 @@ Used by the `CKANInstall` target to set additional KSP versions to treat as comp
 
 ### Referencing Dependencies
 
-Referencing assemblies (DLLs) from other mods should be done with a HintPath relative to `$(KSPRoot)`.  These should be placed *after* importing `KSPCommon.targets` so that `$(KSPRoot)` will be defined.  In addition, you can include the CKAN identifier of the mod to make it installable with the `CKANInstall` target.
+Referencing assemblies (DLLs) from other mods should be done with a HintPath relative to `$(KSPRoot)`.  These should be placed *after* importing `KSPCommon.targets` so that `$(KSPRoot)` will be defined.  In addition, you can include the CKAN identifier of the mod to make it installable when restoring the project. Dependencies should have the private flag set to false, unless they are intended to be included alongside the main dll.
 
 Example from [Shabby](https://github.com/KSPModdingLibs/Shabby/blob/e61ec5084b83c7e6941e62f43439cdd28fe867e6/Source/Shabby.csproj#L30):
 
@@ -96,14 +97,14 @@ Example from [Shabby](https://github.com/KSPModdingLibs/Shabby/blob/e61ec5084b83
     </Reference>
 ```
 
-### CKANInstall target
+### Installing Dependencies
 
-This is a build target that you can invoke with msbuild to install all the dependencies of your mod using CKAN.  Each dependency should be marked with its `CKANIdentifier` as shown above.  Dependencies will be installed in `$(KSPRoot)`.  It may also be invoked from the [`install-dependencies`](#install-dependencies) action.
+Dependencies are installed by the CKANInstall target, which automatically runs when the dotnet project is restored. Each dependency should be marked with its `CKANIdentifier` as shown above. Dependencies will be installed in `$(KSPRoot)`.
 
 Example usage:
 
 ```
-msbuild -t:CKANInstall
+msbuild -t:restore
 ```
 
 # update-version.sh
@@ -211,7 +212,7 @@ Env:
 
 * `RELEASE_STAGING`
 
-  The artifact files will be copied to this directory before being packaged in the zip file.  This becomes the input for `upload-artifact`
+  The artifact files will be copied to this directory before being packaged in the zip file.  This becomes the input for `upload-artifact`. If not set, `/tmp/release` is used instead
 
 Inputs:
 
@@ -231,13 +232,14 @@ Outputs:
 
 ## [compile](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/compile/action.yml)
 
-Compiles C# code using `msbuild` into a mod assembly.  This action will install any dependent mods and restore NuGet packages.
+Compiles C# code using `msbuild` into a mod assembly. This action will install any dependent mods declared in the csproj file and restore NuGet packages.
+
 
 Environment:
 
-* `KSPRoot`
+* `KSP_ROOT`
 
-  The path to use as the root of a KSP install.  Dependencies will be downloaded here and the `ksp-zip-url` libraries will be extracted here.  This is generally set by the `build` or `assemble-release` workflows.
+  The path to use as the root of a KSP install.  Dependencies will be downloaded here and the `ksp-zip-url` libraries will be extracted here.  This is generally set by the `build` or `assemble-release` workflows. If not set, `/tmp/ksp` is used instead.
 
 Inputs:
 
@@ -261,29 +263,29 @@ Inputs:
 
 * All inputs from [`install-dependencies`](#install-dependencies)
 
+## [setup-ckan](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/setup-ckan/action.yml)
 
-## [install-dependencies](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/install-dependencies/action.yml)
+Installs [CKAN](https://github.com/KSP-CKAN/CKAN) and sets up a KSP installation
 
-Uses CKAN to install any dependent mods so that your code can be compiled against them.  At least one of `dependency-identifiers` or `msbuild-dependency-target` should be specified, or this action won't do anything.
+Environment:
+
+* `KSP_ROOT`
+
+  The path to use as the root of a KSP instance for CKAN to set-up. If not set, `/tmp/ksp` is used instead.
 
 Inputs:
 
-* `dependency-identifiers`
+* `ckan-version`
 
-  Optional.  A list of mod identifiers to install
-
-* `msbuild-dependency-target`
-
-  Optional.  The name of a msbuild target to build in order to install dependencies.
-  If your dependencies are specified in the .csproj file using `CKANIdentifier` and you're using the standard `KSPCommon.targets` file, then you should set this to `CKANInstall`.
+  CKAN tag to install. set to an empty string to always install the most recent version. See [https://github.com/KSP-CKAN/CKAN/tags](the CKAN releases page) for a list of available tags
 
 * `ckan-compatible-versions`
 
-  A list of versions for ckan to treat as compatible when installing the dependencies.  Defaults to `1.12 1.11 1.10 1.9 1.8`
+  KSP versions to mark as compatible. Newline-separated. Defaults to versions from 1.8 to 1.12
 
-* `ckan-filters`
-
-  A list of install filters (files that should *NOT* be installed).  Defaults to `.dds .png .bmp .mu .mbm .jpg .wav` so that large content files can be skipped - only DLL files should be necessary for compilation.
+* `ckan-filters` 
+  
+  File globs to ignore when installing mods. Newline-separated. Defaults to most large asset files included in mods. Set to an empty string if you need the entire mod installed for bundling.
 
 ## [update-version](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/update-version/action.yml)
 
@@ -307,7 +309,7 @@ Inputs:
 
 * `release-notes-output-file`
 
-  Optional.  If specified, uses `yaclog` to save the most recent changelog info in markdown format to this file.  This can then be used by the [`assemble-release` action](#assemble-release).
+  Optional.  If specified, uses `yaclog` to save the most recent changelog info in Markdown format to this file.  This can then be used by the [`assemble-release` action](#assemble-release).
 
 * `template-extension`
 
