@@ -7,12 +7,6 @@ inputs:
   output-file-name:
     description: Output artifact name
     default: ${{ github.event.repository.name || 'release'}}
-  release-staging:
-    description: >
-      Path to staging directory. Defaults to the `RELEASE_STAGING` environment environment variable, 
-      or '/tmp/release' if that is not set.
-    default: ${{ env.RELEASE_STAGING || '/tmp/release' }}
-
 
 outputs:
   artifact-id:
