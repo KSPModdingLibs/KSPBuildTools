@@ -12,30 +12,22 @@ on:
   workflow_dispatch:
   workflow_call:
 
-env:
-  KSP_ROOT: /tmp/ksp
-  RELEASE_STAGING: /tmp/release
-  
 jobs:
   build:
     steps:
       - name: Checkout Mod Repo
         uses: actions/checkout@v4
         with:
-            submodules: true
-
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 5.x
+          submodules: true
 
       # Install CKAN and set up an instance. If CKAN is not needed, remove this step
-      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/ckan-setup@main
+      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/setup-ckan@main
+
+      # Install any CKAN dependencies not in the msbuild file. If there are none, remove this step
+      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-ckan-mods@main
         with:
-          # Any additional CKAN identifiers not listed in the csproj can be listed here. space-separated 
-          dependency-identifiers: "" 
-      
-      # Install any CKAN dependencies listed in the msbuild file. If there are none, remove this step
-      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@main
+          # Any additional CKAN identifiers not listed in the csproj can be listed here. space-separated
+          dependency-identifiers: ""
 
       # Compile the mod. 
       - uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@main

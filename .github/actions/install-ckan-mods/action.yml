@@ -1,0 +1,14 @@
+name: Install CKAN Mods
+description: Install listed dependencies using CKAN. Make sure you run the `setup-ckan` action first!
+
+inputs:
+  ckan-identifiers:
+    description: Space-separated list of CKAN mod identifiers to install
+
+runs:
+  using: composite
+  steps:
+    - name: Install Mods
+      shell: bash
+      run: ckan install --headless --no-recommends ${{ input.ckan-identifiers }}
+
