@@ -2,11 +2,17 @@ name: assemble-release
 
 inputs:
   artifacts:
-    type: string
+    description: Space-separated list of file globs to include in the output artifact
     default: GameData LICENSE* README* CHANGELOG*
   output-file-name:
-    type: string
+    description: Output artifact name
     default: ${{ github.event.repository.name || 'release'}}
+  release-staging:
+    description: >
+      Path to staging directory. Defaults to the `RELEASE_STAGING` environment environment variable, 
+      or '/tmp/release' if that is not set.
+    default: ${{ env.RELEASE_STAGING || '/tmp/release' }}
+
 
 outputs:
   artifact-id:
@@ -20,18 +26,17 @@ runs:
     - name: Assemble Release
       shell: bash
       run: |
-        mkdir ${{ env.RELEASE_STAGING  || '/tmp/release'  }}
+        mkdir -p ${{ inputs.release-staging  }}
         # TODO: delete pdb files?  run some kind of assembly script?
-        cp -r -v ${{ inputs.artifacts }} ${{ env.RELEASE_STAGING  || '/tmp/release' }} || :
-        cd ${{ env.RELEASE_STAGING  || '/tmp/release' }}
+        cp -r -v ${{ inputs.artifacts }} ${{ inputs.release-staging }} || :
+        cd ${{ inputs.release-staging }}
         zip -r ${{ github.workspace }}/${{ inputs.output-file-name }}.zip .
-        ARTIFACT_FILENAME="${{ inputs.output-file-name }}"
-        echo "ARTIFACT_FILENAME=$ARTIFACT_FILENAME" >> $GITHUB_ENV
+        echo 'ARTIFACT_FILENAME=${{ inputs.output-file-name }}' >> $GITHUB_ENV
 
     - name: Upload Artifact
       id: upload-artifact
       uses: actions/upload-artifact@v4
       with:
-        path: ${{ env.RELEASE_STAGING || '/tmp/release'}}
+        path: ${{ inputs.release-staging }}
         name: ${{ inputs.output-file-name }}
         if-no-files-found: error

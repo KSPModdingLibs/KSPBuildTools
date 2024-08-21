@@ -23,6 +23,9 @@ inputs:
     description: >
       The path to the solution file to build.  Defaults to empty, which will invoke `msbuild` on the root directory of 
       the repo and builds any `*.sln` file it finds there.
+  ksp-root:
+    description: Path to KSP root directory. Defaults to the `KSP_ROOT` environment variable, or '/tmp/ksp' if that is not set
+    default: ${{ env.KSP_ROOT || '/tmp/ksp' }}
 
 runs:
   using: composite
@@ -47,14 +50,14 @@ runs:
       shell: bash
       run: |
         wget --quiet ${{ inputs.ksp-zip-url }} -O /tmp/ksp.zip
-        unzip -q -P "${{ inputs.ksp-zip-password }}" /tmp/ksp.zip -d "${{ env.KSP_ROOT || '/tmp/ksp' }}"
+        unzip -q -P "${{ inputs.ksp-zip-password }}" /tmp/ksp.zip -d "${{ inputs.ksp-root }}"
 
     - name: Restore Mod Solution
       shell: bash
       working-directory: ${{ github.workspace }}
       run: dotnet restore ${{ inputs.solution-file-path }} ${{ runner.debug && '-d:debug' }}
       env:
-        KSP_ROOT: ${{ env.KSP_ROOT || '/tmp/ksp' }}
+        KSP_ROOT: ${{ inputs.ksp-root }}
 
     - name: Build Mod Solution
       shell: bash
@@ -64,4 +67,4 @@ runs:
         -p:ManagedRelativePath=KSP_x64_Data/Managed ${{ inputs.solution-file-path }} \
         ${{ runner.debug && '-d:debug' }}
       env:
-        KSP_ROOT: ${{ env.KSP_ROOT || '/tmp/ksp' }}
+        KSP_ROOT: ${{ inputs.ksp-root }}
