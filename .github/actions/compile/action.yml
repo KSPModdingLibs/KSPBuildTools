@@ -68,7 +68,7 @@ runs:
     - name: Restore Mod Solution
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: dotnet restore ${{ inputs.solution-file-path }} ${{ runner.debug && '-d:debug' }}
+      run: dotnet restore ${{ inputs.solution-file-path }} ${{ runner.debug && '-v:diagnostic' }}
 
     - name: Build Mod Solution
       shell: bash
@@ -76,4 +76,4 @@ runs:
       run: |
         dotnet msbuild -p:Configuration=${{ inputs.build-configuration }} \
         -p:ManagedRelativePath=KSP_x64_Data/Managed ${{ inputs.solution-file-path }} \
-        ${{ runner.debug && '-d:debug' }}
+        ${{ runner.debug && '-v:diagnostic' }}
