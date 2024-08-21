@@ -6,8 +6,8 @@ description: >
 inputs:
   build-configuration:
     default: Release
-    description: >
-      The project configuration to build.  Defaults to `Release`.
+    description: The project configuration to build.  Defaults to `Release`.
+
   ksp-zip-url:
     default: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
     description: >
@@ -16,16 +16,23 @@ inputs:
 
       Defaults to `https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip` which contains stripped versions 
       of the libraries and should be suitable for most users. It does not require a password.
+
   ksp-zip-password:
     description: >
       If the ksp library zip is encrypted, this is the password.  It should be stored in your repository's secrets.
+
   solution-file-path:
     description: >
       The path to the solution file to build.  Defaults to empty, which will invoke `msbuild` on the root directory of 
       the repo and builds any `*.sln` file it finds there.
+
   ksp-root:
     description: Path to KSP root directory. Defaults to the `KSP_ROOT` environment variable, or '/tmp/ksp' if that is not set
     default: ${{ env.KSP_ROOT || '/tmp/ksp' }}
+
+  ckan-identifiers:
+    description: Space-separated list of CKAN mod identifiers to install
+
 
 runs:
   using: composite
@@ -45,6 +52,11 @@ runs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 7.x
+
+    - name: Install Dependencies
+      shell: bash
+      if: ${{ inputs.depedency-identifiers }}
+      run: ckan install --headless --no-recommends ${{ inputs.dependency-identifiers }}
 
     - name: Download KSP Libs
       shell: bash

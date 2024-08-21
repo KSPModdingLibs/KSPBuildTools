@@ -19,6 +19,9 @@ on:
       no-msbuild:
         type: boolean
         default: false
+      no-ckan:
+        type: boolean
+        default: false
     secrets:
       ksp-zip-password:
         required: false
@@ -38,13 +41,13 @@ jobs:
 
       # Install CKAN and set up an instance
       - uses: KSPModdingLibs/KSPBuildTools/.github/actions/setup-ckan@main
-        if: ${{ !inputs.no-msbuild || input.dependency-identifiers}}
+        if: ${{ !inputs.no-ckan && (!inputs.no-msbuild || input.dependency-identifiers) }}
 
       # Install any listed CKAN dependencies
       - uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-ckan-mods@main
         if: ${{ input.dependency-identifiers }}
         with:
-          ckan-identifiers: ${{ input.dependency-identifiers }}
+          dependency-identifiers: ${{ input.dependency-identifiers }}
 
       # Compile the mod.
       - uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@main
