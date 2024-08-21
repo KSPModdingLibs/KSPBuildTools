@@ -46,7 +46,7 @@ runs:
         gh release download ${{ inputs.ckan-version }} --repo ${{ inputs.ckan-repo }} --pattern 'ckan*.deb' -O ckan.deb
         ${{ env.ACT && 'sudo apt update --quiet' }}
         sudo apt install --quiet ./ckan.deb  ${{ runner.debug && '--verbose-versions' }}
-        ckan version ${{ runner.debug && '--debug' }}
+        ckan version
       env:
         GH_TOKEN: ${{ github.token }}
 
@@ -54,15 +54,15 @@ runs:
       shell: bash
       run: |
         ${{ runner.debug && 'echo "$PATH"' }}
-        ckan instance fake --set-default KSP ${{ env.KSP_ROOT }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1  ${{ runner.debug && '--debug' }}
-        ckan update ${{ runner.debug && '--debug' }}
+        ckan instance fake --set-default KSP ${{ env.KSP_ROOT }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1  ${{ runner.debug && '--verbose' }}
+        ckan update
 
     - name: Setup CKAN Compatible Versions
       shell: bash
       if: inputs.ckan-compatible-versions != ''
       run: |
         for version in $VERSIONS; do
-        ckan compat add "$version" ${{ runner.debug && '--debug' }}
+        ckan compat add "$version" ${{ runner.debug && '--verbose' }}
         done
       env:
         VERSIONS: ${{ inputs.ckan-compatible-versions }}
@@ -72,7 +72,7 @@ runs:
       if: inputs.ckan-filters != ''
       run: |
         for filter in $FILTERS; do
-        ckan filter add "$filter" ${{ runner.debug && '--debug' }}
+        ckan filter add "$filter" ${{ runner.debug && '--verbose' }}
         done
       env:
         FILTERS: ${{ inputs.ckan-filters }}

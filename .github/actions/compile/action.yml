@@ -57,7 +57,7 @@ runs:
     - name: Install Dependencies
       shell: bash
       if: ${{ inputs.depedency-identifiers }}
-      run: ckan install --headless --no-recommends ${{ runner.debug && '--debug' }} ${{ inputs.dependency-identifiers }}
+      run: ckan install --headless --no-recommends ${{ runner.debug && '--verbose' }} ${{ inputs.dependency-identifiers }}
 
     - name: Download KSP Libs
       shell: bash
@@ -68,7 +68,7 @@ runs:
     - name: Restore Mod Solution
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: dotnet restore ${{ inputs.solution-file-path }} ${{ runner.debug && '-v:diagnostic' }}
+      run: dotnet restore ${{ inputs.solution-file-path }} ${{ runner.debug && '-v:detailed' }}
 
     - name: Build Mod Solution
       shell: bash
@@ -76,4 +76,4 @@ runs:
       run: |
         dotnet msbuild -p:Configuration=${{ inputs.build-configuration }} \
         -p:ManagedRelativePath=KSP_x64_Data/Managed ${{ inputs.solution-file-path }} \
-        ${{ runner.debug && '-v:diagnostic' }}
+        ${{ runner.debug && '-v:detailed' }}
