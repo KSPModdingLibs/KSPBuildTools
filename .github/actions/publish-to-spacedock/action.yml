@@ -3,16 +3,13 @@ name: publish-to-spacedock
 inputs:
   spacedock-username:
     description: Spacedock login username
-    default: ${{ env.SPACEDOCK_USERNAME }}
   spacedock-password:
     description: Spacedock login password. Store this as a secret!
-    default: ${{ env.SPACEDOCK_PASSWORD }}
   game-id:
     description: ID of the game we are deploying for. This should probably be left as-is for KSP 1.
     default: '3102' # hardcoded to KSP1 gameid.  retrieve from https://spacedock.info/api/games
   mod-id:
     description: ID of the mod we are deploying. Get this from the end of your mod's spacedock URL
-    default: ${{ env.SPACEDOCK_MOD_ID }}
 
 runs:
   using: composite

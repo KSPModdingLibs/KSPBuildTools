@@ -24,7 +24,7 @@ jobs:
       - uses: KSPModdingLibs/KSPBuildTools/.github/actions/setup-ckan@main
 
       # Install any CKAN dependencies not in the msbuild file. If there are none, remove this step
-      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-ckan-mods@main
+      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@main
         with:
           # Any additional CKAN identifiers not listed in the csproj can be listed here. space-separated
           dependency-identifiers: ""

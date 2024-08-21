@@ -44,12 +44,12 @@ jobs:
         if: ${{ !inputs.no-ckan && (!inputs.no-msbuild || input.dependency-identifiers) }}
 
       # Install any listed CKAN dependencies
-      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-ckan-mods@main
+      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@main
         if: ${{ input.dependency-identifiers }}
         with:
           dependency-identifiers: ${{ input.dependency-identifiers }}
 
-      # Compile the mod.
+      # Compile the mod
       - uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@main
         if: ${{ !inputs.no-msbuild }}
         with:

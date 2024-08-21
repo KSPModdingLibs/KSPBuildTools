@@ -32,13 +32,14 @@ inputs:
       .jpg
       .wav
 
-  ksp-root:
-    description: Path to KSP root directory. Defaults to the `KSP_ROOT` environment variable, or '/tmp/ksp' if that is not set
-    default: ${{ env.KSP_ROOT || '/tmp/ksp' }}
-
 runs:
   using: composite
   steps:
+    - name: Set KSP_ROOT
+      if: ${{ !env.KSP_ROOT }}
+      shell: bash
+      run: echo 'KSP_ROOT=${{ '/tmp/ksp' }}' >> "$GITHUB_ENV"
+
     - name: Install CKAN
       shell: bash
       run: |
@@ -54,7 +55,7 @@ runs:
       run: |
         ${{ runner.debug && 'echo "$PATH"' }}
         ${{ runner.debug && 'ls -la $GITHUB_WORKSPACE/ckan' }}
-        ckan instance fake --set-default KSP ${{ inputs.ksp-root }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
+        ckan instance fake --set-default KSP ${{ env.KSP_ROOT }} 1.12.5 --game KSP --MakingHistory 1.9.1 --BreakingGround 1.7.1
         ckan update
 
     - name: Setup CKAN Compatible Versions

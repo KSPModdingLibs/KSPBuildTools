@@ -23,13 +23,18 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: Set RELEASE_STAGING
+      if: ${{ !env.RELEASE_STAGING}}
+      shell: bash
+      run: echo 'KSP_ROOT=${{ '/tmp/release' }}' >> "$GITHUB_ENV"
+
     - name: Assemble Release
       shell: bash
       run: |
-        mkdir -p ${{ inputs.release-staging  }}
+        mkdir -p ${{ env.RELEASE_STAGING  }}
         # TODO: delete pdb files?  run some kind of assembly script?
-        cp -r -v ${{ inputs.artifacts }} ${{ inputs.release-staging }} || :
-        cd ${{ inputs.release-staging }}
+        cp -r -v ${{ inputs.artifacts }} ${{ env.RELEASE_STAGING }} || :
+        cd ${{ env.RELEASE_STAGING }}
         zip -r ${{ github.workspace }}/${{ inputs.output-file-name }}.zip .
         echo 'ARTIFACT_FILENAME=${{ inputs.output-file-name }}' >> $GITHUB_ENV
 
@@ -37,6 +42,6 @@ runs:
       id: upload-artifact
       uses: actions/upload-artifact@v4
       with:
-        path: ${{ inputs.release-staging }}
+        path: ${{ env.RELEASE_STAGING }}
         name: ${{ inputs.output-file-name }}
         if-no-files-found: error
