@@ -47,7 +47,7 @@ jobs:
 
       # Install CKAN and set up an instance
       - uses: KSPModdingLibs/KSPBuildTools/.github/actions/setup-ckan@main
-        if: ${{ inputs.use-ckan && (!inputs.no-msbuild || input.dependency-identifiers) }}
+        if: ${{ inputs.use-ckan && (inputs.use-msbuild || input.dependency-identifiers) }}
 
       # Install any listed CKAN dependencies
       - uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@main
