@@ -36,17 +36,17 @@
 
     <ItemGroup>
       <!-- Not using `ckan compat set` because as of 2024-08-16 it is still only available in the dev branch -->
-      <_CKANCommands Include="compat add --gamedir $(KSPROOT) %(_CKANCompatibleVersionItems.Identity)"
+      <_CKANCommands Include="compat add --gamedir &quot;$(KSPROOT)&quot; %(_CKANCompatibleVersionItems.Identity)"
                     Condition=" '$(CKANCompatibleVersions)' != '' "/>
 
-      <_CKANCommands Include="install --no-recommends --gamedir $(KSPROOT) $(_CKANDependencyList)"
-                    Condition=" '$(_CKANDependencyList)' != '' "/>
+      <_CKANCommands Include="install --no-recommends --gamedir &quot;$(KSPROOT)&quot; $(_CKANDependencyList)"/>
     </ItemGroup>
 
     <Message Text="Writing CKAN commands to $(_CKANCommandFile)"/>
     <Message Text="@(_CKANCommands, '\n')" Importance="Low"/>
     <WriteLinesToFile File="$(_CKANCommandFile)" Lines="@(_CKANCommands)"/>
-    <Exec Command="cat '$(_CKANCommandFile)' | ckan prompt --headless"/>
+    <Exec Command="cat '$(_CKANCommandFile)' | ckan prompt --headless"
+          Condition="'$(_CKANDependencyList)' != '&quot;&quot;'"/>
     <RemoveDir Directories="$(_TempStagingFolder)"/>
   </Target>
 
