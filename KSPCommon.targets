@@ -43,7 +43,7 @@
     </ItemGroup>
 
     <Message Text="Writing CKAN commands to $(_CKANCommandFile)"/>
-    <Message Text="@(_CKANCommands, '\n')" Importance="Low"/>
+    <Message Text="@(_CKANCommands, '%0a')" Importance="Low"/>
     <WriteLinesToFile File="$(_CKANCommandFile)" Lines="@(_CKANCommands)"/>
     <Exec Command="cat '$(_CKANCommandFile)' | ckan prompt --headless"
           Condition="'$(_CKANDependencyList)' != ''"/>
