@@ -46,7 +46,7 @@
     <Message Text="@(_CKANCommands, '\n')" Importance="Low"/>
     <WriteLinesToFile File="$(_CKANCommandFile)" Lines="@(_CKANCommands)"/>
     <Exec Command="cat '$(_CKANCommandFile)' | ckan prompt --headless"
-          Condition="'$(_CKANDependencyList)' != '&quot;&quot;'"/>
+          Condition="'$(_CKANDependencyList)' != ''"/>
     <RemoveDir Directories="$(_TempStagingFolder)"/>
   </Target>
 
