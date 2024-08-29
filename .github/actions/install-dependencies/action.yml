@@ -10,5 +10,7 @@ runs:
   steps:
     - name: Install Mods
       shell: bash
-      run: ckan install --headless --no-recommends ${{ runner.debug && '--verbose' }} ${{ inputs.dependency-identifiers }}
+      run: |
+        identifiers="${{ inputs.dependency-identifiers }}"
+        ckan install --headless --no-recommends ${{ runner.debug && '--verbose' }} $identifiers
 
