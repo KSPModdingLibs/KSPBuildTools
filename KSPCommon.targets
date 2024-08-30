@@ -79,28 +79,28 @@
     <PropertyGroup>
       <_JSON>{}</_JSON>
     </PropertyGroup>
-    <JsonPoke Content="$(_JSON)" Query="$.NAME" Value="%(VersionFile.Name)">
+    <JsonPoke Content="$(_JSON)" Query="$.NAME" RawValue="'%(VersionFile.Name)'">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
-    <JsonPoke Content="$(_JSON)" Query="$.VERSION" Value="%(VersionFile.Version)" Condition="%(VersionFile.Version) != ''">
+    <JsonPoke Content="$(_JSON)" Query="$.VERSION" RawValue="'%(VersionFile.Version)'" Condition="%(VersionFile.Version) != ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
-    <JsonPoke Content="$(_JSON)" Query="$.VERSION" Value="$(Version)" Condition="%(VersionFile.Version) == ''">
+    <JsonPoke Content="$(_JSON)" Query="$.VERSION" RawValue="'$(Version)'" Condition="%(VersionFile.Version) == ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
-    <JsonPoke Content="$(_JSON)" Query="$.URL" Value="%(VersionFile.URL)" Condition="%(VersionFile.URL) != ''">
+    <JsonPoke Content="$(_JSON)" Query="$.URL" RawValue="'%(VersionFile.URL)'" Condition="%(VersionFile.URL) != ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
-    <JsonPoke Content="$(_JSON)" Query="$.DOWNLOAD" Value="%(VersionFile.Download)" Condition="%(VersionFile.Download) != ''">
+    <JsonPoke Content="$(_JSON)" Query="$.DOWNLOAD" RawValue="'%(VersionFile.Download)'" Condition="%(VersionFile.Download) != ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
-    <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION" Value="%(VersionFile.KSP_Version)" Condition="%(VersionFile.KSP_Version) != ''">
+    <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION" RawValue="'%(VersionFile.KSP_Version)'" Condition="%(VersionFile.KSP_Version) != ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
-    <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION_MIN" Value="%(VersionFile.KSP_Version_Min)" Condition="%(VersionFile.KSP_Version_Min) != ''">
+    <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION_MIN" RawValue="'%(VersionFile.KSP_Version_Min)'" Condition="%(VersionFile.KSP_Version_Min) != ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
-    <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION_MAX" Value="%(VersionFile.KSP_Version_Max)" Condition="%(VersionFile.KSP_Version_Max) != ''">
+    <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION_MAX" Value="'%(VersionFile.KSP_Version_Max)'" Condition="%(VersionFile.KSP_Version_Max) != ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
     <Message Text="Out is $(_JSON)"/>
