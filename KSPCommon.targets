@@ -2,6 +2,12 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Condition=" '$(KSPCommonPropsImported)' == '' " Project="KSPCommon.props"/>
 
+  <!-- NuGet dependencies -->
+  <ItemGroup>
+    <!-- For GenerateKSPVersionFile -->
+    <PackageReference Include="JsonPoke" Version="1.2.0" Condition="@(VersionFile) != ''"/>
+  </ItemGroup>
+
   <!-- Pre/post build targets -->
   <Target Name="BeforeBuildScript" BeforeTargets="Build">
   </Target>
@@ -59,5 +65,44 @@
     <Message Text="@(RequiredExternalTool)" Importance="high"/>
   </Target>
 
+  <ItemDefinitionGroup>
+    <VersionFile>
+      <Name>$(SolutionName)</Name>
+      <KSP_Version>1.12</KSP_Version>
+      <KSP_Version_Min>1.8</KSP_Version_Min>
+      <KSP_Version_Max>1.12</KSP_Version_Max>
+    </VersionFile>
+  </ItemDefinitionGroup>
 
+  <!-- Target to generate the KSP version json file for AVC/CKAN etc-->
+  <Target Name="GenerateKSPVersionFile" AfterTargets="Build" Inputs="@(VersionFile);$(Version)" Outputs="%(VersionFile.destination)">
+    <PropertyGroup>
+      <_JSON>{}</_JSON>
+    </PropertyGroup>
+    <JsonPoke Content="$(_JSON)" Query="$.NAME" Value="%(VersionFile.Name)">
+      <Output TaskParameter="Content" PropertyName="_JSON"/>
+    </JsonPoke>
+    <JsonPoke Content="$(_JSON)" Query="$.VERSION" Value="%(VersionFile.Version)" Condition="%(VersionFile.Version) != ''">
+      <Output TaskParameter="Content" PropertyName="_JSON"/>
+    </JsonPoke>
+    <JsonPoke Content="$(_JSON)" Query="$.VERSION" Value="$(Version)" Condition="%(VersionFile.Version) == ''">
+      <Output TaskParameter="Content" PropertyName="_JSON"/>
+    </JsonPoke>
+    <JsonPoke Content="$(_JSON)" Query="$.URL" Value="%(VersionFile.URL)" Condition="%(VersionFile.URL) != ''">
+      <Output TaskParameter="Content" PropertyName="_JSON"/>
+    </JsonPoke>
+    <JsonPoke Content="$(_JSON)" Query="$.DOWNLOAD" Value="%(VersionFile.Download)" Condition="%(VersionFile.Download) != ''">
+      <Output TaskParameter="Content" PropertyName="_JSON"/>
+    </JsonPoke>
+    <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION" Value="%(VersionFile.KSP_Version)" Condition="%(VersionFile.KSP_Version) != ''">
+      <Output TaskParameter="Content" PropertyName="_JSON"/>
+    </JsonPoke>
+    <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION_MIN" Value="%(VersionFile.KSP_Version_Min)" Condition="%(VersionFile.KSP_Version_Min) != ''">
+      <Output TaskParameter="Content" PropertyName="_JSON"/>
+    </JsonPoke>
+    <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION_MAX" Value="%(VersionFile.KSP_Version_Max)" Condition="%(VersionFile.KSP_Version_Max) != ''">
+      <Output TaskParameter="Content" PropertyName="_JSON"/>
+    </JsonPoke>
+    <Message Text="Out is $(_JSON)"/>
+  </Target>
 </Project>
