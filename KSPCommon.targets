@@ -76,8 +76,12 @@
 
   <!-- Target to generate the KSP version json file for AVC/CKAN etc-->
   <Target Name="GenerateKSPVersionFile" AfterTargets="Build" Inputs="@(VersionFile);$(Version)" Outputs="%(VersionFile.destination)">
+    <ReadLinesFromFile File="@(VersionFile)" Condition="Exists('@(VersionFile)')">
+      <Output TaskParameter="Lines" ItemName="_JSONLines"/>
+    </ReadLinesFromFile>
     <PropertyGroup>
-      <_JSON>{}</_JSON>
+      <_JSON>@(_JSONLines, '%0a')</_JSON>
+      <_JSON Condition="@(_JSONLines) == ''">{}</_JSON>
     </PropertyGroup>
     <JsonPoke Content="$(_JSON)" Query="$.NAME" RawValue="'%(VersionFile.Name)'">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
@@ -103,6 +107,9 @@
     <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION_MAX" Value="'%(VersionFile.KSP_Version_Max)'" Condition="%(VersionFile.KSP_Version_Max) != ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
-    <Message Text="Out is $(_JSON)"/>
+    <WriteLinesToFile File="%(VersionFile.Destination)" Lines="$(_JSON)" Overwrite="true"/>
+
+    <Message Text="Writing JSON version file to %(VersionFile.Destination)"/>
+    <Message Text="Contents:%0a$(_JSON)" Importance="low"/>
   </Target>
 </Project>
