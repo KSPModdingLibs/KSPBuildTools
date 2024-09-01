@@ -59,5 +59,49 @@
     <Message Text="@(RequiredExternalTool)" Importance="high"/>
   </Target>
 
+  <!--
+  Gets version info from Git, or falls back to 0.0.0 if this fails.
+  This will not work if you have any hyphens in your tag names. blame Git
+
+  Populates the following properties:
+    GitTag: The most recent tag in the repo
+    GitHeight: The number of commits since that tag
+    GitCommit: The most recent git commit hash in the repo
+    VersionMajor: The major SemVer version number. Taken directly from the tag
+    VersionMinor: The minor SemVer version number. Taken directly from the tag
+    VersionPatch: The patch SemVer version number. Taken from the tag, and incremented by 1 if GitHeight != 0
+    Version: (MSBuild wellknown property) The calculated version
+    Build: The build number. Equal to GitHeight
+  -->
+  <Target Name="GetVersionFromGit" BeforeTargets="BeforeBuild" Condition="$(PopulateVersionFromGit)">
+    <Exec Command="git describe --tags --long" ConsoleToMSBuild="true"
+          IgnoreStandardErrorWarningFormat="true" IgnoreExitCode="true"
+          EchoOff="true" WorkingDirectory="$(RepoRootPath)">
+      <Output TaskParameter="ConsoleOutput" PropertyName="_GitDescribe"/>
+      <Output TaskParameter="ExitCode" PropertyName="_GitDescribeExit"/>
+    </Exec>
+    <PropertyGroup Condition="$(_GitDescribeExit) == 0">
+      <GitTag>$(_GitDescribe.Split('-')[0])</GitTag>
+      <GitHeight>$(_GitDescribe.Split('-')[1])</GitHeight>
+      <GitCommit>$(_GitDescribe.Split('-')[2])</GitCommit>
+      <VersionMajor>$(GitTag.Split('.')[0])</VersionMajor>
+      <VersionMinor>$(GitTag.Split('.')[1])</VersionMinor>
+      <VersionPatch>$(GitTag.Split('.')[2])</VersionPatch>
+      <VersionPatch Condition="$(GitHeight) != '0'">$([MSBuild]::Add($(VersionPatch), 1))</VersionPatch>
+      <Build>$(GitHeight)</Build>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(_GitDescribeExit) != 0">
+      <!-- Git describe failed, so fallback to a backup version-->
+      <VersionMajor>0</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <VersionPatch>0</VersionPatch>
+      <Build>0</Build>
+    </PropertyGroup>
+    <PropertyGroup>
+      <Version>$(VersionMajor).$(VersionMinor).$(VersionPatch)</Version>
+    </PropertyGroup>
+    <Message Text="Calculated version from git is $(Version)" Condition="$(_GitDescribeExit) == 0"/>
+  </Target>
+
 
 </Project>
