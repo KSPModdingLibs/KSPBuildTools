@@ -37,7 +37,7 @@
     <ItemGroup>
       <!-- Not using `ckan compat set` because as of 2024-08-16 it is still only available in the dev branch -->
       <_CKANCommands Include="compat add --gamedir &quot;$(KSPROOT)&quot; %(_CKANCompatibleVersionItems.Identity)"
-                    Condition=" '$(CKANCompatibleVersions)' != '' "/>
+                     Condition=" '$(CKANCompatibleVersions)' != '' "/>
 
       <_CKANCommands Include="install --no-recommends --gamedir &quot;$(KSPROOT)&quot; $(_CKANDependencyList)"/>
     </ItemGroup>
@@ -73,7 +73,12 @@
     Version: (MSBuild wellknown property) The calculated version
     Build: The build number. Equal to GitHeight
   -->
-  <Target Name="GetVersionFromGit" BeforeTargets="BeforeBuild" Condition="$(PopulateVersionFromGit)">
+  <Target Name="GetVersionFromGit" BeforeTargets="BeforeBuild" Condition="$(GetVersionFromGit) == 'true'">
+    <PropertyGroup>
+      <!-- Fallback values -->
+      <Version>0.0.0</Version>
+      <Build>0</Build>
+    </PropertyGroup>
     <Exec Command="git describe --tags --long" ConsoleToMSBuild="true"
           IgnoreStandardErrorWarningFormat="true" IgnoreExitCode="true"
           EchoOff="true" WorkingDirectory="$(RepoRootPath)">
@@ -84,21 +89,15 @@
       <GitTag>$(_GitDescribe.Split('-')[0])</GitTag>
       <GitHeight>$(_GitDescribe.Split('-')[1])</GitHeight>
       <GitCommit>$(_GitDescribe.Split('-')[2])</GitCommit>
-      <VersionMajor>$(GitTag.Split('.')[0])</VersionMajor>
-      <VersionMinor>$(GitTag.Split('.')[1])</VersionMinor>
-      <VersionPatch>$(GitTag.Split('.')[2])</VersionPatch>
-      <VersionPatch Condition="$(GitHeight) != '0'">$([MSBuild]::Add($(VersionPatch), 1))</VersionPatch>
+      <_VersionMajor>$(GitTag.Split('.')[0])</_VersionMajor>
+      <_VersionMinor>$(GitTag.Split('.')[1])</_VersionMinor>
+      <_VersionPatch>$(GitTag.Split('.')[2])</_VersionPatch>
+      <_VersionPatch Condition="$(GitHeight) != '0'">$([MSBuild]::Add($(_VersionPatch), 1))</_VersionPatch>
+      <Version>$(_VersionMajor).$(_VersionMinor).$(_VersionPatch)</Version>
       <Build>$(GitHeight)</Build>
     </PropertyGroup>
-    <PropertyGroup Condition="$(_GitDescribeExit) != 0">
-      <!-- Git describe failed, so fallback to a backup version-->
-      <VersionMajor>0</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <VersionPatch>0</VersionPatch>
-      <Build>0</Build>
-    </PropertyGroup>
     <PropertyGroup>
-      <Version>$(VersionMajor).$(VersionMinor).$(VersionPatch)</Version>
+      <AssemblyVersion>$(Version).$(Build)</AssemblyVersion>
     </PropertyGroup>
     <Message Text="Calculated version from git is $(Version)" Condition="$(_GitDescribeExit) == 0"/>
   </Target>
