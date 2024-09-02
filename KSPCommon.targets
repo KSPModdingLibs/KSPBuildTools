@@ -21,7 +21,7 @@
   </Target>
 
   <!-- Use CKAN to install mods for any references tagged with a CKAN Identifier -->
-  <Target Name="CKANInstall" BeforeTargets="_GenerateRestoreProjectSpec;Restore">
+  <Target Name="CKANInstall" BeforeTargets="_GenerateRestoreProjectSpec;Restore" Inputs="@(Reference)" Outputs="$(KSPRoot)/CKAN/registry.json">
     <ItemGroup>
       <_CKANCompatibleVersionItems Include="$(CKANCompatibleVersions.Split(' '))"/>
       <_CKANDependency Include="%(Reference.CKANIdentifier)" Condition="%(Reference.CKANVersion) == ''"/>
@@ -68,10 +68,8 @@
     GitTag: The most recent tag in the repo
     GitHeight: The number of commits since that tag
     GitCommit: The most recent git commit hash in the repo
-    VersionMajor: The major SemVer version number. Taken directly from the tag
-    VersionMinor: The minor SemVer version number. Taken directly from the tag
-    VersionPatch: The patch SemVer version number. Taken from the tag, and incremented by 1 if GitHeight != 0
-    Version: (MSBuild wellknown property) The calculated version
+    Version: (MSBuild wellknown property) The calculated version.
+      Equal to GitTag but with the patch number incremented if GitHeight is not 0
     Build: The build number. Equal to GitHeight
   -->
   <Target Name="GetVersionFromGit" BeforeTargets="BeforeBuild" Condition="$(GetVersionFromGit) == 'true'">
