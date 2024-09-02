@@ -20,7 +20,7 @@ runs:
     - name: Set RELEASE_STAGING
       if: ${{ !env.RELEASE_STAGING}}
       shell: bash
-      run: echo 'KSP_ROOT=${{ '/tmp/release' }}' >> "$GITHUB_ENV"
+      run: echo 'RELEASE_STAGING=${{ '/tmp/release' }}' >> "$GITHUB_ENV"
 
     - name: Assemble Release
       shell: bash
