@@ -103,4 +103,56 @@
   </Target>
 
 
+  <!--
+  Generate the KSPAssembly attribute based on the Version property
+  -->
+  <ItemGroup>
+    <GenerateKSPAssemblyAttributeDependsOn Include='GetVersionFromGit' Condition="$(GetVersionFromGit)"/>
+  </ItemGroup>
+  <Target Name="GenerateKSPAssemblyAttribute" BeforeTargets="CoreGenerateAssemblyInfo"
+          Condition="$(GenerateKSPAssemblyAttribute)" DependsOnTargets="$(GenerateKSPAssemblyAttributeDependsOn)">
+    <ItemGroup>
+      <AssemblyAttribute Include="KSPAssembly">
+        <_Parameter1>$(AssemblyName)</_Parameter1>
+        <_Parameter1_TypeName>System.String</_Parameter1_TypeName>
+        <_Parameter2>$(Version.Split('.')[0])</_Parameter2>
+        <_Parameter2_TypeName>System.Int32</_Parameter2_TypeName>
+        <_Parameter3>$(Version.Split('.')[1])</_Parameter3>
+        <_Parameter3_TypeName>System.Int32</_Parameter3_TypeName>
+        <_Parameter4>$(Version.Split('.')[2])</_Parameter4>
+        <_Parameter4_TypeName>System.Int32</_Parameter4_TypeName>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
+
+  <!--
+  Generate the KSPAssemblyDependency attributes based on input references
+
+  Reference items must have a CKANIdentifier or a KSPAssemblyName.
+  KSPAssemblyVersion can be optionally specified.
+    Otherwise CKANVersion is used.
+    Otherwise 0.0.0 is used (no minimum version)
+  -->
+  <Target Name="GenerateKSPAssemblyDependencyAttributes" BeforeTargets="CoreGenerateAssemblyInfo"
+          Condition="$(GenerateKSPAssemblyDependencyAttributes) == 'true'">
+    <ItemGroup>
+      <Reference Update="%(Reference.identity)" Condition="'%(Reference.CKANIdentifier)%(Reference.KSPAssemblyName)' != ''">
+        <KSPAssemblyName Condition="%(Reference.KSPAssemblyName) == ''">$([System.String]::Copy('%(Reference.identity)').Split(',')[0])</KSPAssemblyName>
+        <KSPAssemblyVersion Condition="%(Reference.KSPAssemblyVersion) == ''">%(Reference.CKANVersion)</KSPAssemblyVersion>
+        <KSPAssemblyVersion Condition="%(Reference.KSPAssemblyVersion) == ''">0.0.0</KSPAssemblyVersion>
+      </Reference>
+    </ItemGroup>
+    <ItemGroup>
+      <AssemblyAttribute Include="KSPAssemblyDependency" Condition="%(Reference.KSPAssemblyName) != ''">
+        <_Parameter1>%(Reference.KSPAssemblyName)</_Parameter1>
+        <_Parameter1_TypeName>System.String</_Parameter1_TypeName>
+        <_Parameter2>$([System.String]::Copy('%(Reference.KSPAssemblyVersion)').Split('.')[0])</_Parameter2>
+        <_Parameter2_TypeName>System.Int32</_Parameter2_TypeName>
+        <_Parameter3>$([System.String]::Copy('%(Reference.KSPAssemblyVersion)').Split('.')[1])</_Parameter3>
+        <_Parameter3_TypeName>System.Int32</_Parameter3_TypeName>
+        <_Parameter4>$([System.String]::Copy('%(Reference.KSPAssemblyVersion)').Split('.')[2])</_Parameter4>
+        <_Parameter4_TypeName>System.Int32</_Parameter4_TypeName>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
 </Project>
