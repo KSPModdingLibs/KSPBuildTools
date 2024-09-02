@@ -68,7 +68,7 @@ runs:
     - name: Restore Mod Solution
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: dotnet restore ${{ inputs.solution-file-path }} ${{ runner.debug && '-v:detailed' }}
+      run: nuget restore ${{ inputs.solution-file-path }} ${{ runner.debug && '-v:detailed' }}
 
     - name: Build Mod Solution
       shell: bash
