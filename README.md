@@ -83,6 +83,18 @@ Default value: `1.12 1.11 1.10 1.9 1.8`
 
 Used by the `CKANInstall` target to set additional KSP versions to treat as compatible when installing dependencies.
 
+#### `GetVersionFromGit`
+
+If set to `true`, the `Version` property will be automatically populated from your git tags. Tags must be in SemVer format. If the current commit is not tagged, it will use the most recent tag with the patch number incremented by 1. The Version attribute will automatically be added to your assembly's `AssemblyVersionAttribute`, there is no need to have that in an assemblyinfo.cs file.
+
+#### `GenerateKSPAssemblyAttribute`
+
+If set to `true`, automatically generates the `KSPAssembly` for your assembly from the `Version` property.
+
+#### `GenerateKSPAssemblyDependencyAttributes`
+
+If set to `true`, automatically generates `KSPAssemblyDependency` attributes for each dependency. Dependencies should have either the `CKANIdentifier` metadata or `KSPAssemblyName` metadata. Versions can be supplied with `CKANVersion` or `KSPAssemblyVersion`. See [Referencing Dependencies](#referencing-dependencies) below.
+
 ### Referencing Dependencies
 
 Referencing assemblies (DLLs) from other mods should be done with a HintPath relative to `$(KSPRoot)`.  These should be placed *after* importing `KSPCommon.targets` so that `$(KSPRoot)` will be defined.  In addition, you can include the CKAN identifier of the mod to make it installable when restoring the project. Dependencies should have the private flag set to false, unless they are intended to be included alongside the main dll.
