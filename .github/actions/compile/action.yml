@@ -26,10 +26,6 @@ inputs:
       The path to the solution file to build.  Defaults to empty, which will invoke `msbuild` on the root directory of 
       the repo and builds any `*.sln` file it finds there.
 
-  ckan-identifiers:
-    description: Space-separated list of CKAN mod identifiers to install
-
-
 runs:
   using: composite
   steps:
@@ -53,11 +49,6 @@ runs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 5.x
-
-    - name: Install Dependencies
-      shell: bash
-      if: ${{ inputs.depedency-identifiers }}
-      run: ckan install --headless --no-recommends ${{ runner.debug && '--verbose' }} ${{ inputs.dependency-identifiers }}
 
     - name: Download KSP Libs
       shell: bash
