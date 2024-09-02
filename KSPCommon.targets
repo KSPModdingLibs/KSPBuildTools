@@ -24,7 +24,8 @@
   <Target Name="CKANInstall" BeforeTargets="_GenerateRestoreProjectSpec;Restore">
     <ItemGroup>
       <_CKANCompatibleVersionItems Include="$(CKANCompatibleVersions.Split(' '))"/>
-      <_CKANDependency Include="%(Reference.CKANIdentifier)"/>
+      <_CKANDependency Include="%(Reference.CKANIdentifier)" Condition="%(Reference.CKANVersion) == ''"/>
+      <_CKANDependency Include="%(Reference.CKANIdentifier)=%(Reference.CKANVersion)" Condition="%(Reference.CKANVersion) != ''"/>
       <_CKANDependency Include="@(CKANDependency)"/>
     </ItemGroup>
 
