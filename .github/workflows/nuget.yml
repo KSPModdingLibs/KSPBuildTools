@@ -64,7 +64,7 @@ jobs:
 
       - name: Authenticate with Github
         run: >-
-          dotnet nuget add source --username $GITHUB_REPOSITORY_OWNER --password ${{ env.GITHUB_TOKEN }}
+          dotnet nuget add source --username $GITHUB_REPOSITORY_OWNER --password ${{ secrets.GITHUB_TOKEN }} 
           --store-password-in-clear-text --name github "https://nuget.pkg.github.com/KSPModdingLibs/index.json"
 
       - name: Publish Package
