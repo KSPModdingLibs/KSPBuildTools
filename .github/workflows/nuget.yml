@@ -10,13 +10,13 @@ on:
       - '**/*.csproj'
       - '**/*.props'
       - '**/*.targets'
-      - '.github/workflows-nuget.yml'
+      - '.github/workflows/nuget.yml'
   pull_request:
     paths:
       - '**/*.csproj'
       - '**/*.props'
       - '**/*.targets'
-      - '.github/workflows-nuget.yml'
+      - '.github/workflows/nuget.yml'
   workflow_dispatch:
 
 env:
