@@ -50,6 +50,9 @@ jobs:
   deploy-nuget:
     runs-on: ubuntu-latest
     needs: [ build ]
+    environment:
+      name: "NuGet"
+      url: "https://www.nuget.org/packages/KSPBuildTools"
     if: github.event_name == 'push'
     steps:
       - name: Setup .NET
@@ -62,11 +65,17 @@ jobs:
           name: nuget-package
           path: ${{ env.NuGetDirectory }}
 
+      - name: Publish Package to NuGet
+        run: >-
+          dotnet nuget push ${{ env.NuGetDirectory }}/*.nupkg
+          --api-key ${{ secrets.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+
       - name: Authenticate with Github
         run: >-
           dotnet nuget add source --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }} 
           --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
 
-      - name: Publish Package
+      - name: Publish Package to Github
         run: |
           dotnet nuget push --source "github" ${{ env.NuGetDirectory }}/*.nupkg
