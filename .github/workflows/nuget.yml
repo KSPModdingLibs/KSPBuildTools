@@ -10,11 +10,13 @@ on:
       - '**/*.csproj'
       - '**/*.props'
       - '**/*.targets'
+      - '.github/workflows-nuget.yml'
   pull_request:
     paths:
       - '**/*.csproj'
       - '**/*.props'
       - '**/*.targets'
+      - '.github/workflows-nuget.yml'
   workflow_dispatch:
 
 env:
@@ -48,6 +50,7 @@ jobs:
   deploy-nuget:
     runs-on: ubuntu-latest
     needs: [ build ]
+    if: github.event_name == 'push'
     steps:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -58,5 +61,10 @@ jobs:
         with:
           name: nuget-package
           path: ${{ env.NuGetDirectory }}
+
+      - name: Authenticate with Github
+        run: >
+          dotnet nuget add source --username KSPModdingLibs --password ${{ env.GITHUB_TOKEN }} 
+          --store-password-in-clear-text --name github "https://nuget.pkg.github.com/KSPModdingLibs/index.json"
 
       # todo: figure out how the hell you push to github packages
