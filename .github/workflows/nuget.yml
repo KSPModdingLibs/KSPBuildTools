@@ -64,7 +64,9 @@ jobs:
 
       - name: Authenticate with Github
         run: >
-          dotnet nuget add source --username KSPModdingLibs --password ${{ env.GITHUB_TOKEN }} 
+          dotnet nuget add source --username $GITHUB_REPOSITORY_OWNER --password ${{ env.GITHUB_TOKEN }} 
           --store-password-in-clear-text --name github "https://nuget.pkg.github.com/KSPModdingLibs/index.json"
 
-      # todo: figure out how the hell you push to github packages
+      - name: Publish Package
+        run: |
+          dotnet nuget push --source "github" ${{ env.NuGetDirectory }}/*.nupkg
