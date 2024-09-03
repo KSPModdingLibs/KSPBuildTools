@@ -1,0 +1,62 @@
+name: Build for NuGet
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+    branches:
+     - 'main'
+    paths:
+      - '**/*.csproj'
+      - '**/*.props'
+      - '**/*.targets'
+  pull_request:
+    paths:
+      - '**/*.csproj'
+      - '**/*.props'
+      - '**/*.targets'
+  workflow_dispatch:
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+  NuGetDirectory: ${{ github.workspace}}/nuget
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+          
+      - name: Build
+        run: dotnet build KSPBuildTools.csproj
+
+      - name: Package
+        run: dotnet pack KSPBuildTools.csproj --configuration Release --output ${{ env.NuGetDirectory }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package
+          if-no-files-found: error
+          path: ${{ env.NuGetDirectory }}/*.nupkg
+
+  deploy-nuget:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: nuget-package
+          path: ${{ env.NuGetDirectory }}
+
+      # todo: figure out how the hell you push to github packages
