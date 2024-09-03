@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <Target Name="Build" />
+  <Target Name="Rebuild" />
+
+  <!-- NuGet dependencies -->
+  <ItemGroup>
+    <!-- MinVer for project versioning. necessary for nuget -->
+    <PackageReference Include="MinVer" Version="5.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+    <IsPackable>true</IsPackable>
+    <PlatformTarget>x64</PlatformTarget>
+    <NoWarn>1701;1702;CS0649;CS1591</NoWarn>
+    <AssemblyCopyright>2024 KSPModdingLibs Contributors</AssemblyCopyright>
+    <AssemblyName>KSPBuildTools</AssemblyName>
+    <RepoRootPath>$(ProjectDir)</RepoRootPath>
+    <PackageId>KSPBuildTools</PackageId>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Authors>KSPModdingLibs Contributors</Authors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="KSPCommon.props" Pack="True" PackagePath="build/KSPBuildTools.props" />
+    <None Include="KSPCommon.targets" Pack="True" PackagePath="build/KSPBuildTools.targets" />
+    <None Include="README.md" Pack="True" PackagePath="/"/>
+  </ItemGroup>
+</Project>
