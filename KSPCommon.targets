@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Condition=" '$(KSPCommonPropsImported)' == '' " Project="KSPCommon.props"/>
+  <Import Condition=" '$(KSPCommonPropsImported)' == '' And Exists('$(MSBuildThisFileDirectory)KSPCommon.props') " Project="$(MSBuildThisFileDirectory)KSPCommon.props"/>
 
   <!-- Pre/post build targets -->
   <Target Name="BeforeBuildScript" BeforeTargets="Build">
