@@ -24,6 +24,7 @@
     <PackageId>KSPBuildTools</PackageId>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Authors>KSPModdingLibs Contributors</Authors>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
 
   <ItemGroup>
