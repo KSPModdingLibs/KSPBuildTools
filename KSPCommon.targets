@@ -61,55 +61,10 @@
   </Target>
 
   <!--
-  Gets version info from Git, or falls back to 0.0.0 if this fails.
-  This will not work if you have any hyphens in your tag names. blame Git
-
-  Populates the following properties:
-    GitTag: The most recent tag in the repo
-    GitHeight: The number of commits since that tag
-    GitCommit: The most recent git commit hash in the repo
-    Version: (MSBuild wellknown property) The calculated version.
-      Equal to GitTag but with the patch number incremented if GitHeight is not 0
-    Build: The build number. Equal to GitHeight
+  Generate the KSPAssembly attribute based on the FileVersion property
   -->
-  <Target Name="GetVersionFromGit" BeforeTargets="PrepareForBuild" Condition="$(GetVersionFromGit) == 'true'">
-    <PropertyGroup>
-      <!-- Fallback values -->
-      <Version>0.0.0</Version>
-      <Build>0</Build>
-    </PropertyGroup>
-    <Exec Command="git describe --tags --long" ConsoleToMSBuild="true"
-          IgnoreStandardErrorWarningFormat="true" IgnoreExitCode="true"
-          EchoOff="true" WorkingDirectory="$(RepoRootPath)">
-      <Output TaskParameter="ConsoleOutput" PropertyName="_GitDescribe"/>
-      <Output TaskParameter="ExitCode" PropertyName="_GitDescribeExit"/>
-    </Exec>
-    <PropertyGroup Condition="$(_GitDescribeExit) == 0">
-      <GitTag>$(_GitDescribe.Split('-')[0])</GitTag>
-      <GitHeight>$(_GitDescribe.Split('-')[1])</GitHeight>
-      <GitCommit>$(_GitDescribe.Split('-')[2])</GitCommit>
-      <_VersionMajor>$(GitTag.Split('.')[0])</_VersionMajor>
-      <_VersionMinor>$(GitTag.Split('.')[1])</_VersionMinor>
-      <_VersionPatch>$(GitTag.Split('.')[2])</_VersionPatch>
-      <_VersionPatch Condition="$(GitHeight) != '0'">$([MSBuild]::Add($(_VersionPatch), 1))</_VersionPatch>
-      <Version>$(_VersionMajor).$(_VersionMinor).$(_VersionPatch)</Version>
-      <Build>$(GitHeight)</Build>
-    </PropertyGroup>
-    <PropertyGroup>
-      <AssemblyVersion>$(Version).$(Build)</AssemblyVersion>
-    </PropertyGroup>
-    <Message Text="Calculated version from git is $(Version)" Condition="$(_GitDescribeExit) == 0"/>
-  </Target>
-
-
-  <!--
-  Generate the KSPAssembly attribute based on the Version property
-  -->
-  <ItemGroup>
-    <GenerateKSPAssemblyAttributeDependsOn Include='GetVersionFromGit' Condition="$(GetVersionFromGit) == 'true'"/>
-  </ItemGroup>
   <Target Name="GenerateKSPAssemblyAttribute" BeforeTargets="CoreGenerateAssemblyInfo"
-          Condition="$(GenerateKSPAssemblyAttribute)" DependsOnTargets="$(GenerateKSPAssemblyAttributeDependsOn)">
+          Condition="$(GenerateKSPAssemblyAttribute)">
     <ItemGroup>
       <AssemblyAttribute Include="KSPAssembly">
         <_Parameter1>$(AssemblyName)</_Parameter1>
