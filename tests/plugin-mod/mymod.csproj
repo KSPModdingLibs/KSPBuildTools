@@ -18,6 +18,7 @@
     <AssemblyCopyright>2024 KSPModdingLibs Contributors</AssemblyCopyright>
     <AssemblyName>MyMod</AssemblyName>
     <RepoRootPath>$(MSBuildThisFileDirectory)</RepoRootPath>
+    <BinariesOutputRelativePath>GameData/plugin-mod</BinariesOutputRelativePath>
   </PropertyGroup>
 
   <!-- DLL Dependencies-->
@@ -33,7 +34,7 @@
   <!-- Version Files -->
   <ItemGroup>
     <KSPVersionFile Include=".">
-      <Destination>$(RepoRootPath)GameData/MyMod/mymod.version</Destination>
+      <Destination>$(RepoRootPath)$(BinariesOutputRelativePath)/mymod.version</Destination>
     </KSPVersionFile>
   </ItemGroup>
   
@@ -43,7 +44,7 @@
   </PropertyGroup>
   
   <Target Name="MakeModDir" BeforeTargets="BeforeBuild">
-    <MakeDir Directories="$(RepoRootPath)GameData/MyMod" />
+    <MakeDir Directories="$(RepoRootPath)GameData/plugin-mod" />
   </Target>
 
   <Import Project="$(MSBuildThisFileDirectory)../../KSPCommon.targets" />

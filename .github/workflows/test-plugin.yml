@@ -21,4 +21,5 @@ jobs:
 
       - uses: ./.github/actions/assemble-release
         with:
-          artifacts: ${{ env.TESTDIR }}/GameData
+          artifacts: ${{ env.TESTDIR }}/GameData ${{ env.TESTDIR }}/mymod.csproj
+          output-file-name: plugin-mod
