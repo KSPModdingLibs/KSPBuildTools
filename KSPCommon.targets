@@ -106,7 +106,7 @@
   Generate the KSPAssembly attribute based on the Version property
   -->
   <ItemGroup>
-    <GenerateKSPAssemblyAttributeDependsOn Include='GetVersionFromGit' Condition="$(GetVersionFromGit)"/>
+    <GenerateKSPAssemblyAttributeDependsOn Include='GetVersionFromGit' Condition="$(GetVersionFromGit) == 'true'"/>
   </ItemGroup>
   <Target Name="GenerateKSPAssemblyAttribute" BeforeTargets="CoreGenerateAssemblyInfo"
           Condition="$(GenerateKSPAssemblyAttribute)" DependsOnTargets="$(GenerateKSPAssemblyAttributeDependsOn)">
@@ -114,11 +114,11 @@
       <AssemblyAttribute Include="KSPAssembly">
         <_Parameter1>$(AssemblyName)</_Parameter1>
         <_Parameter1_TypeName>System.String</_Parameter1_TypeName>
-        <_Parameter2>$(Version.Split('.')[0])</_Parameter2>
+        <_Parameter2>$(FileVersion.Split('.')[0])</_Parameter2>
         <_Parameter2_TypeName>System.Int32</_Parameter2_TypeName>
-        <_Parameter3>$(Version.Split('.')[1])</_Parameter3>
+        <_Parameter3>$(FileVersion.Split('.')[1])</_Parameter3>
         <_Parameter3_TypeName>System.Int32</_Parameter3_TypeName>
-        <_Parameter4>$(Version.Split('.')[2])</_Parameter4>
+        <_Parameter4>$(FileVersion.Split('.')[2])</_Parameter4>
         <_Parameter4_TypeName>System.Int32</_Parameter4_TypeName>
       </AssemblyAttribute>
     </ItemGroup>
