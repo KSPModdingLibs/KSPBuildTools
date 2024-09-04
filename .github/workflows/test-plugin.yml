@@ -3,9 +3,8 @@ name: test plugin mod build
 on:
   workflow_call:
 
-defaults:
-  run:
-    working-directory: tests/plugin-mod
+env:
+ TESTDIR: tests/plugin-mod
 
 jobs:
   build:
@@ -13,4 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         
-      - run: echo "Hello World"
+      - uses: ./.github/actions/setup-ckan
+
+      - uses: ./.github/actions/compile
+        with:
+          solution-file-path: ${ env.TESTDIR }/mymod.csproj
+          ksp-zip-url: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
+
+      - uses: ./.github/actions/assemble-release
+        with:
+          artifacts: ${ env.TESTDIR }/GameData
