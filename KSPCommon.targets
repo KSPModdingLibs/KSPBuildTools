@@ -75,7 +75,7 @@
   </ItemDefinitionGroup>
 
   <!-- Target to generate the KSP version json file for AVC/CKAN etc-->
-  <Target Name="GenerateKSPVersionFile" AfterTargets="Build" Inputs="@(KSPVersionFile);$(Version)" Outputs="%(KSPVersionFile.destination)">
+  <Target Name="GenerateKSPVersionFile" AfterTargets="Build" Inputs="@(KSPVersionFile);$(FileVersion)" Outputs="%(KSPVersionFile.destination)">
     <ReadLinesFromFile File="@(KSPVersionFile)" Condition="Exists('@(KSPVersionFile)')">
       <Output TaskParameter="Lines" ItemName="_JSONLines"/>
     </ReadLinesFromFile>
@@ -89,7 +89,7 @@
     <JsonPoke Content="$(_JSON)" Query="$.VERSION" RawValue="'%(KSPVersionFile.Version)'" Condition="%(KSPVersionFile.Version) != ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
-    <JsonPoke Content="$(_JSON)" Query="$.VERSION" RawValue="'$(Version)'" Condition="%(KSPVersionFile.Version) == ''">
+    <JsonPoke Content="$(_JSON)" Query="$.VERSION" RawValue="'$(FileVersion)'" Condition="%(KSPVersionFile.Version) == ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
     <JsonPoke Content="$(_JSON)" Query="$.URL" RawValue="'%(KSPVersionFile.URL)'" Condition="%(KSPVersionFile.URL) != ''">
