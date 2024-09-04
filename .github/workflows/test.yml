@@ -5,5 +5,5 @@ on:
   pull_request:
 
 jobs:
-  test-plugin-mod:
-    uses: './tests/plugin-mod/workflow.yml'
+  test-plugin:
+    uses: './.github/workflows/test-plugin.yml'

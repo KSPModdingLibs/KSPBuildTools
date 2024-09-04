@@ -3,9 +3,9 @@ name: test plugin mod build
 on:
   workflow_call:
 
-env:
-  KSP_ROOT: /tmp/kspfoobar
-  RELEASE_STAGING: /tmp/release
+defaults:
+  run:
+    working-directory: ./tests/plugin-mod
 
 jobs:
   build:
