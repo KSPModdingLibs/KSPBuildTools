@@ -1,0 +1,14 @@
+name: test plugin mod build
+
+on:
+  workflow_call:
+
+env:
+  KSP_ROOT: /tmp/kspfoobar
+  RELEASE_STAGING: /tmp/release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello World"

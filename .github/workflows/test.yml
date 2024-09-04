@@ -1,0 +1,9 @@
+name: run tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-plugin-mod:
+    uses: './tests/plugin-mod/workflow.yml'
