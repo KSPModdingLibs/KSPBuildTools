@@ -1,4 +1,5 @@
-name: test plugin mod build
+# This is an internal test for KSPBuildTools and not intended to be used by other projects
+name: Test Plugin Mod (Legacy)
 
 on:
   workflow_call:
