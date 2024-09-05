@@ -51,7 +51,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
-    <RepoRootPath>$(MSBuildThisFileDirectory)</RepoRootPath>
+    <RepoRootPath>$(MSBuildThisFileDirectory)../</RepoRootPath>
     <BinariesOutputRelativePath>GameData/plugin-mod-legacy</BinariesOutputRelativePath>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)/$(MSBuildToolsVersion)\Microsoft.Common.props" />
