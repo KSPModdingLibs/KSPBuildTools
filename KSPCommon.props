@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <KSPCommonPropsImported>true</KSPCommonPropsImported>
+  </PropertyGroup>
   
   <!--import solution-wide props if it exists -->
   <Import Condition=" Exists('$(SolutionDir)$(SolutionName).props') " Project="$(SolutionDir)$(SolutionName).props"/>

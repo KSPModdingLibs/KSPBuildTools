@@ -1,6 +1,21 @@
+KSP Build Tools
+===============
+
 This repository aims to provide a common set of tools for developing mods for Kerbal Space Program.  Note that it's still in "alpha" stages so expect things to change or break.
 
 To use it, either:
+
+* Reference this package in your csproj
+
+  run
+  `dotnet add package KSPBuildTools`
+
+  or add the following to your csproj
+  ```xml
+  <ItemGroup>
+    <PackageReference Include="KSPBuildTools" Version="0.0.0-alpha.0.214" /> 
+  </ItemGroup>
+  ```
 
 * Add this repository as a submodule:
 
@@ -27,7 +42,7 @@ What it does:
 - Includes a target for installing dependencies with CKAN
 - Designed to be used by the [Build github workflow](#compile-action)
 
-To use it, import `KSPCommon.targets` in your .csproj file after it imports Microsoft.CSharp.targets.  You should remove ALL the existing assembly references to `System`, `Assembly-CSharp`, and `Unity`.
+If not using a PackageReference, import `KSPCommon.targets` in your .csproj file after it imports Microsoft.CSharp.targets.  You should remove ALL the existing assembly references to `System`, `Assembly-CSharp`, and `Unity`.
 
 ```xml
 <Import Project="$(MSBuildToolsPath)/Microsoft.CSharp.targets" />

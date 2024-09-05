@@ -26,10 +26,6 @@ inputs:
       The path to the solution file to build.  Defaults to empty, which will invoke `msbuild` on the root directory of 
       the repo and builds any `*.sln` file it finds there.
 
-  ckan-identifiers:
-    description: Space-separated list of CKAN mod identifiers to install
-
-
 runs:
   using: composite
   steps:
@@ -54,11 +50,6 @@ runs:
       with:
         dotnet-version: 5.x
 
-    - name: Install Dependencies
-      shell: bash
-      if: ${{ inputs.depedency-identifiers }}
-      run: ckan install --headless --no-recommends ${{ runner.debug && '--verbose' }} ${{ inputs.dependency-identifiers }}
-
     - name: Download KSP Libs
       shell: bash
       run: |
@@ -68,7 +59,7 @@ runs:
     - name: Restore Mod Solution
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: dotnet restore ${{ inputs.solution-file-path }} ${{ runner.debug && '-v:detailed' }}
+      run: nuget restore ${{ inputs.solution-file-path }} ${{ runner.debug && '-v:detailed' }}
 
     - name: Build Mod Solution
       shell: bash

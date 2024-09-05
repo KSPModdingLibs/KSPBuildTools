@@ -24,10 +24,9 @@ on:
           you should set this to false
       use-ckan:
         type: boolean
-        default: true
+        default: false
         description: >
-          If CKAN should be installed. If your mod has no dependencies you can set this to false to save some time 
-          during builds.
+          If CKAN should be installed to install dependencies in the msbuild project.
     secrets:
       ksp-zip-password:
         required: false
@@ -47,7 +46,7 @@ jobs:
 
       # Install CKAN and set up an instance
       - uses: KSPModdingLibs/KSPBuildTools/.github/actions/setup-ckan@main
-        if: ${{ inputs.use-ckan && (inputs.use-msbuild || inputs.dependency-identifiers) }}
+        if: ${{ (inputs.use-ckan && inputs.use-msbuild) || inputs.dependency-identifiers }}
 
       # Install any listed CKAN dependencies
       - uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@main

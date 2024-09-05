@@ -1,0 +1,4 @@
+# dotnet artifacts
+bin
+obj
+*.nupkg

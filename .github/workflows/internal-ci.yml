@@ -1,0 +1,83 @@
+# This is an internal workflow for KSPBuildTools and not intended to be used by other projects
+
+name: CI
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+    branches:
+      - 'main'
+  pull_request:
+  workflow_dispatch:
+
+env:
+  NuGetDirectory: ${{ github.workspace}}/nuget
+
+jobs:
+  test-plugin:
+    uses: './.github/workflows/internal-test-plugin.yml'
+    
+  test-plugin-legacy:
+    uses: './.github/workflows/internal-test-plugin-legacy.yml'
+
+  build:
+    env:
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      DOTNET_NOLOGO: true
+    runs-on: ubuntu-latest
+    needs: [ test-plugin, test-plugin-legacy ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # get full history, not shallow clone
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build
+        run: dotnet build KSPBuildTools.csproj
+
+      - name: Package
+        run: dotnet pack KSPBuildTools.csproj --configuration Release --output ${{ env.NuGetDirectory }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package
+          if-no-files-found: error
+          path: ${{ env.NuGetDirectory }}/*.nupkg
+
+  deploy-nuget:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    environment:
+      name: "NuGet"
+      url: "https://www.nuget.org/packages/KSPBuildTools"
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: nuget-package
+          path: ${{ env.NuGetDirectory }}
+
+      - name: Publish Package to NuGet
+        run: >-
+          dotnet nuget push ${{ env.NuGetDirectory }}/*.nupkg
+          --api-key ${{ secrets.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+
+      - name: Authenticate with Github
+        run: >-
+          dotnet nuget add source --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }} 
+          --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+
+      - name: Publish Package to Github
+        run: |
+          dotnet nuget push --source "github" ${{ env.NuGetDirectory }}/*.nupkg
