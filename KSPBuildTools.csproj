@@ -32,4 +32,9 @@
     <None Include="KSPCommon.targets" Pack="True" PackagePath="build/KSPBuildTools.targets" />
     <None Include="README.md" Pack="True" PackagePath="/"/>
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="tests\plugin-mod-legacy\plugin-mod-legacy.csproj" />
+    <Content Include="tests\plugin-mod\plugin-mod.csproj" />
+  </ItemGroup>
 </Project>

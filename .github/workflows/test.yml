@@ -7,3 +7,5 @@ on:
 jobs:
   test-plugin:
     uses: './.github/workflows/test-plugin.yml'
+  test-plugin-legacy:
+    uses: './.github/workflows/test-plugin-legacy.yml'

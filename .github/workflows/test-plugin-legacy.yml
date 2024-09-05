@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 env:
-  TESTDIR: tests/plugin-mod
+  TESTDIR: tests/plugin-mod-legacy
 
 jobs:
   build:
@@ -16,10 +16,10 @@ jobs:
 
       - uses: ./.github/actions/compile
         with:
-          solution-file-path: ${{ env.TESTDIR }}/plugin-mod.csproj
+          solution-file-path: ${{ env.TESTDIR }}/plugin-mod-legacy.csproj
           ksp-zip-url: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
 
       - uses: ./.github/actions/assemble-release
         with:
           artifacts: ${{ env.TESTDIR }}/GameData
-          output-file-name: plugin-mod
+          output-file-name: plugin-mod-legacy
