@@ -27,6 +27,13 @@ Most things in this repository will work best if you have a directory in your re
 
 While working on your mod, I recommend that you create a junction or symlink from the game's GameData folder pointing at the content folder in your repository.  That way any changes you make will be immediately available, and you don't need to deploy or copy anything.  If you'd like to see other workflows supported please ask!
 
+#### Table of Contents
+
+- [KSPCommon.targets](#kspcommontargets)
+- [update-version.sh](#update-versionsh)
+- [Github Workflows](#github-workflows)
+- [Github Actions](#github-actions)
+
 # KSPCommon.targets
 
 This is a [msbuild](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-concepts) targets file that you can include in your .csproj files.
@@ -40,7 +47,7 @@ What it does:
 - Sets the debug symbols format to portable so that you can [debug your mod](https://gist.github.com/gotmachine/d973adcb9ae413386291170fa346d043)
 - Sets up Visual Studio's debugging start actions so you can launch KSP directly from VS
 - Includes a target for installing dependencies with CKAN
-- Designed to be used by the [Build github workflow](#compile-action)
+- Designed to be used by the [Build github workflow](#compile)
 
 If not using a PackageReference, import `KSPCommon.targets` in your .csproj file after it imports Microsoft.CSharp.targets.  You should remove ALL the existing assembly references to `System`, `Assembly-CSharp`, and `Unity`.
 
@@ -298,8 +305,6 @@ Inputs:
 
   If the ksp library zip is encrypted, this is the password.  It should be stored in your repository's secrets.
 
-* All inputs from [`install-dependencies`](#install-dependencies)
-
 ## [setup-ckan](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/setup-ckan/action.yml)
 
 Installs [CKAN](https://github.com/KSP-CKAN/CKAN) and sets up a KSP installation
@@ -324,9 +329,19 @@ Inputs:
   
   File globs to ignore when installing mods. Newline-separated. Defaults to most large asset files included in mods. Set to an empty string if you need the entire mod installed for bundling.
 
+## [install-dependencies](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/install-dependencies/action.yml)
+
+Uses CKAN to install dependencies.  You should generally prefer to [specify them in the .csproj file](#referencing-dependencies).  Requires [setup-ckan](#setup-ckan) to have already been run.
+
+Inputs:
+
+* `dependency-identifiers`
+
+A space-separated list of CKAN identifiers to install.
+
 ## [update-version](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/update-version/action.yml)
 
-Uses [yaclog](https://yaclog.readthedocs.io/en/latest/index.html) and [yaclog-ksp](https://pypi.org/project/yaclog-ksp/) to update a changelog and get release notes.  Then runs [update-version.sh](#update-version.sh) to replace version tokens in several text files.  All modifications will be staged to git but not committed.
+Uses [yaclog](https://yaclog.readthedocs.io/en/latest/index.html) and [yaclog-ksp](https://pypi.org/project/yaclog-ksp/) to update a changelog and get release notes.  Then runs [update-version.sh](#update-versionsh) to replace version tokens in several text files.  All modifications will be staged to git but not committed.
 
 Inputs:
 
