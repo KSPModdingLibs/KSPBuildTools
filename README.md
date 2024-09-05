@@ -53,6 +53,10 @@ Here's an example from [kOS](https://github.com/KSP-KOS/KOS/blob/22808556c090ebe
 
 Note that `KSPCommon.targets` makes use of `KSPCommon.props` for advanced users, which sets all the below properties but does not include the build targets.  If you only want the properties and not the targets, you can use `KSPCommon.props` instead.
 
+### Versioning
+
+[MinVer](https://github.com/adamralph/minver) is recommended for versioning mods. KSPCommon.targets will use the generated version correctly.
+
 ### Customization
 
 Properties can be customized at several points:
@@ -97,6 +101,14 @@ This property should be set to the root directory of your KSP install.  If it is
 Default value: `1.12 1.11 1.10 1.9 1.8`
 
 Used by the `CKANInstall` target to set additional KSP versions to treat as compatible when installing dependencies.
+
+#### `GenerateKSPAssemblyAttribute`
+
+If set to `true`, automatically generates the `KSPAssembly` for your assembly from the `Version` property.
+
+#### `GenerateKSPAssemblyDependencyAttributes`
+
+If set to `true`, automatically generates `KSPAssemblyDependency` attributes for each dependency. Dependencies should have either the `CKANIdentifier` metadata or `KSPAssemblyName` metadata. Versions can be supplied with `CKANVersion` or `KSPAssemblyVersion`. See [Referencing Dependencies](#referencing-dependencies) below.
 
 ### Referencing Dependencies
 

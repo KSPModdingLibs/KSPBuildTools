@@ -27,33 +27,37 @@
   </Target>
 
   <!-- Use CKAN to install mods for any references tagged with a CKAN Identifier -->
-  <Target Name="CKANInstall" BeforeTargets="_GenerateRestoreProjectSpec;Restore">
+  <Target Name="CKANInstallScriptGen" BeforeTargets="_GenerateRestoreProjectSpec;Restore">
+    <Message Text="IntermediateOutputPath: $(Test)"/>
     <ItemGroup>
       <_CKANCompatibleVersionItems Include="$(CKANCompatibleVersions.Split(' '))"/>
-      <_CKANDependency Include="%(Reference.CKANIdentifier)"/>
+      <_CKANDependency Include="%(Reference.CKANIdentifier)" Condition="%(Reference.CKANVersion) == ''"/>
+      <_CKANDependency Include="%(Reference.CKANIdentifier)=%(Reference.CKANVersion)" Condition="%(Reference.CKANVersion) != ''"/>
       <_CKANDependency Include="@(CKANDependency)"/>
     </ItemGroup>
-
     <PropertyGroup>
-      <_TempStagingFolder>$([System.IO.Path]::Combine($([System.IO.Path]::GetTempPath()), $([System.IO.Path]::GetRandomFileName())))</_TempStagingFolder>
-      <_CKANCommandFile>$(_TempStagingFolder)/ckan_commands.txt</_CKANCommandFile>
-      <_CKANDependencyList>@(_CKANDependency, ' ')</_CKANDependencyList>
+      <CKANDependencyList>@(_CKANDependency, ' ')</CKANDependencyList>
+      <CKANCommandFile>$(IntermediateOutputPath)CKANCommands</CKANCommandFile>
     </PropertyGroup>
-
     <ItemGroup>
       <!-- Not using `ckan compat set` because as of 2024-08-16 it is still only available in the dev branch -->
       <_CKANCommands Include="compat add --gamedir &quot;$(KSPROOT)&quot; %(_CKANCompatibleVersionItems.Identity)"
-                    Condition=" '$(CKANCompatibleVersions)' != '' "/>
+                     Condition=" '$(CKANCompatibleVersions)' != '' "/>
 
-      <_CKANCommands Include="install --no-recommends --gamedir &quot;$(KSPROOT)&quot; $(_CKANDependencyList)"/>
+      <_CKANCommands Include="install --no-recommends --gamedir &quot;$(KSPROOT)&quot; $(CKANDependencyList)" Condition="$(CKANDependencyList) != ''"/>
     </ItemGroup>
-
-    <Message Text="Writing CKAN commands to $(_CKANCommandFile)"/>
+    <Message Text="Writing CKAN commands to $(CKANCommandFile)"/>
     <Message Text="@(_CKANCommands, '%0a')" Importance="Low"/>
-    <WriteLinesToFile File="$(_CKANCommandFile)" Lines="@(_CKANCommands)"/>
-    <Exec Command="cat '$(_CKANCommandFile)' | ckan prompt --headless"
-          Condition="'$(_CKANDependencyList)' != ''"/>
-    <RemoveDir Directories="$(_TempStagingFolder)"/>
+    <WriteLinesToFile File="$(CKANCommandFile)" Lines="@(_CKANCommands)" Overwrite="true" WriteOnlyWhenDifferent="true"/>
+  </Target>
+
+  <!-- Execute generated CKAN command list -->
+  <Target Name="CKANInstall" DependsOnTargets="CKANInstallScriptGen" BeforeTargets="_GenerateRestoreProjectSpec;Restore" Inputs="$(CKANCommandFile)" Outputs="$(KSPRoot)/CKAN/registry.json">
+    <Exec Command="cat '$(CKANCommandFile)' | ckan prompt --headless" Condition="'$(CKANDependencyList)' != ''"/>
+  </Target>
+
+  <Target Name="CKANClean" AfterTargets="Clean">
+    <Delete Files="$(IntermediateOutputPath)CKANCommands"/>
   </Target>
 
   <!--  For use like so: `msbuild -t:"GetRequiredExternalTools" -verbosity:minimal -nologo`, then pipe into your destination of choice -->
@@ -63,6 +67,56 @@
       <RequiredExternalTool Include="CKAN" Condition="@(CKANDependencyList) != ''"/>
     </ItemGroup>
     <Message Text="@(RequiredExternalTool)" Importance="high"/>
+  </Target>
+
+  <!--
+  Generate the KSPAssembly attribute based on the FileVersion property
+  -->
+  <Target Name="GenerateKSPAssemblyAttribute" BeforeTargets="CoreGenerateAssemblyInfo"
+          Condition="$(GenerateKSPAssemblyAttribute)">
+    <ItemGroup>
+      <AssemblyAttribute Include="KSPAssembly">
+        <_Parameter1>$(AssemblyName)</_Parameter1>
+        <_Parameter1_TypeName>System.String</_Parameter1_TypeName>
+        <_Parameter2>$(FileVersion.Split('.')[0])</_Parameter2>
+        <_Parameter2_TypeName>System.Int32</_Parameter2_TypeName>
+        <_Parameter3>$(FileVersion.Split('.')[1])</_Parameter3>
+        <_Parameter3_TypeName>System.Int32</_Parameter3_TypeName>
+        <_Parameter4>$(FileVersion.Split('.')[2])</_Parameter4>
+        <_Parameter4_TypeName>System.Int32</_Parameter4_TypeName>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
+
+  <!--
+  Generate the KSPAssemblyDependency attributes based on input references
+
+  Reference items must have a CKANIdentifier or a KSPAssemblyName.
+  KSPAssemblyVersion can be optionally specified.
+    Otherwise CKANVersion is used.
+    Otherwise 0.0.0 is used (no minimum version)
+  -->
+  <Target Name="GenerateKSPAssemblyDependencyAttributes" BeforeTargets="CoreGenerateAssemblyInfo"
+          Condition="$(GenerateKSPAssemblyDependencyAttributes) == 'true'">
+    <ItemGroup>
+      <Reference Update="%(Reference.identity)" Condition="'%(Reference.CKANIdentifier)%(Reference.KSPAssemblyName)' != ''">
+        <KSPAssemblyName Condition="%(Reference.KSPAssemblyName) == ''">$([System.String]::Copy('%(Reference.identity)').Split(',')[0])</KSPAssemblyName>
+        <KSPAssemblyVersion Condition="%(Reference.KSPAssemblyVersion) == ''">%(Reference.CKANVersion)</KSPAssemblyVersion>
+        <KSPAssemblyVersion Condition="%(Reference.KSPAssemblyVersion) == ''">0.0.0</KSPAssemblyVersion>
+      </Reference>
+    </ItemGroup>
+    <ItemGroup>
+      <AssemblyAttribute Include="KSPAssemblyDependency" Condition="%(Reference.KSPAssemblyName) != ''">
+        <_Parameter1>%(Reference.KSPAssemblyName)</_Parameter1>
+        <_Parameter1_TypeName>System.String</_Parameter1_TypeName>
+        <_Parameter2>$([System.String]::Copy('%(Reference.KSPAssemblyVersion)').Split('.')[0])</_Parameter2>
+        <_Parameter2_TypeName>System.Int32</_Parameter2_TypeName>
+        <_Parameter3>$([System.String]::Copy('%(Reference.KSPAssemblyVersion)').Split('.')[1])</_Parameter3>
+        <_Parameter3_TypeName>System.Int32</_Parameter3_TypeName>
+        <_Parameter4>$([System.String]::Copy('%(Reference.KSPAssemblyVersion)').Split('.')[2])</_Parameter4>
+        <_Parameter4_TypeName>System.Int32</_Parameter4_TypeName>
+      </AssemblyAttribute>
+    </ItemGroup>
   </Target>
 
   <ItemDefinitionGroup>
