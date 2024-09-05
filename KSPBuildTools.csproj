@@ -32,4 +32,9 @@
     <None Include="KSPCommon.targets" Pack="True" PackagePath="build/KSPBuildTools.targets" />
     <None Include="README.md" Pack="True" PackagePath="/"/>
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="$(MSBuildThisFileDirectory)tests/**" />
+    <None Remove="$(MSBuildThisFileDirectory)tests/**" />
+  </ItemGroup>
 </Project>
