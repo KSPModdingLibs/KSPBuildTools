@@ -34,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="tests\plugin-mod-legacy\plugin-mod-legacy.csproj" />
-    <Content Include="tests\plugin-mod\plugin-mod.csproj" />
+    <Content Exclude="tests/*" />
   </ItemGroup>
 </Project>

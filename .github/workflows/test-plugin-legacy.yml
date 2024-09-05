@@ -16,7 +16,7 @@ jobs:
 
       - uses: ./.github/actions/compile
         with:
-          solution-file-path: ${{ env.TESTDIR }}/plugin-mod-legacy.csproj
+          solution-file-path: ${{ env.TESTDIR }}/PluginModLegacy.sln
           ksp-zip-url: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
 
       - uses: ./.github/actions/assemble-release
