@@ -314,7 +314,7 @@ Inputs:
 
 * `ckan-version`
 
-  CKAN tag to install. set to an empty string to always install the most recent version. See [https://github.com/KSP-CKAN/CKAN/tags](the CKAN releases page) for a list of available tags
+  CKAN tag to install. set to an empty string to always install the most recent version. See [the CKAN releases page](https://github.com/KSP-CKAN/CKAN/tags) for a list of available tags
 
 * `ckan-compatible-versions`
 
