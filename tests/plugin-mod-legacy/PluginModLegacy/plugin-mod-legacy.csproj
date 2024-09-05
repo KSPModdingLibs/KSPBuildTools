@@ -58,7 +58,7 @@
   <Import Project="$(MSBuildThisFileDirectory)../../../KSPCommon.targets" />
   <Import Project="$(MSBuildBinPath)/Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="Properties/dAssemblyInfo.cs"/>
+    <Compile Include="Properties/AssemblyInfo.cs"/>
   </ItemGroup>
   <ItemGroup>
     <Publicize Include="Assembly-CSharp" />
