@@ -42,10 +42,6 @@
     <GenerateKSPAssemblyAttribute>true</GenerateKSPAssemblyAttribute>
     <GenerateKSPAssemblyDependencyAttributes>true</GenerateKSPAssemblyDependencyAttributes>
   </PropertyGroup>
-  
-  <Target Name="MakeModDir" BeforeTargets="BeforeBuild">
-    <MakeDir Directories="$(RepoRootPath)GameData/plugin-mod" />
-  </Target>
 
   <Import Project="$(MSBuildThisFileDirectory)../../KSPCommon.targets" />
 </Project>
