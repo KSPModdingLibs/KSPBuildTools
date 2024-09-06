@@ -8,18 +8,10 @@
     <PackageReference Include="JsonPoke" Version="1.2.0" Condition="@(KSPVersionFile) != ''"/>
   </ItemGroup>
 
-  <!-- Pre/post build targets -->
-  <Target Name="BeforeBuildScript" BeforeTargets="Build">
-  </Target>
-  <Target Name="PostBuildScript" AfterTargets="Build">
-    <CallTarget Targets="CopyBinariesToRepo"/>
-  </Target>
-
   <!--Custom Targets-->
 
-  <!-- this probably isn't the best way to do this, because it doesn't necessarily get run when switching build configs (debug/release)-->
-  <!-- make sure to always do a rebuild when switching configs and you should be fine -->
-  <Target Name="CopyBinariesToRepo">
+  <!-- Copy output files to mod folder -->
+  <Target Name="CopyBinariesToRepo" AfterTargets="CopyFilesToOutputDirectory">
     <ItemGroup>
       <BinariesToCopy Include="$(TargetDir)/*.*"/>
     </ItemGroup>
