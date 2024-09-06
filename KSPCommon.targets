@@ -21,9 +21,10 @@
   <!-- make sure to always do a rebuild when switching configs and you should be fine -->
   <Target Name="CopyBinariesToRepo">
     <ItemGroup>
-      <BinariesToCopy Include="$(TargetDir)\*.*"/>
+      <BinariesToCopy Include="$(TargetDir)/*.*"/>
     </ItemGroup>
-    <Copy SourceFiles="@(BinariesToCopy)" DestinationFolder="$(RepoRootPath)\$(BinariesOutputRelativePath)"/>
+    <MakeDir Directories="$(RepoRootPath)/$(BinariesOutputRelativePath)"/>
+    <Copy SourceFiles="@(BinariesToCopy)" DestinationFolder="$(RepoRootPath)/$(BinariesOutputRelativePath)"/>
   </Target>
 
   <!-- Use CKAN to install mods for any references tagged with a CKAN Identifier -->
