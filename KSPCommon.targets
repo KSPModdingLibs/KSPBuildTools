@@ -20,8 +20,7 @@
   </Target>
 
   <!-- Use CKAN to install mods for any references tagged with a CKAN Identifier -->
-  <Target Name="CKANInstallScriptGen" BeforeTargets="_GenerateRestoreProjectSpec;Restore">
-    <Message Text="IntermediateOutputPath: $(Test)"/>
+  <Target Name="CKANInstallScriptGen">
     <ItemGroup>
       <_CKANCompatibleVersionItems Include="$(CKANCompatibleVersions.Split(' '))"/>
       <_CKANDependency Include="%(Reference.CKANIdentifier)" Condition="%(Reference.CKANVersion) == ''"/>
@@ -45,7 +44,7 @@
   </Target>
 
   <!-- Execute generated CKAN command list -->
-  <Target Name="CKANInstall" DependsOnTargets="CKANInstallScriptGen" BeforeTargets="_GenerateRestoreProjectSpec;Restore" Inputs="$(CKANCommandFile)" Outputs="$(KSPRoot)/CKAN/registry.json">
+  <Target Name="CKANInstall" DependsOnTargets="CKANInstallScriptGen" BeforeTargets="_GenerateRestoreProjectSpec;Restore;Build" Inputs="$(CKANCommandFile)" Outputs="$(KSPRoot)/CKAN/registry.json">
     <Exec Command="cat '$(CKANCommandFile)' | ckan prompt --headless" Condition="'$(CKANDependencyList)' != ''"/>
   </Target>
 
