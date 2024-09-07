@@ -54,7 +54,6 @@
 
   <Target Name="CKANClean" AfterTargets="Clean">
     <Delete Files="$(IntermediateOutputPath)CKANCommands"/>
-    <Delete Files="$(KSPRoot)/CKAN/registry.json"/>
   </Target>
 
   <!--  For use like so: `msbuild -t:"GetRequiredExternalTools" -verbosity:minimal -nologo`, then pipe into your destination of choice -->
