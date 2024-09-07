@@ -5,7 +5,7 @@
   <!-- NuGet dependencies -->
   <ItemGroup>
     <!-- For GenerateKSPVersionFile -->
-    <PackageReference Include="JsonPoke" Version="1.2.0" Condition="@(KSPVersionFile) != ''"/>
+    <PackageReference Include="JsonPoke" Version="1.2.0"/>
   </ItemGroup>
 
   <!--Custom Targets-->
@@ -43,13 +43,18 @@
     <WriteLinesToFile File="$(CKANCommandFile)" Lines="@(_CKANCommands)" Overwrite="true" WriteOnlyWhenDifferent="true"/>
   </Target>
 
+  <ItemGroup>
+    <PrepareResourcesDependsOn Include="CKANInstall"/>
+  </ItemGroup>
+
   <!-- Execute generated CKAN command list -->
-  <Target Name="CKANInstall" DependsOnTargets="CKANInstallScriptGen" BeforeTargets="_GenerateRestoreProjectSpec;Restore;Build" Inputs="$(CKANCommandFile)" Outputs="$(KSPRoot)/CKAN/registry.json">
+  <Target Name="CKANInstall" DependsOnTargets="CKANInstallScriptGen" BeforeTargets="_GenerateRestoreProjectSpec;Restore;PrepareResources" Inputs="$(CKANCommandFile)" Outputs="$(KSPRoot)/CKAN/registry.json">
     <Exec Command="cat '$(CKANCommandFile)' | ckan prompt --headless" Condition="'$(CKANDependencyList)' != ''"/>
   </Target>
 
   <Target Name="CKANClean" AfterTargets="Clean">
     <Delete Files="$(IntermediateOutputPath)CKANCommands"/>
+    <Delete Files="$(KSPRoot)/CKAN/registry.json"/>
   </Target>
 
   <!--  For use like so: `msbuild -t:"GetRequiredExternalTools" -verbosity:minimal -nologo`, then pipe into your destination of choice -->
