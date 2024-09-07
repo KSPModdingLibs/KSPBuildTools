@@ -5,7 +5,7 @@
   <!-- NuGet dependencies -->
   <ItemGroup>
     <!-- For GenerateKSPVersionFile -->
-    <PackageReference Include="JsonPoke" Version="1.2.0"/>
+    <PackageReference Include="JsonPoke" Version="1.2.0" Condition="@(KSPVersionFile) != ''"/>
   </ItemGroup>
 
   <!--Custom Targets-->
