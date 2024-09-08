@@ -1,0 +1,42 @@
+# This is an internal test for KSPBuildTools and not intended to be used by other projects
+name: Test Plugin Mod
+
+on:
+  workflow_call:
+
+env:
+  TESTDIR: tests/plugin-mod-nuget
+  NuGetDirectory: ${{ github.workspace}}/nuget
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Setup Nuget Package Sources
+        run: |
+          mkdir -p ${{ env.NuGetDirectory }}/local
+          dotnet nuget add source --name local ${{ env.NuGetDirectory }}/local
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: nuget-package
+          path: ${{ env.NuGetDirectory }}/local
+
+      - uses: ./.github/actions/setup-ckan
+
+      - uses: ./.github/actions/compile
+        with:
+          solution-file-path: ${{ env.TESTDIR }}/plugin-mod.csproj
+          ksp-zip-url: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
+
+      - uses: ./.github/actions/assemble-release
+        with:
+          artifacts: ${{ env.TESTDIR }}/GameData
+          output-file-name: plugin-mod-nuget
