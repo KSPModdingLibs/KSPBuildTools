@@ -13,16 +13,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # get full history, not shallow clone
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
+      - name: Get Version
+        run: |
+          dotnet tool install --global minver-cli --version 5.0.0
+          minver 
+          echo "KSPBuildToolsVersion=$(minver -v e)" >> "$GITHUB_ENV"
+
       - name: Setup Nuget Package Sources
         run: |
           mkdir -p ${{ env.NuGetDirectory }}/local
-          dotnet nuget add source --name local ${{ env.NuGetDirectory }}/local
+          nuget sources add -Name local -Source ${{ env.NuGetDirectory }}/local
 
       - uses: actions/download-artifact@v4
         with:

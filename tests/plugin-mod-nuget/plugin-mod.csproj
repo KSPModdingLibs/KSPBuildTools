@@ -1,8 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <KSPBuildToolsVersion Condition = " '$(KSPBuildToolsVersion)' == ''">*-*</KSPBuildToolsVersion>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="KSPBuildTools" Version="*-*" />
+    <PackageReference Include="KSPBuildTools" Version="$(KSPBuildToolsVersion)" />
     <PackageReference Include="MinVer" Version="5.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
