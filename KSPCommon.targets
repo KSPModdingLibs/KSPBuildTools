@@ -44,11 +44,11 @@
   </Target>
 
   <ItemGroup>
-    <PrepareResourcesDependsOn Include="CKANInstall"/>
+    <ResolveReferencesDependsOn Include="CKANInstall"/>
   </ItemGroup>
 
   <!-- Execute generated CKAN command list -->
-  <Target Name="CKANInstall" DependsOnTargets="CKANInstallScriptGen" BeforeTargets="_GenerateRestoreProjectSpec;Restore;PrepareResources" Inputs="$(CKANCommandFile)" Outputs="$(KSPRoot)/CKAN/registry.json">
+  <Target Name="CKANInstall" DependsOnTargets="CKANInstallScriptGen" BeforeTargets="_GenerateRestoreProjectSpec;Restore;ResolveReferences" Inputs="$(CKANCommandFile)" Outputs="$(KSPRoot)/CKAN/registry.json">
     <Exec Command="cat '$(CKANCommandFile)' | ckan prompt --headless" Condition="'$(CKANDependencyList)' != ''"/>
   </Target>
 
