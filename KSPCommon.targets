@@ -127,7 +127,7 @@
   <Target Name="GenerateKSPVersionFile" AfterTargets="Build" Inputs="@(KSPVersionFile);$(FileVersion)" Outputs="%(KSPVersionFile.destination)">
     <ItemGroup>
       <KSPVersionFile Update="@(KSPVersionFile)">
-        <Name Condition="%(KSPVersionFile.Version) == '$(ProjectName)'">$(ProjectName)</Name>
+        <Name Condition="%(KSPVersionFile.Name) == ''">$(ProjectName)</Name>
         <Version Condition="%(KSPVersionFile.Version) == ''">$(FileVersion.Split(`.`)[0]).$(FileVersion.Split(`.`)[1]).$(FileVersion.Split(`.`)[2])</Version>
       </KSPVersionFile>
     </ItemGroup>
