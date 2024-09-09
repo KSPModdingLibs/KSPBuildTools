@@ -136,10 +136,14 @@
     <JsonPoke Content="$(_JSON)" Query="$.NAME" RawValue="'%(KSPVersionFile.Name)'">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
-    <JsonPoke Content="$(_JSON)" Query="$.VERSION" RawValue="'%(KSPVersionFile.Version)'" Condition="%(KSPVersionFile.Version) != ''">
+    <JsonPoke Content="$(_JSON)" Query="$.VERSION"
+              RawValue="'%(KSPVersionFile.Version)'"
+              Condition="%(KSPVersionFile.Version) != ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
-    <JsonPoke Content="$(_JSON)" Query="$.VERSION" RawValue="'$(FileVersion)'" Condition="%(KSPVersionFile.Version) == ''">
+    <JsonPoke Content="$(_JSON)" Query="$.VERSION"
+              RawValue="'$(FileVersion.Split(`.`)[0]).$(FileVersion.Split(`.`)[1]).$(FileVersion.Split(`.`)[2])'"
+              Condition="%(KSPVersionFile.Version) == ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
     <JsonPoke Content="$(_JSON)" Query="$.URL" RawValue="'%(KSPVersionFile.URL)'" Condition="%(KSPVersionFile.URL) != ''">
