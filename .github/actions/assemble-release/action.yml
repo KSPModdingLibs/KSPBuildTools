@@ -46,7 +46,7 @@ runs:
         mkdir -p ${{ env.RELEASE_STAGING  }}   
         cp -r -v ${{ inputs.artifacts }} ${{ env.RELEASE_STAGING }}
         cd ${{ env.RELEASE_STAGING }}
-        rm ${{ inputs.artifacts-exclude }}
+        rm -f ${{ inputs.artifacts-exclude }}
 
     - name: Assemble Release
       id: assemble-release
