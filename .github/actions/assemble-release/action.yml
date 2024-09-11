@@ -7,7 +7,7 @@ inputs:
 
   artifacts-exclude:
     description: Space-separated list of file globs remove from the staging directory before zipping
-    default: '**/*.pdb'
+    default: "**/*.pdb"
 
   output-file-name:
     description: Output artifact name
