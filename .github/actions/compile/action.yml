@@ -26,6 +26,10 @@ inputs:
       The path to the solution file to build.  Defaults to empty, which will invoke `msbuild` on the root directory of 
       the repo and builds any `*.sln` file it finds there.
 
+  working-directory:
+    default: ${{ github.workspace }}
+    description: the working directory to run in
+
 runs:
   using: composite
   steps:
@@ -58,12 +62,12 @@ runs:
 
     - name: Restore Mod Solution
       shell: bash
-      working-directory: ${{ github.workspace }}
+      working-directory: ${{ inputs.working-directory }}
       run: nuget restore ${{ inputs.solution-file-path }} -Verbosity detailed
 
     - name: Build Mod Solution
       shell: bash
-      working-directory: ${{ github.workspace }}
+      working-directory: ${{ inputs.working-directory }}
       run: |
         msbuild -p:Configuration=${{ inputs.build-configuration }} \
         -p:ManagedRelativePath=KSP_x64_Data/Managed ${{ inputs.solution-file-path }} \
