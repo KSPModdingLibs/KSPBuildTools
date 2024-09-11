@@ -42,13 +42,12 @@ runs:
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
+        shopt -s nocaseglob # so globs are case-insensitive
+        shopt -s globstar
         mkdir -p ${{ env.RELEASE_STAGING  }}   
         cp -r -v ${{ inputs.artifacts }} ${{ env.RELEASE_STAGING }}
-
-    - name: Remove Excluded Files
-      shell: bash
-      working-directory: ${{ env.RELEASE_STAGING }}
-      run: rm -f ${{ inputs.artifacts-exclude }}
+        cd ${{ env.RELEASE_STAGING }}
+        rm -f ${{ inputs.artifacts-exclude }}
 
     - name: Assemble Release
       id: assemble-release
