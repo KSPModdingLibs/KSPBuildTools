@@ -43,6 +43,7 @@ jobs:
         with:
           ksp-zip-url: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
           working-directory: ${{ env.TESTDIR }}
+          solution-file-path: plugin-mod.csproj
 
       - uses: ./.github/actions/assemble-release
         with:
