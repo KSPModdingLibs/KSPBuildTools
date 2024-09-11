@@ -2,17 +2,33 @@ name: assemble-release
 
 inputs:
   artifacts:
-    description: Space-separated list of file globs to include in the output artifact
+    description: Space-separated list of file globs to include in the output artifact, relative to `working-directory`
     default: GameData LICENSE* README* CHANGELOG*
+
+  artifacts-exclude:
+    description: Space-separated list of file globs remove from the staging directory before zipping
+    default: '**/*.pdb'
+
   output-file-name:
     description: Output artifact name
     default: ${{ github.event.repository.name || 'release'}}
 
+  working-directory:
+    default: ${{ github.workspace }}
+    description: the working directory to run in
+
 outputs:
   artifact-id:
     value: ${{ steps.upload-artifact.outputs.artifact-id }}
+    description: Artifact ID from the upload-artifact action
+
   artifact-url:
     value: ${{ steps.upload-artifact.outputs.artifact-url }}
+    description: Artifact URL from the upload-artifact action
+
+  artifact-path:
+    value: ${{ steps.assemble-release.outputs.artifact-path }}
+    description: Local path to the produced zip file
 
 runs:
   using: composite
@@ -22,15 +38,23 @@ runs:
       shell: bash
       run: echo 'RELEASE_STAGING=${{ '/tmp/release' }}' >> "$GITHUB_ENV"
 
+    - name: Copy Files to Staging
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        shopt -s nocaseglob # so globs are case-insensitive
+        mkdir -p ${{ env.RELEASE_STAGING  }}   
+        cp -r -v ${{ inputs.artifacts }} ${{ env.RELEASE_STAGING }}
+        cd ${{ env.RELEASE_STAGING }}
+        rm ${{ inputs.artifacts-exclude }}
+
     - name: Assemble Release
+      id: assemble-release
       shell: bash
       run: |
-        mkdir -p ${{ env.RELEASE_STAGING  }}
-        # TODO: delete pdb files?  run some kind of assembly script?
-        cp -r -v ${{ inputs.artifacts }} ${{ env.RELEASE_STAGING }} || :
-        cd ${{ env.RELEASE_STAGING }}
-        zip -r ${{ github.workspace }}/${{ inputs.output-file-name }}.zip .
+        zip -r ${{ github.workspace }}/${{ inputs.output-file-name }}.zip ${{ env.RELEASE_STAGING }}
         echo 'ARTIFACT_FILENAME=${{ inputs.output-file-name }}' >> $GITHUB_ENV
+        echo 'artifact-path=${{ github.workspace }}/${{ inputs.output-file-name }}' >> $GITHUB_OUTPUT
 
     - name: Upload Artifact
       id: upload-artifact
