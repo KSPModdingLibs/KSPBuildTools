@@ -22,6 +22,24 @@ jobs:
           solution-file-path: plugin-mod.csproj
 
       - uses: ./.github/actions/assemble-release
+        id: assemble-release
         with:
-          artifacts: ${{ env.TESTDIR }}/GameData
+          working-directory: ${{ env.TESTDIR }}
           output-file-name: plugin-mod
+
+      - name: Get github artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: plugin-mod
+          path: github-artifact
+
+      - name: Compare with zip artifact
+        run: |
+          unzip ${{ steps.assemble-release.outputs.artifact-path }} -d zip-artifact
+          
+          tree github-artifact
+          tree zip-artifact
+          
+          if [[ $(tree github-artifact/* | sed '1d') != $(tree zip-artifact/* | sed '1d') ]]; then echo "tree mismatch" && false; fi # fail if contents differ
+          if [[ ! -d github-artifact/GameData ]]; then echo "GameData not present" && false; fi # fail if GameData folder isnt present
+          if [[ -f github-artifact/GameData/plugin-mod/PluginMod.pdb ]]; then echo "pdb still present" && false; fi # fail if PDB is still present

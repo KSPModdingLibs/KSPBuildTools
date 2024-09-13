@@ -44,6 +44,7 @@ runs:
       run: |
         shopt -s nocaseglob # so globs are case-insensitive
         shopt -s globstar
+        shopt -s nullglob
         mkdir -p ${{ env.RELEASE_STAGING  }}   
         cp -r -v ${{ inputs.artifacts }} ${{ env.RELEASE_STAGING }}
         cd ${{ env.RELEASE_STAGING }}
@@ -52,8 +53,8 @@ runs:
     - name: Assemble Release
       id: assemble-release
       shell: bash
+      working-directory: ${{ env.RELEASE_STAGING }}
       run: |
-        cd ${{ env.RELEASE_STAGING }}
         zip -r ${{ github.workspace }}/${{ inputs.output-file-name }}.zip .
         echo 'ARTIFACT_FILENAME=${{ inputs.output-file-name }}' >> $GITHUB_ENV
         echo 'artifact-path=${{ github.workspace }}/${{ inputs.output-file-name }}' >> $GITHUB_OUTPUT
@@ -65,3 +66,4 @@ runs:
         path: ${{ env.RELEASE_STAGING }}
         name: ${{ inputs.output-file-name }}
         if-no-files-found: error
+        include-hidden-files: 'true' # behavior changed in 4.4.0. Include hidden for matching the behavior of `zip`
