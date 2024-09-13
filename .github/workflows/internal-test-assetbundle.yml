@@ -13,4 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: ./.github/actions/setup-unity
+      - name: Setup Unity
+        uses: kuler90/setup-unity@v1
+        with:
+          unity-version: 2019.4.18f1
+          unity-modules: windows
