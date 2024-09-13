@@ -28,3 +28,7 @@ runs:
       uses: tecolicom/actions-use-apt-tools@v1
       with:
         tools: 'unityhub'
+
+    - name: Run Unity Hub
+      shell: bash
+      run: unityhub --headless help
