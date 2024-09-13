@@ -13,10 +13,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: ./.github/actions/setup-ckan
-
-      - uses: ./.github/actions/compile
-        with:
-          ksp-zip-url: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
-          working-directory: ${{ env.TESTDIR }}
-          solution-file-path: plugin-mod.csproj
+      - uses: ./.github/actions/setup-unity
