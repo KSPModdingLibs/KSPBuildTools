@@ -1,0 +1,22 @@
+# This is an internal test for KSPBuildTools and not intended to be used by other projects
+name: Test Assetbundle
+
+on:
+  workflow_call:
+
+env:
+  TESTDIR: tests/plugin-mod
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-ckan
+
+      - uses: ./.github/actions/compile
+        with:
+          ksp-zip-url: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
+          working-directory: ${{ env.TESTDIR }}
+          solution-file-path: plugin-mod.csproj
