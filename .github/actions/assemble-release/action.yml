@@ -54,7 +54,7 @@ runs:
       shell: bash
       run: |
         cd ${{ env.RELEASE_STAGING }}
-        zip -r ${{ github.workspace }}/${{ inputs.output-file-name }}.zip ${{ env.RELEASE_STAGING }}
+        zip -r ${{ github.workspace }}/${{ inputs.output-file-name }}.zip
         echo 'ARTIFACT_FILENAME=${{ inputs.output-file-name }}' >> $GITHUB_ENV
         echo 'artifact-path=${{ github.workspace }}/${{ inputs.output-file-name }}' >> $GITHUB_OUTPUT
 
