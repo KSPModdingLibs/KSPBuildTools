@@ -1,0 +1,7 @@
+name: Build Assetbundle
+description: Build an assetbundle
+
+runs:
+  using: docker
+  image: Dockerfile
+
