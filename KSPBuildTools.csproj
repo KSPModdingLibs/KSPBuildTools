@@ -40,5 +40,11 @@
   <ItemGroup>
     <Compile Remove="$(MSBuildThisFileDirectory)tests/**" />
     <None Remove="$(MSBuildThisFileDirectory)tests/**" />
+    <Compile Remove="$(MSBuildThisFileDirectory)Editor/**" />
+    <None Remove="$(MSBuildThisFileDirectory)Editor/**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include=".github\actions\build-assetbundle\" />
   </ItemGroup>
 </Project>

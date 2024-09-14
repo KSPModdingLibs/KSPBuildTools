@@ -1,7 +1,22 @@
 name: Build Assetbundle
 description: Build an assetbundle
 
+inputs: 
+  unity-version:
+    description: Full unity version name to build with. e.g. 2019.4.18f1
+    default: '2019.4.18f1'
+
 runs:
-  using: docker
-  image: Dockerfile
+  using: composite
+  steps:
+    - name: Build Docker Container
+      shell: bash
+      run: |
+        docker build -f --platform linux/amd64 --tag build-assetbundle --file ${{ github.action_path }}/Dockerfile --build-arg UNITY_VERSION=${{inputs.unity-version}}
+      working-directory: ${{ github.action_path }}/../../..
+      
+    - name: Run Docker Container
+      shell: bash
+      run: |
+        docker run build-assetbundle --volume ${{ github.workspace }}:/github/workspace
 
