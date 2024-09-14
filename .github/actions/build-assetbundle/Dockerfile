@@ -7,4 +7,4 @@ FROM unityci/editor:${UNITY_VERSION}-windows-mono-3
 COPY ./ /KSPBuildTools
 
 # Code file to execute when the docker container starts up (`build-assetbundle.sh`)
-ENTRYPOINT ["/KSPBuildTools/.github/actions/build-assetbundle/build-assetbundle.sh"]
+ENTRYPOINT ["/KSPBuildTools/build-assetbundle.sh", "--editor", "unity-editor"]
