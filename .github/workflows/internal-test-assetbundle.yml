@@ -18,7 +18,7 @@ jobs:
           repository: 'LGhassen/Deferred'
           path: 'Deferred'
 
-      - uses: ./.github/actions/build-assetbundle
+      - uses: ./.github/actions/build-assetbundles
         with:
           project-dir: 'Deferred/shaders/DeferredKSPShaders'
           assetbundle-dir: 'Bundle'
