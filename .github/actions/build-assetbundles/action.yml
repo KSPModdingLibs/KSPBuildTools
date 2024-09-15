@@ -13,6 +13,9 @@ inputs:
   assetbundle-dir:
     description: Destination for built assetbundles
 
+  unity-license:
+    description: Your Unity License file contents
+
 runs:
   using: composite
   steps:
@@ -29,6 +32,14 @@ runs:
         -d -i -t 
         --volume ${{ github.workspace }}:/github/workspace 
         build-assetbundle 
+
+    - name: Authenticate Unity License
+      shell: bash
+      run: |
+        echo $UNITY_ULF >> 'unity_license.ulf'
+        docker exec build-assetbundle unity-editor -batchmode -manualLicenseFile unity_license.ulf -logfile
+      env:
+        UNITY_ULF: ${{ inputs.unity-license }}
 
     - name: Copy editor tools into project
       shell: bash
