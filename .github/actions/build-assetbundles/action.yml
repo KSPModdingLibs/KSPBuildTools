@@ -37,7 +37,7 @@ runs:
       shell: bash
       run: |
         echo $UNITY_ULF >> 'unity_license.ulf'
-        docker exec build-assetbundle unity-editor -batchmode -manualLicenseFile unity_license.ulf -logfile
+#        docker exec build-assetbundle unity-editor -batchmode -manualLicenseFile unity_license.ulf -logfile
       env:
         UNITY_ULF: ${{ inputs.unity-license }}
 
