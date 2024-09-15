@@ -35,6 +35,6 @@ runs:
       with:
         targetPlatform: 'StandaloneWindows'
         unityVersion: ${{ inputs.unity-version }}
-        projectPath: ${{ project-dir }}
+        projectPath: ${{ inputs.project-dir }}
         customParameters: '-assetbundlePath /github/workspace/${{ inputs.assetbundle-dir }}'
         buildMethod: 'AssetBundleBuilder.BuildBundles'
