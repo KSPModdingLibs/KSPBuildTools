@@ -21,6 +21,14 @@ jobs:
           repository: 'LGhassen/Deferred'
           path: 'Deferred'
 
+      - uses: actions/cache@v4
+        with:
+          path: Deferred/shaders/DeferredKSPShaders/Library
+          key: library-${{ hashFiles('Deferred/shaders/DeferredKSPShaders/Assets/**') }}
+          restore-keys: |
+            library-${{ hashFiles('Deferred/shaders/DeferredKSPShaders/Assets/**') }}
+            library-
+
       - run: |
           mkdir -p Deferred/shaders/DeferredKSPShaders/Assets/KSPBuildTools
           cp -r Editor Deferred/shaders/DeferredKSPShaders/Assets/KSPBuildTools/Editor
@@ -30,7 +38,7 @@ jobs:
           targetPlatform: 'StandaloneWindows'
           unityVersion: '2019.4.18f1'
           projectPath: 'Deferred/shaders/DeferredKSPShaders'
-          customParameters: '-assetbundlePath /github/workspace/${{ inputs.assetbundle-dir }}'
+          customParameters: '-assetbundlePath ${{github.workspace}}/Bundle'
           buildMethod: 'AssetBundleBuilder.BuildBundles'
           allowDirtyBuild: true
           versioning: None
@@ -56,3 +64,4 @@ jobs:
         with:
           path: 'Bundle'
           name: assetbundle
+          if-no-files-found: 'warn'
