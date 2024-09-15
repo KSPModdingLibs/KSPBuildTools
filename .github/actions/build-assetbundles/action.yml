@@ -40,3 +40,7 @@ runs:
         buildMethod: 'AssetBundleBuilder.BuildBundles'
         allowDirtyBuild: true
         versioning: None
+      env:
+        UNITY_LICENSE: ${{ inputs.unity-license }}
+        UNITY_EMAIL: ${{ inputs.unity-username }}
+        UNITY_PASSWORD: ${{ inputs.unity-password }}
