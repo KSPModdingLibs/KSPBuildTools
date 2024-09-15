@@ -38,3 +38,5 @@ runs:
         projectPath: ${{ inputs.project-dir }}
         customParameters: '-assetbundlePath /github/workspace/${{ inputs.assetbundle-dir }}'
         buildMethod: 'AssetBundleBuilder.BuildBundles'
+        allowDirtyBuild: true
+        versioning: None
