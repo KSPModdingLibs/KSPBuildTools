@@ -18,12 +18,6 @@ jobs:
           repository: 'LGhassen/Deferred'
           path: 'Deferred'
 
-      - name: Copy editor tools into project
-        shell: bash
-        run: |
-          mkdir -p ${{ inputs.project-dir }}/Assets/KSPBuildTools
-          cp -r ${{ github.action_path }}/../../../Editor ${{ inputs.project-dir }}/Assets/KSPBuildTools/Editor
-
       - uses: game-ci/unity-builder@v4
         with:
           targetPlatform: 'StandaloneWindows'
