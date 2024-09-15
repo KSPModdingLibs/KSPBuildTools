@@ -13,8 +13,11 @@ inputs:
   assetbundle-dir:
     description: Destination for built assetbundles
 
-  unity-license:
-    description: Your Unity License file contents
+  unity-password:
+    description: Your Unity account password
+
+  unity-username:
+    description: Your Unity account username
 
 runs:
   using: composite
@@ -36,11 +39,13 @@ runs:
     - name: Authenticate Unity License
       shell: bash
       continue-on-error: true
-      run: |
-        echo $UNITY_ULF >> 'Unity_lic.ulf'
-        docker exec build-assetbundle unity-editor -batchmode -nographics -manualLicenseFile /github/workspace/Unity_lic.ulf -logfile /dev/stdout
-      env:
-        UNITY_ULF: ${{ inputs.unity-license }}
+      run: >
+        docker exec build-assetbundle unity-editor 
+        -batchmode 
+        -nographics 
+        -username ${{inputs.unity-username}} 
+        -password ${{inputs.unity-password}} 
+        -logfile /dev/stdout
 
     - name: Copy editor tools into project
       shell: bash

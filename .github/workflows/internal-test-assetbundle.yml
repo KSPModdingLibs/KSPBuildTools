@@ -22,7 +22,9 @@ jobs:
         with:
           project-dir: 'Deferred/shaders/DeferredKSPShaders'
           assetbundle-dir: 'Bundle'
-          unity-license: ${{ secrets.UNITY_ULF }}
+          unity-username: ${{ secrets.UNITY_USERNAME }}
+          unity-password: ${{ secrets.UNITY_PASSWORD}}
+
 
       - uses: actions/upload-artifact@v4
         with:
