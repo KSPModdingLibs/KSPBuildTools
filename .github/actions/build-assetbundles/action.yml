@@ -34,7 +34,7 @@ runs:
       shell: bash
       run: |
         mkdir -p ${{ inputs.project-dir }}/Assets/KSPBuildTools
-        cp ${{ github.action_path }}/../../../Editor ${{ inputs.project-dir }}/Assets/KSPBuildTools/Editor
+        cp -r ${{ github.action_path }}/../../../Editor ${{ inputs.project-dir }}/Assets/KSPBuildTools/Editor
 
     - name: Run assetbundle build
       shell: bash
