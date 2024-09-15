@@ -21,14 +21,17 @@ jobs:
           repository: 'LGhassen/Deferred'
           path: 'Deferred'
 
+      - run: |
+          mkdir -p Deferred/shaders/DeferredKSPShaders/Assets/KSPBuildTools
+          cp -r Editor Deferred/shaders/DeferredKSPShaders/Assets/KSPBuildTools/Editor
+
       - uses: game-ci/unity-builder@v4
         with:
           targetPlatform: 'StandaloneWindows'
           unityVersion: '2019.4.18f1'
           projectPath: 'Deferred/shaders/DeferredKSPShaders'
           customParameters: '-assetbundlePath /github/workspace/${{ inputs.assetbundle-dir }}'
-          buildMethod: 'Deferred.CreateAssetBundles.BuildAllAssetBundles'
-          # this isnt going to work but yaknow
+          buildMethod: 'AssetBundleBuilder.BuildBundles'
           allowDirtyBuild: true
           versioning: None
         env:

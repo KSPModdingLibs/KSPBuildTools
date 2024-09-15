@@ -7,7 +7,6 @@ public class AssetBundleBuilder
     {
         string[] args = Environment.GetCommandLineArgs();
         string path = "";
-        string target = "";
         for (int i = 0; i < args.Length; i++)
         {
             if(args[i] == "-assetbundlePath")
@@ -16,6 +15,10 @@ public class AssetBundleBuilder
             }
         }
 
+		Debug.Log($"Building assetbundle for {path}");
+
         BuildPipeline.BuildAssetBundles(path, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.StandaloneWindows64);
+
+		Debug.Log("Done!");
     }
 }
