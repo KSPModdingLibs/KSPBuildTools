@@ -39,14 +39,14 @@ runs:
     - name: Run assetbundle build
       shell: bash
       run: >
-        docker exec -d build-assetbundle 
+        docker exec build-assetbundle 
         unity-editor 
-          -batchmode 
-          -nographics 
-          -projectPath /github/workspace/${{ inputs.project-dir }} 
-          -executeMethod AssetBundleBuilder.BuildBundles
-          -assetbundlePath /github/workspace/${{ inputs.assetbundle-dir }}
-          -quit
+        -batchmode 
+        -nographics 
+        -projectPath /github/workspace/${{ inputs.project-dir }} 
+        -executeMethod AssetBundleBuilder.BuildBundles
+        -assetbundlePath /github/workspace/${{ inputs.assetbundle-dir }}
+        -quit
         
     - name: Shutdown Docker Container
       shell: bash
