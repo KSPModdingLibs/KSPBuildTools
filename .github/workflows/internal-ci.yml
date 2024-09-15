@@ -54,6 +54,10 @@ jobs:
 
   test-assetbundle:
     uses: './.github/workflows/internal-test-assetbundle.yml'
+    with:
+      unity-license: ${{ secrets.UNITY_LICENSE }}
+      unity-email: ${{ secrets.UNITY_EMAIL }}
+      unity-password: ${{ secrets.UNITY_PASSWORD }}
 
   deploy-nuget:
     runs-on: ubuntu-latest

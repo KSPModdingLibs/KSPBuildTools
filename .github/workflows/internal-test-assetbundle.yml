@@ -3,6 +3,13 @@ name: Test Assetbundle
 
 on:
   workflow_call:
+    inputs:
+      unity-license:
+        required: true
+      unity-email:
+        required: true
+      unity-password:
+        required: true
 
 env:
   TESTDIR: tests/plugin-mod
@@ -29,9 +36,9 @@ jobs:
           allowDirtyBuild: true
           versioning: None
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_LICENSE: ${{ inputs.unity-license }}
+          UNITY_EMAIL: ${{ inputs.unity-email }}
+          UNITY_PASSWORD: ${{ inputs.unity-password }}
 
 #      - uses: ./.github/actions/build-assetbundles
 #        with:
