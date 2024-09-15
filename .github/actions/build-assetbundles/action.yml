@@ -33,8 +33,8 @@ runs:
     - name: Copy editor tools into project
       shell: bash
       run: |
-        mkdir /github/workspace/${{ inputs.project-dir }}/Assets/KSPBuildTools
-        docker exec -d build-assetbundle cp /KSPBuildTools/Editor /github/workspace/${{ inputs.project-dir }}/Editor
+        mkdir -p ${{ inputs.project-dir }}/Assets/KSPBuildTools
+        cp ${{ github.action_path }}/../../../Editor ${{ inputs.project-dir }}/Assets/KSPBuildTools/Editor
 
     - name: Run assetbundle build
       shell: bash
