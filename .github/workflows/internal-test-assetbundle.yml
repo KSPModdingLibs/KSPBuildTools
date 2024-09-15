@@ -13,4 +13,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/checkout@v4
+        with:
+          repository: 'https://github.com/LGhassen/Deferred.git'
+          path: 'Deferred'
+
       - uses: ./.github/actions/build-assetbundle
+        with:
+          project-dir: 'Deferred/shaders/DeferredKSPShaders'
+          assetbundle-dir: 'Bundle'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          path: 'Bundle'
+          name: assetbundle
