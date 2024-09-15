@@ -39,7 +39,7 @@ jobs:
           targetPlatform: 'StandaloneWindows'
           unityVersion: '2019.4.18f1'
           projectPath: 'Deferred/shaders/DeferredKSPShaders'
-          customParameters: '-assetbundlePath ${{github.workspace}}/Bundle'
+          customParameters: '-assetbundlePath /github/workspace/Bundle'
           buildMethod: 'AssetBundleBuilder.BuildBundles'
           allowDirtyBuild: true
           versioning: None
