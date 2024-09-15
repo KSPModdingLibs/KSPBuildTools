@@ -30,6 +30,7 @@ jobs:
             library-
 
       - run: |
+          mkdir -p Bundle
           mkdir -p Deferred/shaders/DeferredKSPShaders/Assets/KSPBuildTools
           cp -r Editor Deferred/shaders/DeferredKSPShaders/Assets/KSPBuildTools/Editor
 
