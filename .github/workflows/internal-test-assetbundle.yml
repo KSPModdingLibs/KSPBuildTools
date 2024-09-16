@@ -20,46 +20,14 @@ jobs:
         with:
           repository: 'LGhassen/Deferred'
           path: 'Deferred'
-
-      - uses: actions/cache@v4
-        with:
-          path: Deferred/shaders/DeferredKSPShaders/Library
-          key: library-${{ hashFiles('Deferred/shaders/DeferredKSPShaders/Assets/**') }}
-          restore-keys: |
-            library-${{ hashFiles('Deferred/shaders/DeferredKSPShaders/Assets/**') }}
-            library-
-
-      - run: |
-          mkdir -p Bundle
-          mkdir -p Deferred/shaders/DeferredKSPShaders/Assets/KSPBuildTools
-          cp -r Editor Deferred/shaders/DeferredKSPShaders/Assets/KSPBuildTools/Editor
-
-      - uses: game-ci/unity-builder@v4
-        with:
-          targetPlatform: 'StandaloneWindows'
-          unityVersion: '2019.4.18f1'
-          projectPath: 'Deferred/shaders/DeferredKSPShaders'
-          customParameters: '-assetbundlePath /github/workspace/Bundle'
-          buildMethod: 'AssetBundleBuilder.BuildBundles'
-          allowDirtyBuild: true
-          versioning: None
+          
+      - uses: ./.github/actions/build-assetbundles
+        with: 
+          project-dir: 'Deferred/shaders/DeferredKSPShaders'
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-
-#      - uses: ./.github/actions/build-assetbundles
-#        with:
-#          project-dir: 'Deferred/shaders/DeferredKSPShaders'
-#          assetbundle-dir: 'Bundle'
-#          unity-username: ${{ secrets.UNITY_USERNAME }}
-#          unity-password: ${{ secrets.UNITY_PASSWORD}}
-#          unity-license: ${{ secrets.UNITY_ULF}}
-#        env:
-#          UNITY_LICENSE: ${{ secrets.UNITY_ULF }}
-#          UNITY_EMAIL: ${{ secrets.UNITY_USERNAME}}
-#          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-
 
       - uses: actions/upload-artifact@v4
         with:

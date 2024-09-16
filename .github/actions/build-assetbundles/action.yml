@@ -1,7 +1,7 @@
 name: Build Assetbundle
 description: Build an assetbundle
 
-inputs: 
+inputs:
   unity-version:
     description: Full unity version name to build with. e.g. 2019.4.18f1
     default: '2019.4.18f1'
@@ -12,35 +12,47 @@ inputs:
 
   assetbundle-dir:
     description: Destination for built assetbundles
-
-  unity-password:
-    description: Your Unity account password
-
-  unity-username:
-    description: Your Unity account username
-
-  unity-license:
-    description: Your Unity ULF file contents
+    default: 'Bundle'
 
 runs:
   using: composite
   steps:
+    - name: Calculate destination directory
+      shell: bash
+      run: |
+        echo "ASSETBUNDLE_OUTPUT_DIR=AssetBundles/${{ hashFiles(format('{0}/**', inputs.project-dir.project-dir)) }}" >> $GITHUB_ENV
+
+    - name: Make destination directory
+      shell: bash
+      run: mkdir -p ${{ env.ASSETBUNDLE_OUTPUT_DIR }}
+
+    - uses: actions/cache@v4
+      with:
+        path: ${{ inputs.project-dir }}/Library
+        key: library-${{ env.ASSETBUNDLE_OUTPUT_DIR }}
+        restore-keys: |
+          library-${{ env.ASSETBUNDLE_OUTPUT_DIR }}
+          library-
+
     - name: Copy editor tools into project
       shell: bash
       run: |
         mkdir -p ${{ inputs.project-dir }}/Assets/KSPBuildTools
-        cp -r ${{ github.action_path }}/../../../Editor ${{ inputs.project-dir }}/Assets/KSPBuildTools/Editor
+        cp -r ${{ github.action_path }}/AssetBundleBuilder.cs ${{ inputs.project-dir }}/Assets/KSPBuildTools/Editor/
 
     - uses: game-ci/unity-builder@v4
       with:
-        targetPlatform: 'StandaloneWindows'
+        targetPlatform: 'StandaloneWindows64'
         unityVersion: ${{ inputs.unity-version }}
         projectPath: ${{ inputs.project-dir }}
-        customParameters: '-assetbundlePath /github/workspace/${{ inputs.assetbundle-dir }}'
-        buildMethod: 'AssetBundleBuilder.BuildBundles'
+        customParameters: '-assetbundlePath /github/workspace/${{ env.ASSETBUNDLE_OUTPUT_DIR }}'
+        buildMethod: 'KSPBuildTools.AssetBundleBuilder.BuildBundles'
         allowDirtyBuild: true
         versioning: None
+
+    - name: Copy bundles to target directory
+      shell: bash
+      run: |
+        cp ${{ env.ASSETBUNDLE_OUTPUT_DIR }}/* }} ${{ inputs.assetbundle-dir }}/
       env:
-        UNITY_LICENSE: ${{ inputs.unity-license }}
-        UNITY_EMAIL: ${{ inputs.unity-username }}
-        UNITY_PASSWORD: ${{ inputs.unity-password }}
+        GLOBIGNORE: '*.manifest'
