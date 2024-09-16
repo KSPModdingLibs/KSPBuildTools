@@ -34,9 +34,6 @@ runs:
       with:
         path: ${{ env.ASSETBUNDLE_TMP }}
         key: bundle-${{ env.PROJECT_HASH }}
-        restore-keys: |
-          bundle-${{ env.PROJECT_HASH }}
-          bundle-
       env:
         PROJECT_HASH: ${{ hashFiles(format('{0}/**', inputs.project-dir)) }}
         
