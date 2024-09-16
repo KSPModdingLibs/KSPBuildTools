@@ -37,8 +37,8 @@ runs:
     - name: Copy editor tools into project
       shell: bash
       run: |
-        mkdir -p ${{ inputs.project-dir }}/Assets/KSPBuildTools
-        cp -r ${{ github.action_path }}/AssetBundleBuilder.cs ${{ inputs.project-dir }}/Assets/KSPBuildTools/Editor/
+        mkdir -p ${{ inputs.project-dir }}/Assets/KSPBuildTools/Editor
+        cp ${{ github.action_path }}/AssetBundleBuilder.cs ${{ inputs.project-dir }}/Assets/KSPBuildTools/Editor/
 
     - uses: game-ci/unity-builder@v4
       with:
