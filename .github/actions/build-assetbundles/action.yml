@@ -55,6 +55,6 @@ runs:
     - name: Copy bundles to target directory
       shell: bash
       run: |
-        cp ${{ env.ASSETBUNDLE_TMP }}/* }} ${{ inputs.assetbundle-dir }}/
+        cp ${{ env.ASSETBUNDLE_TMP }}/*  ${{ inputs.assetbundle-dir }}/
       env:
         GLOBIGNORE: '*.manifest'
