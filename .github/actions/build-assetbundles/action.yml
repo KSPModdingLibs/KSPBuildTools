@@ -20,18 +20,20 @@ runs:
     - name: Calculate destination directory
       shell: bash
       run: |
-        echo "ASSETBUNDLE_OUTPUT_DIR=AssetBundles/${{ hashFiles(format('{0}/**', inputs.project-dir)) }}" >> $GITHUB_ENV
+        echo "ASSETBUNDLE_TMP=AssetBundles/${{ hashFiles(format('{0}/**', inputs.project-dir)) }}" >> $GITHUB_ENV
 
     - name: Make destination directory
       shell: bash
-      run: mkdir -p ${{ env.ASSETBUNDLE_OUTPUT_DIR }}
+      run: |
+        mkdir -p ${{ env.ASSETBUNDLE_TMP }}
+        mkdir -p ${{ inputs.assetbundle-dir }}
 
     - uses: actions/cache@v4
       with:
         path: ${{ inputs.project-dir }}/Library
-        key: library-${{ env.ASSETBUNDLE_OUTPUT_DIR }}
+        key: library-${{ env.ASSETBUNDLE_TMP }}
         restore-keys: |
-          library-${{ env.ASSETBUNDLE_OUTPUT_DIR }}
+          library-${{ env.ASSETBUNDLE_TMP }}
           library-
 
     - name: Copy editor tools into project
@@ -45,7 +47,7 @@ runs:
         targetPlatform: 'StandaloneWindows64'
         unityVersion: ${{ inputs.unity-version }}
         projectPath: ${{ inputs.project-dir }}
-        customParameters: '-assetbundlePath /github/workspace/${{ env.ASSETBUNDLE_OUTPUT_DIR }}'
+        customParameters: '-assetbundlePath /github/workspace/${{ env.ASSETBUNDLE_TMP }}'
         buildMethod: 'KSPBuildTools.AssetBundleBuilder.BuildBundles'
         allowDirtyBuild: true
         versioning: None
@@ -53,6 +55,6 @@ runs:
     - name: Copy bundles to target directory
       shell: bash
       run: |
-        cp ${{ env.ASSETBUNDLE_OUTPUT_DIR }}/* }} ${{ inputs.assetbundle-dir }}/
+        cp ${{ env.ASSETBUNDLE_TMP }}/* }} ${{ inputs.assetbundle-dir }}/
       env:
         GLOBIGNORE: '*.manifest'
