@@ -20,29 +20,47 @@ runs:
     - name: Calculate destination directory
       shell: bash
       run: |
-        echo "ASSETBUNDLE_TMP=AssetBundles/${{ hashFiles(format('{0}/**', inputs.project-dir)) }}" >> $GITHUB_ENV
+        echo "ASSETBUNDLE_TMP=AssetBundles_tmp" >> $GITHUB_ENV
 
     - name: Make destination directory
       shell: bash
       run: |
         mkdir -p ${{ env.ASSETBUNDLE_TMP }}
         mkdir -p ${{ inputs.assetbundle-dir }}
-
-    - uses: actions/cache@v4
+        
+    - name: Cache Assetbundles
+      id: cache-assetbundles
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.ASSETBUNDLE_TMP }}
+        key: bundle-${{ env.PROJECT_HASH }}
+        restore-keys: |
+          bundle-${{ env.PROJECT_HASH }}
+          bundle-
+      env:
+        PROJECT_HASH: ${{ hashFiles(format('{0}/**', inputs.project-dir)) }}
+        
+    - name: Cache Unity Library
+      if: steps.cache-assetbundles.outputs.cache-hit != 'true'
+      uses: actions/cache@v4
       with:
         path: ${{ inputs.project-dir }}/Library
-        key: library-${{ env.ASSETBUNDLE_TMP }}
+        key: library-${{ env.PROJECT_HASH }}
         restore-keys: |
-          library-${{ env.ASSETBUNDLE_TMP }}
+          library-${{ env.PROJECT_HASH }}
           library-
+      env:
+        PROJECT_HASH: ${{ hashFiles(format('{0}/**', inputs.project-dir)) }}
 
     - name: Copy editor tools into project
+      if: steps.cache-assetbundles.outputs.cache-hit != 'true'
       shell: bash
       run: |
         mkdir -p ${{ inputs.project-dir }}/Assets/KSPBuildTools/Editor
         cp ${{ github.action_path }}/AssetBundleBuilder.cs ${{ inputs.project-dir }}/Assets/KSPBuildTools/Editor/
 
     - uses: game-ci/unity-builder@v4
+      if: steps.cache-assetbundles.outputs.cache-hit != 'true'
       with:
         targetPlatform: 'StandaloneWindows64'
         unityVersion: ${{ inputs.unity-version }}
