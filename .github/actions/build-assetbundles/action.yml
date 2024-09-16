@@ -20,7 +20,7 @@ runs:
     - name: Calculate destination directory
       shell: bash
       run: |
-        echo "ASSETBUNDLE_OUTPUT_DIR=AssetBundles/${{ hashFiles(format('{0}/**', inputs.project-dir.project-dir)) }}" >> $GITHUB_ENV
+        echo "ASSETBUNDLE_OUTPUT_DIR=AssetBundles/${{ hashFiles(format('{0}/**', inputs.project-dir)) }}" >> $GITHUB_ENV
 
     - name: Make destination directory
       shell: bash
