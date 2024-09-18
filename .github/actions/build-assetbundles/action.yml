@@ -42,16 +42,21 @@ runs:
       run: |
         echo 'ASSETBUNDLE_TMP=Assetbundle_${{ inputs.assetbundle-name }}_TMP' >> $GITHUB_ENV
         echo 'PROJECT_DIR=Project_${{ inputs.assetbundle-name }}_TMP' >> $GITHUB_ENV
+
+    - name: Make Temp Project Directory
+      if: inputs.project-dir == ''
+      shell: bash
+      run: |
         mkdir -p '${{ env.PROJECT_DIR }}/Assets/Bundle'
         cp -r ${{ inputs.asset-files }} '${{ env.PROJECT_DIR }}/Assets/Bundle/'
 
-    - name: Make destination directory
+    - name: Make Destination Directory
       shell: bash
       run: |
         mkdir -p ${{ env.ASSETBUNDLE_TMP }}
         mkdir -p ${{ inputs.assetbundle-dir }}
 
-    - name: Copy editor tools into project
+    - name: Copy Editor Tools Into Project
       if: startsWith(inputs.build-method, 'KSPBuildTools')
       shell: bash
       run: |
