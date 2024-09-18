@@ -19,6 +19,10 @@ inputs:
     description: Destination for built assetbundles
     default: 'Bundle'
 
+  build-method:
+    description: Method to call to build the assetbundles. Uses a builtin build script with sensible values by default
+    default: 'KSPBuildTools.AssetBundleBuilder.BuildBundles'
+
 runs:
   using: composite
   steps:
@@ -38,6 +42,8 @@ runs:
       run: |
         echo 'ASSETBUNDLE_TMP=Assetbundle_${{ inputs.assetbundle-name }}_TMP' >> $GITHUB_ENV
         echo 'PROJECT_DIR=Project_${{ inputs.assetbundle-name }}_TMP' >> $GITHUB_ENV
+        mkdir -p '${{ env.PROJECT_DIR }}/Assets/Bundle'
+        cp -r ${{ inputs.asset-files }} '${{ env.PROJECT_DIR }}/Assets/Bundle/'
 
     - name: Make destination directory
       shell: bash
@@ -45,15 +51,8 @@ runs:
         mkdir -p ${{ env.ASSETBUNDLE_TMP }}
         mkdir -p ${{ inputs.assetbundle-dir }}
 
-    - name: Make Temp Project Directory
-      if: inputs.project-dir == '' && steps.cache-assetbundles.outputs.cache-hit != 'true'
-      shell: bash
-      run: |
-        mkdir -p '${{ env.PROJECT_DIR }}/Assets/Bundle'
-        cp -r ${{ inputs.asset-files }} '${{ env.PROJECT_DIR }}/Assets/Bundle/'
-
     - name: Copy editor tools into project
-      if: steps.cache-assetbundles.outputs.cache-hit != 'true'
+      if: startsWith(inputs.build-method, 'KSPBuildTools')
       shell: bash
       run: |
         mkdir -p ${{ env.PROJECT_DIR }}/Assets/KSPBuildTools/Editor
@@ -64,7 +63,7 @@ runs:
       uses: actions/cache@v4
       with:
         path: ${{ env.ASSETBUNDLE_TMP }}
-        key: bundle-${{ env.PROJECT_HASH }}
+        key: ${{ inputs.assetbundle-name || 'Assetbundle' }}-${{ inputs.build-method }}-${{ env.PROJECT_HASH }}
       env:
         PROJECT_HASH: ${{ hashFiles(format('{0}/**', env.PROJECT_DIR)) }}
         
@@ -89,7 +88,7 @@ runs:
         customParameters: >
           -assetbundlePath /github/workspace/${{ env.ASSETBUNDLE_TMP }} 
           ${{ inputs.project-dir == '' && format('-assetbundleName {0}', inputs.assetbundle-name) }}
-        buildMethod: 'KSPBuildTools.AssetBundleBuilder.BuildBundles'
+        buildMethod: ${{ inputs.build-method }}
         allowDirtyBuild: true
         versioning: None
 
