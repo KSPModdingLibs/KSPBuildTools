@@ -59,8 +59,6 @@ runs:
         mkdir -p ${{ env.PROJECT_DIR }}/Assets/KSPBuildTools/Editor
         cp ${{ github.action_path }}/AssetBundleBuilder.cs ${{ env.PROJECT_DIR }}/Assets/KSPBuildTools/Editor/
 
-
-
     - name: Cache Assetbundles
       id: cache-assetbundles
       uses: actions/cache@v4
@@ -91,8 +89,6 @@ runs:
         customParameters: >
           -assetbundlePath /github/workspace/${{ env.ASSETBUNDLE_TMP }} 
           ${{ inputs.project-dir == '' && format('-assetbundleName {0}', inputs.assetbundle-name) }}'
-
-        #${{ inputs.project-dir == '' && format('-createProject {0}', env.PROJECT_DIR) }}'
         buildMethod: 'KSPBuildTools.AssetBundleBuilder.BuildBundles'
         allowDirtyBuild: true
         versioning: None
