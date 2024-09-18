@@ -63,7 +63,7 @@ runs:
       uses: actions/cache@v4
       with:
         path: ${{ env.ASSETBUNDLE_TMP }}
-        key: ${{ inputs.assetbundle-name || 'Assetbundle' }}-${{ inputs.build-method }}-${{ env.PROJECT_HASH }}
+        key: ${{ inputs.assetbundle-name || 'Assetbundles' }}-${{ inputs.build-method }}-${{ env.PROJECT_HASH }}
       env:
         PROJECT_HASH: ${{ hashFiles(format('{0}/**', env.PROJECT_DIR)) }}
         
