@@ -25,17 +25,16 @@ namespace KSPBuildTools {
 
             Debug.Log($"Building assetbundle for {path}");
 
+            PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.StandaloneWindows64, false);
+            PlayerSettings.SetGraphicsAPIs(BuildTarget.StandaloneWindows64, new GraphicsDeviceType[] {
+                GraphicsDeviceType.OpenGLCore, GraphicsDeviceType.Direct3D11
+            });
 
             if (isProject) {
                 BuildPipeline.BuildAssetBundles(path, BuildAssetBundleOptions.ChunkBasedCompression,
                     BuildTarget.StandaloneWindows64);
             }
             else {
-                PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.StandaloneWindows64, false);
-                PlayerSettings.SetGraphicsAPIs(BuildTarget.StandaloneWindows64, new GraphicsDeviceType[] {
-                    GraphicsDeviceType.OpenGLCore, GraphicsDeviceType.Direct3D11
-                });
-
                 var bundleDefinitions = new AssetBundleBuild[] {
                     new AssetBundleBuild {
                         assetBundleName = assetbundleName,
