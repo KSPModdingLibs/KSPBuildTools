@@ -88,7 +88,7 @@ runs:
         projectPath: ${{ env.PROJECT_DIR }}
         customParameters: >
           -assetbundlePath /github/workspace/${{ env.ASSETBUNDLE_TMP }} 
-          ${{ inputs.project-dir == '' && format('-assetbundleName {0}', inputs.assetbundle-name) }}'
+          ${{ inputs.project-dir == '' && format('-assetbundleName {0}', inputs.assetbundle-name) }}
         buildMethod: 'KSPBuildTools.AssetBundleBuilder.BuildBundles'
         allowDirtyBuild: true
         versioning: None
