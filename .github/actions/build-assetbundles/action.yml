@@ -15,7 +15,7 @@ inputs:
   assetbundle-name:
     description: Name of the assetbundle to generate. Mutually exclusive with `project-dir`
 
-  assetbundle-dir:
+  output-dir:
     description: Destination for built assetbundles
     default: 'Bundle'
 
@@ -54,7 +54,7 @@ runs:
       shell: bash
       run: |
         mkdir -p ${{ env.ASSETBUNDLE_TMP }}
-        mkdir -p ${{ inputs.assetbundle-dir }}
+        mkdir -p ${{ inputs.output-dir }}
 
     - name: Copy Editor Tools Into Project
       if: startsWith(inputs.build-method, 'KSPBuildTools')
@@ -99,4 +99,4 @@ runs:
       run: |
         rm -f ${{ env.ASSETBUNDLE_TMP }}/${{ env.ASSETBUNDLE_TMP }}
         rm -f ${{ env.ASSETBUNDLE_TMP }}/*.manifest
-        cp ${{ env.ASSETBUNDLE_TMP }}/*  ${{ inputs.assetbundle-dir }}/
+        cp ${{ env.ASSETBUNDLE_TMP }}/*  ${{ inputs.output-dir }}/
