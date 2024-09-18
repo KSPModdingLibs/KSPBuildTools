@@ -45,6 +45,22 @@ runs:
         mkdir -p ${{ env.ASSETBUNDLE_TMP }}
         mkdir -p ${{ inputs.assetbundle-dir }}
 
+    - name: Make Temp Project Directory
+      if: inputs.project-dir == '' && steps.cache-assetbundles.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        mkdir -p '${{ env.PROJECT_DIR }}/Assets/Bundle'
+        cp -r ${{ inputs.asset-files }} '${{ env.PROJECT_DIR }}/Assets/Bundle/'
+
+    - name: Copy editor tools into project
+      if: steps.cache-assetbundles.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        mkdir -p ${{ env.PROJECT_DIR }}/Assets/KSPBuildTools/Editor
+        cp ${{ github.action_path }}/AssetBundleBuilder.cs ${{ env.PROJECT_DIR }}/Assets/KSPBuildTools/Editor/
+
+
+
     - name: Cache Assetbundles
       id: cache-assetbundles
       uses: actions/cache@v4
@@ -66,20 +82,6 @@ runs:
       env:
         PROJECT_HASH: ${{ hashFiles(format('{0}/**', env.PROJECT_DIR)) }}
 
-    - name: Make Temp Project Directory
-      if: inputs.project-dir == '' && steps.cache-assetbundles.outputs.cache-hit != 'true'
-      shell: bash
-      run: |
-        mkdir -p '${{ env.PROJECT_DIR }}/Assets/Bundle'
-        cp -r ${{ inputs.asset-files }} '${{ env.PROJECT_DIR }}/Assets/Bundle/'
-
-    - name: Copy editor tools into project
-      if: steps.cache-assetbundles.outputs.cache-hit != 'true'
-      shell: bash
-      run: |
-        mkdir -p ${{ env.PROJECT_DIR }}/Assets/KSPBuildTools/Editor
-        cp ${{ github.action_path }}/AssetBundleBuilder.cs ${{ env.PROJECT_DIR }}/Assets/KSPBuildTools/Editor/
-
     - uses: game-ci/unity-builder@v4
       if: steps.cache-assetbundles.outputs.cache-hit != 'true'
       with:
@@ -88,8 +90,9 @@ runs:
         projectPath: ${{ env.PROJECT_DIR }}
         customParameters: >
           -assetbundlePath /github/workspace/${{ env.ASSETBUNDLE_TMP }} 
-          ${{ inputs.project-dir == '' && format('-createProject {0}', env.PROJECT_DIR) }}'
           ${{ inputs.project-dir == '' && format('-assetbundleName {0}', inputs.assetbundle-name) }}'
+
+        #${{ inputs.project-dir == '' && format('-createProject {0}', env.PROJECT_DIR) }}'
         buildMethod: 'KSPBuildTools.AssetBundleBuilder.BuildBundles'
         allowDirtyBuild: true
         versioning: None
