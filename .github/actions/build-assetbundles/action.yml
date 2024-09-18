@@ -52,19 +52,19 @@ runs:
         path: ${{ env.ASSETBUNDLE_TMP }}
         key: bundle-${{ env.PROJECT_HASH }}
       env:
-        PROJECT_HASH: ${{ hashFiles(format('{0}/**', inputs.project-dir)) }}
+        PROJECT_HASH: ${{ hashFiles(format('{0}/**', env.PROJECT_DIR)) }}
         
     - name: Cache Unity Library
       if: steps.cache-assetbundles.outputs.cache-hit != 'true'
       uses: actions/cache@v4
       with:
-        path: ${{ inputs.project-dir }}/Library
+        path: ${{ env.PROJECT_DIR }}/Library
         key: library-${{ env.PROJECT_HASH }}
         restore-keys: |
           library-${{ env.PROJECT_HASH }}
           library-
       env:
-        PROJECT_HASH: ${{ hashFiles(format('{0}/**', inputs.project-dir)) }}
+        PROJECT_HASH: ${{ hashFiles(format('{0}/**', env.PROJECT_DIR)) }}
 
     - name: Make Temp Project Directory
       if: inputs.project-dir == '' && steps.cache-assetbundles.outputs.cache-hit != 'true'
