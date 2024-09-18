@@ -32,7 +32,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include=".github\actions\build-assetbundles\build-assetbundle.sh" />
     <None Include="KSPCommon.props" Pack="True" PackagePath="build/KSPBuildTools.props" />
     <None Include="KSPCommon.targets" Pack="True" PackagePath="build/KSPBuildTools.targets" />
     <None Include="README.md" Pack="True" PackagePath="/"/>
@@ -41,11 +40,7 @@
   <ItemGroup>
     <Compile Remove="$(MSBuildThisFileDirectory)tests/**" />
     <None Remove="$(MSBuildThisFileDirectory)tests/**" />
-    <Compile Remove="$(MSBuildThisFileDirectory)Editor/**" />
-    <None Remove="$(MSBuildThisFileDirectory)Editor/**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include=".github\actions\build-assetbundle\" />
+    <Compile Remove="$(MSBuildThisFileDirectory).github/**" />
+    <None Remove="$(MSBuildThisFileDirectory).github/**" />
   </ItemGroup>
 </Project>
