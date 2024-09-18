@@ -1,6 +1,7 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace KSPBuildTools {
     public class AssetBundleBuilder {
@@ -30,6 +31,11 @@ namespace KSPBuildTools {
                     BuildTarget.StandaloneWindows64);
             }
             else {
+                PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.StandaloneWindows64, false);
+                PlayerSettings.SetGraphicsAPIs(BuildTarget.StandaloneWindows64, new GraphicsDeviceType[] {
+                    GraphicsDeviceType.OpenGLCore, GraphicsDeviceType.Direct3D11
+                });
+
                 var bundleDefinitions = new AssetBundleBuild[] {
                     new AssetBundleBuild {
                         assetBundleName = assetbundleName,
