@@ -18,12 +18,13 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          repository: 'LGhassen/Deferred'
-          path: 'Deferred'
+          repository: 'drewcassidy/Resurfaced'
+          path: 'Resurfaced'
           
       - uses: ./.github/actions/build-assetbundles
         with: 
-          project-dir: 'Deferred/shaders/DeferredKSPShaders'
+          assetbundle-name: foo.shab
+          asset-files: '*.shader *.cginc'
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}

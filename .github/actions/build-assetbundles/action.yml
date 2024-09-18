@@ -8,7 +8,12 @@ inputs:
 
   project-dir:
     description: Location of the Unity project root (The folder that contains `Assets`) *relative to the github workspace*
-    default: .
+
+  asset-files:
+    description: Glob of assets to bundle. Mutually exclusive with `project-dir`
+
+  assetbundle-name:
+    description: Name of the assetbundle to generate. Mutually exclusive with `project-dir`
 
   assetbundle-dir:
     description: Destination for built assetbundles
@@ -17,17 +22,29 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Calculate destination directory
+    - name: Pre-Run (Unity Project)
+      if: inputs.project-dir != ''
       shell: bash
       run: |
-        echo "ASSETBUNDLE_TMP=AssetBundles_tmp" >> $GITHUB_ENV
+        echo 'ASSETBUNDLE_TMP=Assetbundles_TMP' >> $GITHUB_ENV
+        echo 'PROJECT_DIR=${{inputs.project-dir}}' >> $GITHUB_ENV
+        ${{ inputs.asset-files != '' && 'echo "Cannot set project directory and asset-files in the same action run" && false'}}
+        ${{ inputs.assetbundle-name!= '' && 'echo "Cannot set project directory and assetbundle-name in the same action run" && false'}}
+    
+
+    - name: Pre-Run (Asset list)
+      if: inputs.project-dir == ''
+      shell: bash
+      run: |
+        echo 'ASSETBUNDLE_TMP=Assetbundle_${{ inputs.assetbundle-name }}_TMP' >> $GITHUB_ENV
+        echo 'PROJECT_DIR=Project_${{ inputs.assetbundle-name }}_TMP' >> $GITHUB_ENV
 
     - name: Make destination directory
       shell: bash
       run: |
         mkdir -p ${{ env.ASSETBUNDLE_TMP }}
         mkdir -p ${{ inputs.assetbundle-dir }}
-        
+
     - name: Cache Assetbundles
       id: cache-assetbundles
       uses: actions/cache@v4
@@ -49,20 +66,30 @@ runs:
       env:
         PROJECT_HASH: ${{ hashFiles(format('{0}/**', inputs.project-dir)) }}
 
+    - name: Make Temp Project Directory
+      if: inputs.project-dir == '' && steps.cache-assetbundles.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        mkdir -p '${{ env.PROJECT_DIR }}/Assets/Bundle'
+        cp -r ${{ inputs.asset-files }} '${{ env.PROJECT_DIR }}/Assets/Bundle/'
+
     - name: Copy editor tools into project
       if: steps.cache-assetbundles.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        mkdir -p ${{ inputs.project-dir }}/Assets/KSPBuildTools/Editor
-        cp ${{ github.action_path }}/AssetBundleBuilder.cs ${{ inputs.project-dir }}/Assets/KSPBuildTools/Editor/
+        mkdir -p ${{ env.PROJECT_DIR }}/Assets/KSPBuildTools/Editor
+        cp ${{ github.action_path }}/AssetBundleBuilder.cs ${{ env.PROJECT_DIR }}/Assets/KSPBuildTools/Editor/
 
     - uses: game-ci/unity-builder@v4
       if: steps.cache-assetbundles.outputs.cache-hit != 'true'
       with:
         targetPlatform: 'StandaloneWindows64'
         unityVersion: ${{ inputs.unity-version }}
-        projectPath: ${{ inputs.project-dir }}
-        customParameters: '-assetbundlePath /github/workspace/${{ env.ASSETBUNDLE_TMP }}'
+        projectPath: ${{ env.PROJECT_DIR }}
+        customParameters: >
+          -assetbundlePath /github/workspace/${{ env.ASSETBUNDLE_TMP }} 
+          ${{ inputs.project-dir == '' && format('-createProject {0}', env.PROJECT_DIR) }}'
+          ${{ inputs.project-dir == '' && format('-assetbundleName {0}', inputs.assetbundle-name) }}'
         buildMethod: 'KSPBuildTools.AssetBundleBuilder.BuildBundles'
         allowDirtyBuild: true
         versioning: None
