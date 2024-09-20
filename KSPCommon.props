@@ -3,7 +3,10 @@
   <PropertyGroup>
     <KSPCommonPropsImported>true</KSPCommonPropsImported>
   </PropertyGroup>
-  
+
+  <!-- import the csproj.user file. This might not be a good idea -->
+  <Import Project="$(MSBuildProjectFullPath).user" Condition="Exists('$(MSBuildProjectFullPath).user')"/>
+
   <!--import solution-wide props if it exists -->
   <Import Condition=" Exists('$(SolutionDir)$(SolutionName).props') " Project="$(SolutionDir)$(SolutionName).props"/>
 
