@@ -1,0 +1,102 @@
+name: Build Assetbundle
+description: Build an assetbundle
+
+inputs:
+  unity-version:
+    description: Full unity version name to build with. e.g. 2019.4.18f1
+    default: '2019.4.18f1'
+
+  project-dir:
+    description: Location of the Unity project root (The folder that contains `Assets`) *relative to the github workspace*
+
+  asset-files:
+    description: Glob of assets to bundle. Mutually exclusive with `project-dir`
+
+  assetbundle-name:
+    description: Name of the assetbundle to generate. Mutually exclusive with `project-dir`
+
+  output-dir:
+    description: Destination for built assetbundles
+    default: 'Bundle'
+
+  build-method:
+    description: Method to call to build the assetbundles. Uses a builtin build script with sensible values by default
+    default: 'KSPBuildTools.AssetBundleBuilder.BuildBundles'
+
+runs:
+  using: composite
+  steps:
+    - name: Pre-Run (Unity Project)
+      if: inputs.project-dir != ''
+      shell: bash
+      run: |
+        echo 'ASSETBUNDLE_TMP=Assetbundles_TMP' >> $GITHUB_ENV
+        echo 'PROJECT_DIR=${{inputs.project-dir}}' >> $GITHUB_ENV
+        ${{ inputs.asset-files != '' && 'echo "Cannot set project directory and asset-files in the same action run" && false'}}
+        ${{ inputs.assetbundle-name!= '' && 'echo "Cannot set project directory and assetbundle-name in the same action run" && false'}}
+    
+
+    - name: Pre-Run (Asset list)
+      if: inputs.project-dir == ''
+      shell: bash
+      run: |
+        echo 'ASSETBUNDLE_TMP=Assetbundle_${{ inputs.assetbundle-name }}_TMP' >> $GITHUB_ENV
+        echo 'PROJECT_DIR=Project_${{ inputs.assetbundle-name }}_TMP' >> $GITHUB_ENV
+
+    - name: Make Temp Project Directory
+      if: inputs.project-dir == ''
+      shell: bash
+      run: |
+        mkdir -p '${{ env.PROJECT_DIR }}/Assets/Bundle'
+        cp -r ${{ inputs.asset-files }} '${{ env.PROJECT_DIR }}/Assets/Bundle/'
+
+    - name: Make Destination Directory
+      shell: bash
+      run: |
+        mkdir -p ${{ env.ASSETBUNDLE_TMP }}
+        mkdir -p ${{ inputs.output-dir }}
+
+    - name: Copy Editor Tools Into Project
+      if: startsWith(inputs.build-method, 'KSPBuildTools')
+      shell: bash
+      run: |
+        mkdir -p ${{ env.PROJECT_DIR }}/Assets/KSPBuildTools/Editor
+        cp ${{ github.action_path }}/AssetBundleBuilder.cs ${{ env.PROJECT_DIR }}/Assets/KSPBuildTools/Editor/
+
+    - name: Cache Assetbundles
+      id: cache-assetbundles
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.ASSETBUNDLE_TMP }}
+        key: ${{ inputs.assetbundle-name || 'Assetbundles' }}-${{ inputs.build-method }}-${{ env.PROJECT_HASH }}
+      env:
+        PROJECT_HASH: ${{ hashFiles(format('{0}/**', env.PROJECT_DIR)) }}
+        
+    - name: Cache Unity Library
+      if: steps.cache-assetbundles.outputs.cache-hit != 'true'
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.PROJECT_DIR }}/Library
+        key: library-${{ hashFiles(format('{0}/**', env.PROJECT_DIR)) }}
+        restore-keys: |
+          library-
+
+    - uses: game-ci/unity-builder@v4
+      if: steps.cache-assetbundles.outputs.cache-hit != 'true'
+      with:
+        targetPlatform: 'StandaloneWindows64'
+        unityVersion: ${{ inputs.unity-version }}
+        projectPath: ${{ env.PROJECT_DIR }}
+        customParameters: >
+          -assetbundlePath /github/workspace/${{ env.ASSETBUNDLE_TMP }} 
+          ${{ inputs.project-dir == '' && format('-assetbundleName {0}', inputs.assetbundle-name) }}
+        buildMethod: ${{ inputs.build-method }}
+        allowDirtyBuild: true
+        versioning: None
+
+    - name: Copy bundles to target directory
+      shell: bash
+      run: |
+        rm -f ${{ env.ASSETBUNDLE_TMP }}/${{ env.ASSETBUNDLE_TMP }}
+        rm -f ${{ env.ASSETBUNDLE_TMP }}/*.manifest
+        cp ${{ env.ASSETBUNDLE_TMP }}/*  ${{ inputs.output-dir }}/

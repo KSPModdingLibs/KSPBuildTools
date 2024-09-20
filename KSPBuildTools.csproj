@@ -40,5 +40,7 @@
   <ItemGroup>
     <Compile Remove="$(MSBuildThisFileDirectory)tests/**" />
     <None Remove="$(MSBuildThisFileDirectory)tests/**" />
+    <Compile Remove="$(MSBuildThisFileDirectory).github/**" />
+    <None Remove="$(MSBuildThisFileDirectory).github/**" />
   </ItemGroup>
 </Project>

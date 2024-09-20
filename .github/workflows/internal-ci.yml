@@ -15,16 +15,6 @@ env:
   NuGetDirectory: ${{ github.workspace}}/nuget
 
 jobs:
-  test-plugin:
-    uses: './.github/workflows/internal-test-plugin.yml'
-
-  test-plugin-nuget:
-    uses: './.github/workflows/internal-test-plugin-nuget.yml'
-    needs: [ build ]
-
-  test-plugin-legacy:
-    uses: './.github/workflows/internal-test-plugin-legacy.yml'
-
   build:
     env:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
@@ -52,9 +42,23 @@ jobs:
           if-no-files-found: error
           path: ${{ env.NuGetDirectory }}/*.nupkg
 
+  test-plugin:
+    uses: './.github/workflows/internal-test-plugin.yml'
+
+  test-plugin-nuget:
+    uses: './.github/workflows/internal-test-plugin-nuget.yml'
+    needs: [ build ]
+
+  test-plugin-legacy:
+    uses: './.github/workflows/internal-test-plugin-legacy.yml'
+
+  test-assetbundle:
+    uses: './.github/workflows/internal-test-assetbundle.yml'
+    secrets: inherit
+
   deploy-nuget:
     runs-on: ubuntu-latest
-    needs: [  test-plugin, test-plugin-nuget, test-plugin-legacy ]
+    needs: [  test-plugin, test-plugin-nuget, test-plugin-legacy, test-assetbundle ]
     environment:
       name: "NuGet"
       url: "https://www.nuget.org/packages/KSPBuildTools"
