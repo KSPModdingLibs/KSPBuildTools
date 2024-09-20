@@ -22,10 +22,13 @@
     <!-- look for a KSP installation in SolutionDir -->
     <KSPRoot Condition = " '$(KSPRoot)' == '' And Exists('$(SolutionDir)KSP/buildID.txt')">$(SolutionDir)KSP</KSPRoot>
 
-    <KSPRoot Condition = " '$(KSPRoot)' == '' ">$(ReferencePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar))</KSPRoot>
+    <!-- use ReferencePath if it exists and is a valid KSP install -->
+    <KSPRoot Condition = " '$(KSPRoot)' == '' And Exists('$(ReferencePath)/buildID.txt')">$(ReferencePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar))</KSPRoot>
+
     <!--If the reference path isn't set, use the default steam location, but this will be incorrect in lots of cases-->
-    <KSPRoot Condition = "('$(KSPRoot)' == '') And ($([MSBuild]::IsOsPlatform('Windows')))">C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program</KSPRoot>
-    <KSPRoot Condition = "('$(KSPRoot)' == '') And ($([MSBuild]::IsOsPlatform('OSX')))">$(HOME)/Library/Application Support/Steam/steamapps/common/Kerbal Space Program</KSPRoot>
+    <SteamKSPRoot Condition = "($([MSBuild]::IsOsPlatform('Windows')))">C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program</SteamKSPRoot>
+    <SteamKSPRoot Condition = "($([MSBuild]::IsOsPlatform('OSX')))">$(HOME)/Library/Application Support/Steam/steamapps/common/Kerbal Space Program</SteamKSPRoot>
+    <KSPRoot Condition = "'$(KSPRoot)' == '' And Exists('$(SteamKSPRoot)/buildID.txt')">$(SteamKSPRoot)</KSPRoot>
 
     <!-- default CKAN compatibility versions -->
     <CKANCompatibleVersions Condition="('$(CKANCompatibleVersions)' == '')">1.12 1.11 1.10 1.9 1.8</CKANCompatibleVersions>
