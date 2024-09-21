@@ -3,6 +3,10 @@ name: Test Plugin Mod (NuGet)
 
 on:
   workflow_call:
+    inputs:
+      package-version:
+        type: string
+        required: true
 
 env:
   TESTDIR: tests/plugin-mod-nuget
@@ -21,12 +25,6 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      - name: Get Version
-        run: |
-          dotnet tool install --global minver-cli --version 5.0.0
-          minver 
-          echo "KSPBuildToolsVersion=$(minver -v e)" >> "$GITHUB_ENV"
-
       - name: Setup Nuget Package Sources
         run: |
           mkdir -p ${{ env.NuGetDirectory }}/local
@@ -44,6 +42,8 @@ jobs:
           ksp-zip-url: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
           working-directory: ${{ env.TESTDIR }}
           solution-file-path: plugin-mod.csproj
+        env:
+          KSPBuildToolsVersion: ${{ inputs.package-version }}
 
       - uses: ./.github/actions/assemble-release
         with:

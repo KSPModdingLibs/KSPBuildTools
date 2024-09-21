@@ -20,6 +20,8 @@ jobs:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
       DOTNET_NOLOGO: true
     runs-on: ubuntu-latest
+    outputs:
+      package-version: ${{ steps.get-version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -29,6 +31,13 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+
+      - name: Get Version
+        id: get-version
+        run: |
+          dotnet tool install --global minver-cli --version 5.0.0
+          minver 
+          echo "version=$(minver -v e)" >> "$GITHUB_OUTPUT"
 
       - name: Build
         run: dotnet build KSPBuildTools.csproj
@@ -48,6 +57,8 @@ jobs:
   test-plugin-nuget:
     uses: './.github/workflows/internal-test-plugin-nuget.yml'
     needs: [ build ]
+    with:
+      package-version: ${{ needs.build.outputs.package-version }}
 
   test-plugin-legacy:
     uses: './.github/workflows/internal-test-plugin-legacy.yml'
