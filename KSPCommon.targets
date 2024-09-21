@@ -33,7 +33,7 @@
     </ItemGroup>
     <PropertyGroup>
       <CKANDependencyList>@(_CKANDependency, ' ')</CKANDependencyList>
-      <CKANCommandFile>$(IntermediateOutputPath)CKANCommands</CKANCommandFile>
+      <CKANCommandFile>$(BaseIntermediateOutputPath)CKANCommands</CKANCommandFile>
     </PropertyGroup>
     <ItemGroup>
       <!-- Not using `ckan compat set` because as of 2024-08-16 it is still only available in the dev branch -->
@@ -57,7 +57,7 @@
   </Target>
 
   <Target Name="CKANClean" AfterTargets="Clean">
-    <Delete Files="$(IntermediateOutputPath)CKANCommands"/>
+    <Delete Files="$(BaseIntermediateOutputPath)CKANCommands"/>
   </Target>
 
   <!--  For use like so: `msbuild -t:"GetRequiredExternalTools" -verbosity:minimal -nologo`, then pipe into your destination of choice -->
