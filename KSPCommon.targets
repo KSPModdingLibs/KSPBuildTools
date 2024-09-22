@@ -24,6 +24,9 @@
   </Target>
 
   <!-- Use CKAN to install mods for any references tagged with a CKAN Identifier -->
+  <PropertyGroup>
+    <CKANCommandFile>$(BaseIntermediateOutputPath)ckancommands.cache</CKANCommandFile>
+  </PropertyGroup>
   <Target Name="CKANInstallScriptGen">
     <ItemGroup>
       <_CKANCompatibleVersionItems Include="$(CKANCompatibleVersions.Split(' '))"/>
@@ -33,7 +36,6 @@
     </ItemGroup>
     <PropertyGroup>
       <CKANDependencyList>@(_CKANDependency, ' ')</CKANDependencyList>
-      <CKANCommandFile>$(BaseIntermediateOutputPath)CKANCommands</CKANCommandFile>
     </PropertyGroup>
     <ItemGroup>
       <!-- Not using `ckan compat set` because as of 2024-08-16 it is still only available in the dev branch -->
@@ -57,7 +59,7 @@
   </Target>
 
   <Target Name="CKANClean" AfterTargets="Clean">
-    <Delete Files="$(BaseIntermediateOutputPath)CKANCommands"/>
+    <Delete Files="$(CKANCommandFile)"/>
   </Target>
 
   <!--  For use like so: `msbuild -t:"GetRequiredExternalTools" -verbosity:minimal -nologo`, then pipe into your destination of choice -->
