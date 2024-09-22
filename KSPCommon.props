@@ -4,6 +4,11 @@
     <KSPCommonPropsImported>true</KSPCommonPropsImported>
   </PropertyGroup>
 
+  <!-- default CKAN compatibility versions -->
+  <PropertyGroup>
+    <CKANCompatibleVersions Condition="('$(CKANCompatibleVersions)' == '')">1.12 1.11 1.10 1.9 1.8</CKANCompatibleVersions>
+  </PropertyGroup>
+
   <!--Parse KSP platform-specific paths -->
   <!-- These can be overwritten by user and props files -->
   <PropertyGroup Condition=" '$(ManagedRelativePath)' == '' ">
@@ -40,46 +45,23 @@
   <Import Condition=" Exists('$(SolutionDir)$(SolutionName).props') " Project="$(SolutionDir)$(SolutionName).props"/>
 
   <PropertyGroup>
+    <!-- Relative path that must exist for a path to be a valid KSP Install-->
+    <KSPRootIdentifier>$(ManagedRelativePath)/Assembly-CSharp.dll</KSPRootIdentifier>
+
     <!-- Default KSPRoot to the "KSP_ROOT" environment variable if it exists -->
-    <!-- Doing this overrides any checks for a valid KSP install so be careful! -->
-    <KSPRoot Condition=" '$(KSPRoot)' == '' And '$(KSP_ROOT)' != ''">$(KSP_ROOT)</KSPRoot>
-  </PropertyGroup>
+    <!-- Doing this skips any checks for a valid KSP install so be careful! -->
+    <KSPRoot Condition=" '$(KSPRoot)' == '' And '$(KSP_ROOT)' != '' ">$(KSP_ROOT)</KSPRoot>
 
-  <!-- Search for KSPRoot -->
-  <PropertyGroup>
-    <!-- Default KSPRoot to the "KSP_ROOT" environment variable if it exists -->
-    <!-- Doing this overrides any checks for a valid KSP install so be careful! -->
-    <KSPRoot Condition=" '$(KSPRoot)' == '' And '$(KSP_ROOT)' != ''">$(KSP_ROOT)</KSPRoot>
+    <!-- Look for KSP install in Solution dir -->
+    <KSPRoot Condition=" '$(KSPRoot)' == '' And Exists('$(SolutionDir)KSP/$(KSPRootIdentifier)') ">$(SolutionDir)KSP</KSPRoot>
 
-    <!-- look for a KSP installation in SolutionDir -->
-    <KSPRoot Condition=" '$(KSPRoot)' == '' And Exists('$(SolutionDir)KSP/GameData')">$(SolutionDir)KSP</KSPRoot>
+    <!-- Look for KSP install in ReferencePath -->
+    <KSPRoot Condition=" '$(KSPRoot)' == '' And Exists('$(ReferencePath)/$(KSPRootIdentifier)') ">$(ReferencePath)</KSPRoot>
 
-    <!-- use ReferencePath if it exists and is a valid KSP install -->
-    <KSPRoot Condition=" '$(KSPRoot)' == '' And Exists('$(ReferencePath)GameData')">$(ReferencePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar))</KSPRoot>
+    <!-- Look for KSP steam install-->
+    <KSPRoot Condition=" '$(KSPRoot)' == '' And Exists('$(SteamKSPRoot)/$(KSPRootIdentifier)') ">$(SteamKSPRoot)</KSPRoot>
 
-    <!--If the reference path isn't set, use the default steam location, but this will be incorrect in lots of cases-->
-    <KSPRoot Condition="'$(KSPRoot)' == '' And Exists('$(SteamKSPRoot)/GameData')">$(SteamKSPRoot)</KSPRoot>
-
-    <!-- default CKAN compatibility versions -->
-    <CKANCompatibleVersions Condition="('$(CKANCompatibleVersions)' == '')">1.12 1.11 1.10 1.9 1.8</CKANCompatibleVersions>
-  </PropertyGroup>
-
-  <!-- Assemble a list of KSPRoot candidates. Additional items can be defined in .csproj.user if desired -->
-  <ItemGroup>
-    <KSPRootCandidate Include="$(SolutionDir)KSP"/>
-    <KSPRootCandidate Include="$(ReferencePath)"/>
-    <KSPRootCandidate Include="$(SteamKSPRoot)"/>
-  </ItemGroup>
-  <!-- Search through candidates and select the first one that looks like a valid install-->
-  <ItemGroup>
-    <_ValidKSPRootCandidate Include="@(KSPRootCandidate.Identity)" Condition="Exists('@(KSPRootCandidate.Identity)/$(ManagedRelativePath/Assembly-CSharp.dll')"/>
-  </ItemGroup>
-  <PropertyGroup>
-    <KSPRoot Condition="'$(KSPRoot)' == '' "> %(_ValidKSPRootCandidate.Identity) </KSPRoot>
-  </PropertyGroup>
-
-  <!-- Calculate ManagedPath -->
-  <PropertyGroup>
+    <!-- Calculate ManagedPath -->
     <ManagedPath>$(KSPRoot)/$(ManagedRelativePath)</ManagedPath>
   </PropertyGroup>
 
