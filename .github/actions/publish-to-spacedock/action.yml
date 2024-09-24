@@ -37,3 +37,9 @@ runs:
       with:
         username: ${{ inputs.spacedock-username }}
         password: ${{ inputs.spacedock-password }}
+        game_id: ${{ inputs.game-id }}
+        mod_id: ${{ inputs.mod-id }}
+        version: ${{ env.VERSION_STRING }}
+        zipball: ${{ env.ARTIFACT_FILENAME }}
+
+
