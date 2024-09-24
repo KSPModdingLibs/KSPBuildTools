@@ -25,6 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: get-release-info
+        id: get-release-info
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/get-release-info@main
         with:
           release-tag: ${{ inputs.release-tag }}
