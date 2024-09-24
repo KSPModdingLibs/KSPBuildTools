@@ -41,4 +41,13 @@ runs:
         # extract changelog, save it to a file, and output the filename
         jq -r .body release.json > /tmp/changelog.md
         echo "changelog-file=$(echo /tmp/changelog.md)" >> $GITHUB_OUTPUT
-        
+    
+    - name: dump contexts
+      shell: bash
+      if: runner.debug
+      run: |
+        echo "${{ toJson(env) }}"
+        echo "${{ toJson(github )}}"
+        echo "${{ toJson(job) }}"
+        echo "${{ toJson(steps) }}"
+        printenv
