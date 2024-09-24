@@ -34,7 +34,7 @@ runs:
         echo "version-string=$RELEASE_TAG" >> $GITHUB_OUTPUT
 
         # output artifact filename and download it
-        echo "artifact-file=$(jq -r '.assets[0].name' release.json) >> $GITHUB_OUTPUT
+        echo "artifact-file=$(jq -r '.assets[0].name' release.json)" >> $GITHUB_OUTPUT
         gh release download $RELEASE_TAG
 
         # extract changelog, save it to a file, and output the filename
