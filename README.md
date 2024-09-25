@@ -240,6 +240,14 @@ For details:
 
 [Example usage from RasterPropMonitor](https://github.com/JonnyOThan/RasterPropMonitor/blob/master/.github/workflows/create-release.yml)
 
+## [publish-to-spacedock](https://github.com/KSPModdingLibs/blob/main/.github/workflows/publish-to-spacedock.yml)
+
+Publishes a github release to Spacedock.  You can reference this workflow from one in your own repository that is triggered on a release being published, so that it automatically also gets uploaded to Spacedock.
+
+Calls [get-release-info](#get-release-info) and then uses KSP2Community's [spacedock-upload](https://github.com/KSP2Community/spacedock-upload) action to publish it.  You will need to provide your spacedock username and mod id as variables, and the spacedock password as a secret.  You could either hardcode the mod ID and username in your repository's workflow, or use a repository or organization variable.
+
+[Example from RasterPropMonitor](https://github.com/FirstPersonKSP/RasterPropMonitor/blob/master/.github/workflows/publish-to-spacedock.yml)
+
 ## [validate](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/workflows/validate.yml)
 
 Performs validation to help check for errors.  Right now it just invokes CKAN's KSPMMCfgParser action to check for syntax errors in cfg files, but it may do more in the future.  You may want to add this to a continuous integration workflow that is triggered on pull requests and commits.
@@ -304,6 +312,30 @@ Inputs:
 * `ksp-zip-password`
 
   If the ksp library zip is encrypted, this is the password.  It should be stored in your repository's secrets.
+
+## [get-release-info](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/get-release-info/action.yml)
+
+Fetches information about a published release on github.  This is intended to be used to upload the release to other sites such as Spacedock.
+
+Inputs:
+
+* `release-tag`
+
+  The release tag to get info for.  If left blank, gets the latest release.
+
+Outputs:
+
+* `version-string`
+
+  The tag of the release.  Will be the same as `inputs.release-tag` unless it was blank.
+
+* `changelog-file`
+
+  Filename of the changelog containing the release notes of the github release (typically in markdown format).
+
+* `artifact-file`
+
+  Filename containing the asset from the release.
 
 ## [setup-ckan](https://github.com/KSPModdingLibs/KSPBuildTools/blob/main/.github/actions/setup-ckan/action.yml)
 
