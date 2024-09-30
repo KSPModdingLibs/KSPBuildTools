@@ -1,5 +1,5 @@
 name: Build Assetbundle
-description: Build an assetbundle
+description: Build a Unity assetbundle
 
 inputs:
   unity-version:

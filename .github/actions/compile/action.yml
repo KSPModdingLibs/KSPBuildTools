@@ -1,4 +1,4 @@
-name: compile
+name: Compile
 description: >
   Compiles C# code using `msbuild` into a mod assembly.  
   This action will install any dependent mods declared in the csproj file and restore NuGet packages.

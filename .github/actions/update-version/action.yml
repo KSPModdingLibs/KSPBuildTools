@@ -1,16 +1,12 @@
-name: update-version
+name: Update Version
 
 inputs:
   version-string:
     description: a version in the form major.minor.build.patch, OR one of "--major", "--minor", "--patch" to increment based on the most recent entry in the changelog
-    type: string
   template-extension:
-    type: string
     default: .versiontemplate
   files:
-    type: string
   ksp-build-tools-root:
-    type: string
     default: tmp/kspbuildtools #note this is relative to the *mod*'s repository
   changelog-input-file:
     type: string

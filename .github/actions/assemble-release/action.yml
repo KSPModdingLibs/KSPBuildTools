@@ -1,4 +1,4 @@
-name: assemble-release
+name: Assemble Release
 
 inputs:
   artifacts:
@@ -15,7 +15,7 @@ inputs:
 
   working-directory:
     default: ${{ github.workspace }}
-    description: the working directory to run in
+    description: The working directory to run in
 
 outputs:
   artifact-id:
