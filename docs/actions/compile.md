@@ -1,3 +1,3 @@
 ```{gh-actions:action} Compile
-  :path: .github/actions/compile/action
+  :path: .github/actions/compile
 ```

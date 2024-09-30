@@ -3,8 +3,9 @@
 ```{toctree}
 ---
 maxdepth: 2
+glob:
 ---
 
-actions/index
+*/index
 
 ```
