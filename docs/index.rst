@@ -15,3 +15,5 @@ documentation for details.
    :maxdepth: 2
    :caption: Contents:
 
+.. gh-actions:action::
+    :path: .github/actions/compile/action
