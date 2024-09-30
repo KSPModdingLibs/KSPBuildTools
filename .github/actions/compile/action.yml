@@ -3,6 +3,10 @@ description: >
   Compiles C# code using `msbuild` into a mod assembly.  
   This action will install any dependent mods declared in the csproj file and restore NuGet packages.
 
+x-env:
+  KSP_ROOT:
+    description: The path to use as the root of a KSP instance for CKAN to set-up. If not set, `/tmp/ksp` is used instead.
+
 inputs:
   build-configuration:
     default: Release

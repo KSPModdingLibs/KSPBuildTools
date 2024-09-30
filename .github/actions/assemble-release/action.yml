@@ -1,5 +1,11 @@
 name: Assemble Release
 
+x-env:
+  RELEASE_STAGING:
+    description: >
+      The artifact files will be copied to this directory before being packaged in the zip file.  This becomes the 
+      input for `upload-artifact`. If not set, `/tmp/release` is used instead
+
 inputs:
   artifacts:
     description: Space-separated list of file globs to include in the output artifact, relative to `working-directory`
