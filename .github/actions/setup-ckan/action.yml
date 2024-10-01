@@ -1,5 +1,5 @@
 name: Setup CKAN
-description: Installs CKAN and sets up a KSP installation
+description: Installs [CKAN](https://github.com/KSP-CKAN/CKAN) and sets up a KSP installation
 
 x-env:
   KSP_ROOT:
@@ -7,9 +7,7 @@ x-env:
 
 inputs:
   ckan-version:
-    description: >
-      CKAN tag to install. set to an empty string to always install the most recent version. 
-      See https://github.com/KSP-CKAN/CKAN/tags for a list of available tags
+    description: CKAN tag to install. set to an empty string to always install the most recent version. See [the CKAN releases page](https://github.com/KSP-CKAN/CKAN/tags) for a list of available tags
     default: ''
 
   ckan-repo:
@@ -26,7 +24,7 @@ inputs:
       1.8
 
   ckan-filters:
-    description: CKAN filters to enable. newline-separated
+    description: File globs to ignore when installing mods. Newline-separated. Defaults to most large asset files included in mods. Set to an empty string if you need the entire mod installed for bundling.
     default: |
       .dds
       .png
