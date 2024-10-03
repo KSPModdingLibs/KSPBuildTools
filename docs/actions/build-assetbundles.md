@@ -38,4 +38,4 @@ Alternatively, you can give the action an assetbundle name and a list of assets 
 ```
 
 ### Build Method
-By default, this action will use the [`KSPBuildTools.KSPBuildTools.AssetBundleBuilder.BuildBundles` build method](../../.github/actions/build-assetbundles/AssetBundleBuilder.cs). This function calls on the Unity build pipeline to build your assetbundles. If you need, you can provide your own custom build function and call it with the `build-method` input.
+By default, this action will use the [`KSPBuildTools.KSPBuildTools.AssetBundleBuilder.BuildBundles` build method](../../.github/actions/build-assetbundles/AssetBundleBuilder.cs). This function calls on the Unity build pipeline to build your assetbundles. If you need, you can provide your own custom build function and call it with the {any}`build-method` input.
