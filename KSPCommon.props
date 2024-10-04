@@ -4,52 +4,67 @@
     <KSPCommonPropsImported>true</KSPCommonPropsImported>
   </PropertyGroup>
 
-  <!-- import the csproj.user file. This might not be a good idea -->
-  <Import Project="$(MSBuildProjectFullPath).user" Condition="Exists('$(MSBuildProjectFullPath).user')"/>
-
-  <!--import solution-wide props if it exists -->
-  <Import Condition=" Exists('$(SolutionDir)$(SolutionName).props') " Project="$(SolutionDir)$(SolutionName).props"/>
-
-  <!-- The following properties can be customized per-mod in SolutionName.props-->
+  <!-- default CKAN compatibility versions -->
   <PropertyGroup>
-    <!-- The root directory of the mod repository -->
-    <RepoRootPath Condition = " '$(RepoRootPath)' == '' ">$(SolutionDir.TrimEnd([System.IO.Path]::DirectorySeparatorChar))</RepoRootPath>
-    <BinariesOutputRelativePath Condition = " '$(BinariesOutputRelativePath)' == '' ">GameData\$(SolutionName)</BinariesOutputRelativePath>
-
-    <!-- Default KSPRoot to the "KSP_ROOT" environment variable if it exists -->
-    <KSPRoot Condition=" '$(KSPRoot)' == '' And '$(KSP_ROOT)' != ''">$(KSP_ROOT)</KSPRoot>
-
-    <!-- look for a KSP installation in SolutionDir -->
-    <KSPRoot Condition = " '$(KSPRoot)' == '' And Exists('$(SolutionDir)KSP/GameData')">$(SolutionDir)KSP</KSPRoot>
-
-    <!-- use ReferencePath if it exists and is a valid KSP install -->
-    <KSPRoot Condition = " '$(KSPRoot)' == '' And Exists('$(ReferencePath)GameData')">$(ReferencePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar))</KSPRoot>
-
-    <!--If the reference path isn't set, use the default steam location, but this will be incorrect in lots of cases-->
-    <SteamKSPRoot Condition = "($([MSBuild]::IsOsPlatform('Windows')))">C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program</SteamKSPRoot>
-    <SteamKSPRoot Condition = "($([MSBuild]::IsOsPlatform('OSX')))">$(HOME)/Library/Application Support/Steam/steamapps/common/Kerbal Space Program</SteamKSPRoot>
-    <KSPRoot Condition = "'$(KSPRoot)' == '' And Exists('$(SteamKSPRoot)/GameData')">$(SteamKSPRoot)</KSPRoot>
-
-    <!-- default CKAN compatibility versions -->
     <CKANCompatibleVersions Condition="('$(CKANCompatibleVersions)' == '')">1.12 1.11 1.10 1.9 1.8</CKANCompatibleVersions>
   </PropertyGroup>
 
-  <!--Import a props.user file if it exists, so that KSPRoot can be set globally for the whole mod if desired-->
-  <Import Condition=" Exists('$(SolutionDir)$(SolutionName).props.user') " Project="$(SolutionDir)$(SolutionName).props.user"/>
-  
   <!--Parse KSP platform-specific paths -->
-  <PropertyGroup Condition = " '$(ManagedRelativePath)' == '' ">
-    <ManagedRelativePath Condition = "$([MSBuild]::IsOsPlatform('Windows'))">KSP_x64_Data\Managed</ManagedRelativePath>
-    <ManagedRelativePath Condition = "$([MSBuild]::IsOsPlatform('OSX'))">KSP.app\Contents\Resources\Data\Managed</ManagedRelativePath>
-    <ManagedRelativePath Condition = "$([MSBuild]::IsOsPlatform('Linux'))">KSP_Data\Managed</ManagedRelativePath>
+  <!-- These can be overwritten by user and props files -->
+  <PropertyGroup Condition=" '$(ManagedRelativePath)' == '' ">
+    <ManagedRelativePath Condition="$([MSBuild]::IsOsPlatform('Windows'))">KSP_x64_Data\Managed</ManagedRelativePath>
+    <ManagedRelativePath Condition="$([MSBuild]::IsOsPlatform('OSX'))">KSP.app\Contents\Resources\Data\Managed</ManagedRelativePath>
+    <ManagedRelativePath Condition="$([MSBuild]::IsOsPlatform('Linux'))">KSP_Data\Managed</ManagedRelativePath>
   </PropertyGroup>
   <PropertyGroup>
-    <KSPExecutable Condition = "$([MSBuild]::IsOsPlatform('Windows'))">KSP_x64.exe</KSPExecutable>
-    <KSPExecutable Condition = "$([MSBuild]::IsOsPlatform('OSX'))">KSP.app/Contents/MacOS/KSP</KSPExecutable>
-    <KSPExecutable Condition = "$([MSBuild]::IsOsPlatform('Linux'))">KSP.x86_64</KSPExecutable>
-    <ManagedPath>$(KSPRoot)\$(ManagedRelativePath)</ManagedPath>
+    <KSPExecutable Condition="$([MSBuild]::IsOsPlatform('Windows'))">KSP_x64.exe</KSPExecutable>
+    <KSPExecutable Condition="$([MSBuild]::IsOsPlatform('OSX'))">KSP.app/Contents/MacOS/KSP</KSPExecutable>
+    <KSPExecutable Condition="$([MSBuild]::IsOsPlatform('Linux'))">KSP.x86_64</KSPExecutable>
+    <SteamKSPRoot Condition="($([MSBuild]::IsOsPlatform('Windows')))">C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program</SteamKSPRoot>
+    <SteamKSPRoot Condition="($([MSBuild]::IsOsPlatform('OSX')))">$(HOME)/Library/Application Support/Steam/steamapps/common/Kerbal Space Program</SteamKSPRoot>
   </PropertyGroup>
-  
+
+  <!-- Calculate mod paths -->
+  <!-- These can be overwritten by user, csproj, and props files -->
+  <PropertyGroup>
+    <!-- The root directory of the mod repository -->
+    <RepoRootPath Condition=" '$(RepoRootPath)' == '' ">$(SolutionDir.TrimEnd([System.IO.Path]::DirectorySeparatorChar))</RepoRootPath>
+    <BinariesOutputRelativePath Condition=" '$(BinariesOutputRelativePath)' == '' ">GameData/$(SolutionName)</BinariesOutputRelativePath>
+  </PropertyGroup>
+
+  <!-- Import the csproj.user file. -->
+  <!-- This can overwrite ManagedRelativePath and KSPExecutable,
+       set KSPRoot and ReferencePath, and any other user-specific settings -->
+  <Import Project="$(MSBuildProjectFullPath).user" Condition="Exists('$(MSBuildProjectFullPath).user')"/>
+
+  <!-- Import a props.user file -->
+  <!-- serves the same role as the csproj.user file -->
+  <Import Condition=" Exists('$(SolutionDir)$(SolutionName).props.user') " Project="$(SolutionDir)$(SolutionName).props.user"/>
+
+  <!-- Import solution-wide props if it exists -->
+  <Import Condition=" Exists('$(SolutionDir)$(SolutionName).props') " Project="$(SolutionDir)$(SolutionName).props"/>
+
+  <PropertyGroup>
+    <!-- Relative path that must exist for a path to be a valid KSP Install-->
+    <KSPRootIdentifier>$(ManagedRelativePath)/Assembly-CSharp.dll</KSPRootIdentifier>
+
+    <!-- Default KSPRoot to the "KSP_ROOT" environment variable if it exists -->
+    <!-- Doing this skips any checks for a valid KSP install so be careful! -->
+    <KSPRoot Condition=" '$(KSPRoot)' == '' And '$(KSP_ROOT)' != '' ">$(KSP_ROOT)</KSPRoot>
+
+    <!-- Look for KSP install in Solution dir -->
+    <KSPRoot Condition=" '$(KSPRoot)' == '' And Exists('$(SolutionDir)KSP/$(KSPRootIdentifier)') ">$(SolutionDir)KSP</KSPRoot>
+
+    <!-- Look for KSP install in ReferencePath -->
+    <KSPRoot Condition=" '$(KSPRoot)' == '' And Exists('$(ReferencePath)/$(KSPRootIdentifier)') ">$(ReferencePath)</KSPRoot>
+
+    <!-- Look for KSP steam install-->
+    <KSPRoot Condition=" '$(KSPRoot)' == '' And Exists('$(SteamKSPRoot)/$(KSPRootIdentifier)') ">$(SteamKSPRoot)</KSPRoot>
+
+    <!-- Calculate ManagedPath -->
+    <ManagedPath>$(KSPRoot)/$(ManagedRelativePath)</ManagedPath>
+  </PropertyGroup>
+
   <!-- set the start action so that you can launch directly from VS -->
   <PropertyGroup>
     <StartAction>Program</StartAction>
