@@ -20,7 +20,7 @@ inputs:
     description: If specified, this action will run `yaclog-ksp` on the changelog input file which generates a changelog .cfg file suitable for [Kerbal Changelog](https://github.com/HebaruSan/KerbalChangelog/blob/master/README.md).  As such, `changelog-output-file` should be somewhere in your mod's artifact path so that it will be included when the mod is installed.
   release-notes-output-file:
     default: tmp/release-notes.md
-    description: If specified, uses `yaclog` to save the most recent changelog info in Markdown format to this file.  This can then be used by the [`assemble-release` action](#assemble-release).
+    description: If specified, uses `yaclog` to save the most recent changelog info in Markdown format to this file.  This can then be used by the `assemble-release` action.
 
 outputs:
   version-string:
