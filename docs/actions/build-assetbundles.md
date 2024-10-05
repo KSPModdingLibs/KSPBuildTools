@@ -17,7 +17,7 @@ If your repo has a complete Unity project already checked in, you can point the 
 ```yaml
 - uses: github.com/KSPModdingLibs/KSPBuildTools/.github/actions/build-assetbundles@main
   with: 
-    project-path: 'MyUnityProject'
+    project-dir: 'MyUnityProject'
   env:
     UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
     UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}

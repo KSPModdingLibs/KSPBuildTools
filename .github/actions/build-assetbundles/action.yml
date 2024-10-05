@@ -3,11 +3,12 @@ description: Build a Unity assetbundle
 
 inputs:
   unity-version:
-    description: Full unity version name to build with. e.g. 2019.4.18f1
+    description: Full unity version name to build with. e.g. `2019.4.18f1`
     default: '2019.4.18f1'
 
   project-dir:
     description: Location of the Unity project root (The folder that contains `Assets`) *relative to the github workspace*
+    x-example: '.'
 
   asset-files:
     description: Glob of assets to bundle. Mutually exclusive with `project-dir`
@@ -22,6 +23,17 @@ inputs:
   build-method:
     description: Method to call to build the assetbundles. Uses a builtin build script with sensible values by default
     default: 'KSPBuildTools.AssetBundleBuilder.BuildBundles'
+
+x-env:
+  UNITY_LICENSE:
+    description: The contents of your Unity license file. Store this as a secret
+    example: ${{ secrets.UNITY_LICENSE }}
+  UNITY_EMAIL:
+    description: The address used for your Unity account
+    example: ${{ secrets.UNITY_EMAIL }}
+  UNITY_PASSWORD:
+    description: The password for your Unity account. Store this as a secret
+    example: ${{ secrets.UNITY_PASSWORD }}
 
 runs:
   using: composite
