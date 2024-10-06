@@ -57,9 +57,9 @@ KSPBuildTools needs to know where you have KSP installed in order to reference t
 
 There are several options for this. KSPBuildTools will choose in the following order. Either [autodiscovery in the solution directory](#solution-directory) or [setting a reference path in a .user file](#environment-variable) are the recommended methods for most users.
 
-### KSPRoot MSBuild Variable
+### KSPRoot MSBuild Property
 
-If the {confval}`KSPRoot` MSBuild variable is already set, KSPBuildTools will use it as-is. This can be set in a .user file.
+If the {confval}`KSPRoot` MSBuild property is already set, KSPBuildTools will use it as-is. This can be set in your .csproj.user file.
 
 ### Environment Variable
 
@@ -71,7 +71,7 @@ KSPBuildTools will look for a "KSP" directory in your solution directory and use
 
 ### Reference Path
 
-KSPBuildTools will use the `ReferencePath` MSBuild variable if it is a valid KSP install. This can be set in a user file located at `{csproj path}.user`. If you use Visual Studio, it can generate this file and variable for you.
+KSPBuildTools will use the `ReferencePath` MSBuild property if it is a valid KSP install. This can be set in a user file located at `{csproj path}.user`. If you use Visual Studio, it can generate this file and property for you.
 
 ### From Steam
 
