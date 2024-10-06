@@ -6,10 +6,10 @@ KSPBuildTools provides msbuild properties and targets for developing KSP plugins
 ---
 caption: Contents
 maxdepth: 1
-glob:
 ---
 
-*
-
+getting-started
+generating-version-files
+properties
 ```
 

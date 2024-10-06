@@ -9,9 +9,11 @@ an [SDK-style csproj file](https://learn.microsoft.com/en-us/dotnet/core/project
 
 either run the following command:
 
+````{jinja}
 ```console
-dotnet add package KSPBuildTools
+dotnet add package KSPBuildTools{% if nuget_version %} --version {{nuget_version}}{% endif %} 
 ```
+````
 
 or add the following to your csproj:
 
@@ -57,7 +59,7 @@ There are several options for this. KSPBuildTools will choose in the following o
 
 ### KSPRoot MSBuild Variable
 
-If the `KSPRoot` MSBuild variable is already set, KSPBuildTools will use it as-is. This can be set in a .user file.
+If the {confval}`KSPRoot` MSBuild variable is already set, KSPBuildTools will use it as-is. This can be set in a .user file.
 
 ### Environment Variable
 
