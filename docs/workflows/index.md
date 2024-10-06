@@ -4,9 +4,9 @@ KSPBuildTools provides several reusable workflows for use with Github Actions. T
 
 For usage, see [Reusing Workflows](https://docs.github.com/en/actions/sharing-automations/reusing-workflows) in the Github docs.
 
-
 ```{toctree}
 ---
+caption: Contents
 maxdepth: 1
 glob:
 ---

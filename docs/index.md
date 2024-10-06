@@ -2,10 +2,11 @@
 
 ```{toctree}
 ---
+caption: Contents
 maxdepth: 2
-glob:
 ---
-
-*/index
+msbuild/index
+actions/index
+workflows/index
 
 ```
