@@ -56,7 +56,7 @@
 
   <!-- Execute generated CKAN command list -->
   <Target Name="CKANInstall" DependsOnTargets="CKANInstallScriptGen" BeforeTargets="_GenerateRestoreProjectSpec;Restore;ResolveAssemblyReferences" Inputs="$(CKANCommandFile)" Outputs="$(KSPRoot)/CKAN/registry.json">
-    <Exec Command="cat '$(CKANCommandFile)' | ckan prompt --headless" Condition="'$(CKANDependencyList)' != ''"/>
+    <Exec Command="ckan prompt --headless &lt; '$(CKANCommandFile)'" Condition="'$(CKANDependencyList)' != ''"/>
   </Target>
 
   <Target Name="CKANClean" AfterTargets="Clean">
