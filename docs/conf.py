@@ -27,6 +27,10 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
+# -- Options for myst-parser -------------------------------------------------
+
+myst_heading_anchors = 3
+
 # -- Options for sphinx-gha --------------------------------------------------
 
 sphinx_gha_repo_root = str(Path(__file__).parent.parent.absolute())  # docs/..
