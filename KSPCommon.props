@@ -4,6 +4,11 @@
     <KSPCommonPropsImported>true</KSPCommonPropsImported>
   </PropertyGroup>
 
+  <!-- disable default .net framework imports; use the ones from KSP instead.  There are a few differences that are sometimes important. -->
+  <PropertyGroup>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+  </PropertyGroup>
+
   <!-- default CKAN compatibility versions -->
   <PropertyGroup>
     <CKANCompatibleVersions Condition="('$(CKANCompatibleVersions)' == '')">1.12 1.11 1.10 1.9 1.8</CKANCompatibleVersions>
