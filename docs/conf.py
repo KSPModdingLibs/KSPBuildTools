@@ -30,6 +30,7 @@ html_static_path = ['_static']
 # -- Options for myst-parser -------------------------------------------------
 
 myst_heading_anchors = 3
+myst_enable_extensions = ['attrs_inline']
 
 # -- Options for sphinx-gha --------------------------------------------------
 
@@ -37,6 +38,7 @@ sphinx_gha_repo_root = str(Path(__file__).parent.parent.absolute())  # docs/..
 sphinx_gha_repo_slug = 'KSPModdingLibs/KSPBuildTools'
 
 # -- Detect version ----------------------------------------------------------
+
 nuget_version_regex = re.compile(r'(?:\.?[0-9]+){3,}(?:[-a-z]+)?')
 rtd_version = os.environ.get('READTHEDOCS_GIT_IDENTIFIER') or 'main'
 

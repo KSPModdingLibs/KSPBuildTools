@@ -10,6 +10,7 @@ maxdepth: 1
 
 getting-started
 generating-version-files
+dependencies
 properties
 ```
 
