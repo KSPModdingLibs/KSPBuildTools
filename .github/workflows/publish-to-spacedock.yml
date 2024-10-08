@@ -6,19 +6,24 @@ on:
       spacedock-username:
         type: string
         required: true
+        description: Spacedock login username
       mod-id:
         type: string
         required: true
+        description: ID of the mod we are deploying. Get this from the end of your mod's spacedock URL
       release-tag:
         type: string
         required: false
+        description: The tag of the release.  Will be the same as `inputs.release-tag` unless it was blank.
       game-id:
         type: string
         required: false
         default: '3102' # hardcoded to KSP1 gameid.  retrieve from https://spacedock.info/api/games
+        description: ID of the game we are deploying for. This should probably be left as-is for KSP 1.
     secrets:
       spacedock-password:
         required: true
+        description: Spacedock login password. Store this as a secret!
 
 jobs:
   publish-to-spacedock:
