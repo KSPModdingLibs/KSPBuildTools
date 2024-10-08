@@ -27,13 +27,10 @@ inputs:
 x-env:
   UNITY_LICENSE:
     description: The contents of your Unity license file. Store this as a secret
-    example: ${{ secrets.UNITY_LICENSE }}
   UNITY_EMAIL:
     description: The address used for your Unity account
-    example: ${{ secrets.UNITY_EMAIL }}
   UNITY_PASSWORD:
     description: The password for your Unity account. Store this as a secret
-    example: ${{ secrets.UNITY_PASSWORD }}
 
 runs:
   using: composite
