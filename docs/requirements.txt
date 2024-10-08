@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file=docs/requirements.txt --strip-extras docs/requirements.in
 #
-alabaster==0.7.16
+alabaster==1.0.0
     # via sphinx
 babel==2.16.0
     # via sphinx
@@ -12,7 +12,7 @@ certifi==2024.8.30
     # via requests
 charset-normalizer==3.3.2
     # via requests
-docutils==0.20.1
+docutils==0.21.2
     # via
     #   myst-parser
     #   sphinx
@@ -31,7 +31,7 @@ markdown-it-py==3.0.0
     # via
     #   mdit-py-plugins
     #   myst-parser
-markupsafe==2.1.5
+markupsafe==3.0.0
     # via jinja2
 mdit-py-plugins==0.4.2
     # via myst-parser
@@ -51,7 +51,7 @@ requests==2.32.3
     # via sphinx
 snowballstemmer==2.2.0
     # via sphinx
-sphinx==7.4.7
+sphinx==8.0.0
     # via
     #   -r docs/requirements.in
     #   myst-parser
@@ -66,7 +66,7 @@ sphinx-gha @ git+https://github.com/drewcassidy/sphinx-gha.git@main
     # via -r docs/requirements.in
 sphinx-jinja==2.0.2
     # via -r docs/requirements.in
-sphinx-rtd-theme==2.0.0
+sphinx-rtd-theme==3.0.0
     # via -r docs/requirements.in
 sphinxcontrib-applehelp==2.0.0
     # via sphinx
