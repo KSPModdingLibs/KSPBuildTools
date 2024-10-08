@@ -8,5 +8,6 @@ maxdepth: 2
 msbuild/index
 actions/index
 workflows/index
+scripts
 
 ```
