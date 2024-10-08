@@ -1,4 +1,5 @@
-# Documentation for KSP Build Tools
+```{include} ../README.md
+```
 
 ```{toctree}
 ---
