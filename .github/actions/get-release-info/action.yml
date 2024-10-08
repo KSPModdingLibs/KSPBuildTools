@@ -1,0 +1,53 @@
+name: get-release-info
+description: |
+  Gets information about a github release so that it can be published elsewhere, such as SpaceDock.
+
+inputs:
+  release-tag:
+    description: |
+      The release tag to get info for.  If left blank, gets the latest release.
+outputs:
+  version-string:
+    value: ${{ steps.get-release-info.outputs.version-string }}
+    description: |
+      The tag of the release.  Will be the same as `inputs.release-tag` unless it was blank.
+  changelog-file:
+    value: ${{ steps.get-release-info.outputs.changelog-file }}
+    description: |
+      A file containing the release notes of the github release (typically in markdown format).
+  artifact-file:
+    value: ${{ steps.get-release-info.outputs.artifact-file }}
+
+runs:
+  using: composite
+  steps:
+    - name: get-release-info
+      id: get-release-info
+      shell: bash
+      env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+      run: |
+        gh release view ${{ inputs.release-tag }} --json assets,body,tagName > release.json
+
+        # output version string
+        RELEASE_TAG=$(jq -r .tagName release.json)
+        echo "version-string=$(echo $RELEASE_TAG)" >> $GITHUB_OUTPUT
+
+        # output artifact filename and download it
+        echo "artifact-file=$(echo $(jq -r '.assets[0].name' release.json))" >> $GITHUB_OUTPUT
+        gh release download $RELEASE_TAG
+
+        # extract changelog, save it to a file, and output the filename
+        jq -r .body release.json > /tmp/changelog.md
+        echo "changelog-file=$(echo /tmp/changelog.md)" >> $GITHUB_OUTPUT
+    
+    - name: dump contexts
+      shell: bash
+      if: runner.debug
+      run: |
+        echo "${{ toJson(env) }}"
+        echo "${{ toJson(github )}}"
+        echo "${{ toJson(job) }}"
+        echo "${{ toJson(steps) }}"
+        printenv

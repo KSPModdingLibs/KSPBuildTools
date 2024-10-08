@@ -1,36 +1,42 @@
 name: publish-to-spacedock
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       spacedock-username:
         type: string
-      spacedock-password:
-        type: string
-      game-id:
-        type: number
-        default: 3102 # hardcoded to KSP1 gameid.  retrieve from https://spacedock.info/api/games
+        required: true
       mod-id:
-        type: number
-
-env:
-  SPACEDOCK_USERNAME: ${{ inputs.spacedock-username || github.triggering_actor }}
-  SPACEDOCK_MOD_ID: ${{ inputs.mod-id || vars.SPACEDOCK_MOD_ID }}
+        type: string
+        required: true
+      release-tag:
+        type: string
+        required: false
+      game-id:
+        type: string
+        required: false
+        default: '3102' # hardcoded to KSP1 gameid.  retrieve from https://spacedock.info/api/games
+    secrets:
+      spacedock-password:
+        required: true
 
 jobs:
   publish-to-spacedock:
     runs-on: ubuntu-latest
     steps:
-      - name: setup-inputs
-        uses: KSPModdingLibs/KSPBuildTools/.github/actions/mask-input@main
+      - name: get-release-info
+        id: get-release-info
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/get-release-info@main
         with:
-          input-name: spacedock-password
-          output-variable-name: SPACEDOCK_PASSWORD
-      
-      - name: publish
-        uses: KSPModdingLibs/KSPBuildTools/.github/actions/publish-to-spacedock@main
+          release-tag: ${{ inputs.release-tag }}
+
+      - name: upload-to-spacedock
+        uses: KSP2Community/spacedock-upload@v1.0.0
         with:
-          spacedock-username: ${{ env.SPACEDOCK_USERNAME }}
-          spacedock-password: ${{ env.SPACEDOCK_PASSWORD }}
-          game-id: ${{ inputs.game-id }}
-          mod-id: ${{ env.SPACEDOCK_MOD_ID }}
+          username: ${{ inputs.spacedock-username }}
+          password: ${{ secrets.spacedock-password }}
+          game_id: ${{ inputs.game-id }}
+          mod_id: ${{ inputs.mod-id }}
+          version: ${{ steps.get-release-info.outputs.version-string }}
+          zipball: ${{ steps.get-release-info.outputs.artifact-file }}
+          changelog: ${{ steps.get-release-info.outputs.changelog-file }}

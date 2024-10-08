@@ -12,6 +12,7 @@
 
   <Target Name="CheckForKSPRoot" BeforeTargets="ResolveReferences" Condition="'$(KSPRoot)' == ''">
     <Error Text="KSPBuildTools was unable to find a KSP installation. Please set the ReferencePath or KSPRoot property in your csproj.user file to a valid KSP installation directory (the one with GameData in it)"/>
+    <Message Text="Found KSPRoot at $(KSPRoot)" Importance="low"/>
   </Target>
 
   <!-- Copy output files to mod folder -->
@@ -55,7 +56,7 @@
 
   <!-- Execute generated CKAN command list -->
   <Target Name="CKANInstall" DependsOnTargets="CKANInstallScriptGen" BeforeTargets="_GenerateRestoreProjectSpec;Restore;ResolveAssemblyReferences" Inputs="$(CKANCommandFile)" Outputs="$(KSPRoot)/CKAN/registry.json">
-    <Exec Command="cat '$(CKANCommandFile)' | ckan prompt --headless" Condition="'$(CKANDependencyList)' != ''"/>
+    <Exec Command="ckan prompt --headless &lt; '$(CKANCommandFile)'" Condition="'$(CKANDependencyList)' != ''"/>
   </Target>
 
   <Target Name="CKANClean" AfterTargets="Clean">
