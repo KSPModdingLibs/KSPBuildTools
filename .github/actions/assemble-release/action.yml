@@ -1,4 +1,8 @@
-name: assemble-release
+name: Assemble Release
+
+x-env:
+  RELEASE_STAGING:
+    description: The artifact files will be copied to this directory before being packaged in the zip file.  This becomes the input for `upload-artifact`. If not set, `/tmp/release` is used instead
 
 inputs:
   artifacts:
@@ -10,12 +14,12 @@ inputs:
     default: "**/*.pdb"
 
   output-file-name:
-    description: Output artifact name
+    description: Output artifact name used in the upload-artifact action. a zip file with this name will be created in the github workspace so that it can be immediately consumed by other actions in the workflow without having to download the artifact.
     default: ${{ github.event.repository.name || 'release'}}
 
   working-directory:
     default: ${{ github.workspace }}
-    description: the working directory to run in
+    description: The working directory to run in
 
 outputs:
   artifact-id:

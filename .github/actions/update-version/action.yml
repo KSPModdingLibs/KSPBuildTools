@@ -1,31 +1,34 @@
-name: update-version
+name: Update Version
+description: Uses [yaclog](https://yaclog.readthedocs.io/en/latest/index.html) and [yaclog-ksp](https://pypi.org/project/yaclog-ksp/) to update a changelog and get release notes. Then runs `update-version.sh` to replace version tokens in several text files.  All modifications will be staged to git but not committed.
 
 inputs:
   version-string:
-    description: a version in the form major.minor.build.patch, OR one of "--major", "--minor", "--patch" to increment based on the most recent entry in the changelog
-    type: string
+    description: A version number in major.minor.patch.build form, or one of the special strings `--major` `--minor` `--patch` which will increment the version based on the most recent entry in the changelog file.
+    required: true
   template-extension:
-    type: string
     default: .versiontemplate
+    description: Corresponds to the input to `update-version.sh`.
   files:
-    type: string
+    description: Corresponds to the input to `update-version.sh`.
   ksp-build-tools-root:
-    type: string
     default: tmp/kspbuildtools #note this is relative to the *mod*'s repository
+    description: Where to download `update-version.sh`.
   changelog-input-file:
-    type: string
     default: CHANGELOG.md
+    description: The name of a changelog file to use.  Should be formatted according to [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), with a `## Unreleased` section at the top for changes that are pending release.  `yaclog release` will be invoked which replaces the `## Unreleased` section with the version number and the date stamp.
   changelog-output-file:
-    type: string
+    description: If specified, this action will run `yaclog-ksp` on the changelog input file which generates a changelog .cfg file suitable for [Kerbal Changelog](https://github.com/HebaruSan/KerbalChangelog/blob/master/README.md).  As such, `changelog-output-file` should be somewhere in your mod's artifact path so that it will be included when the mod is installed.
   release-notes-output-file:
-    type: string
     default: tmp/release-notes.md
+    description: If specified, uses `yaclog` to save the most recent changelog info in Markdown format to this file.  This can then be used by the `assemble-release` action.
 
 outputs:
   version-string:
     value: ${{ steps.result.outputs.version-string }}
+    description: The final version string
   release-notes-output-file:
     value: ${{ inputs.release-notes-output-file }}
+    description: The path to the release notes file
 
 runs:
   using: composite

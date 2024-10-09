@@ -1,12 +1,14 @@
-name: compile
-description: >
-  Compiles C# code using `msbuild` into a mod assembly.  
-  This action will install any dependent mods declared in the csproj file and restore NuGet packages.
+name: Compile
+description: Compiles C# code using `msbuild` into a mod assembly.  This action will install any dependent mods declared in the csproj file and restore NuGet packages.
+
+x-env:
+  KSP_ROOT:
+    description: The path to use as the root of a KSP instance for CKAN to set-up. If not set, `/tmp/ksp` is used instead.
 
 inputs:
   build-configuration:
     default: Release
-    description: The project configuration to build.  Defaults to `Release`.
+    description: The project configuration to build.
 
   ksp-zip-url:
     default: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
@@ -14,8 +16,8 @@ inputs:
       A url for a zip file that contains the assemblies from the game to link against.  This should either be stripped 
       so that it only contains public interfaces, or encrypted so that the libraries are not being redistributed unprotected.
 
-      Defaults to `https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip` which contains stripped versions 
-      of the libraries and should be suitable for most users. It does not require a password.
+      Defaults to KSP 1.12.5 with stripped versions 
+      of the libraries which should be suitable for most users. It does not require a password.
 
   ksp-zip-password:
     description: >
