@@ -10,9 +10,19 @@
 
   <!--Custom Targets-->
 
-  <Target Name="CheckForKSPRoot" BeforeTargets="ResolveReferences" Condition="'$(KSPRoot)' == ''">
-    <Error Text="KSPBuildTools was unable to find a KSP installation. Please set the ReferencePath or KSPRoot property in your csproj.user file to a valid KSP installation directory (the one with GameData in it)"/>
-    <Message Text="Found KSPRoot at $(KSPRoot)" Importance="low"/>
+  <Target Name="CheckForKSPRoot" BeforeTargets="ResolveReferences">
+    <Error Text="KSPBuildTools was unable to find a KSP installation. Please set the ReferencePath or KSPRoot property
+                 in your csproj.user file to a valid KSP installation directory (the one with GameData in it)
+
+                 See https://kspbuildtools.readthedocs.io/en/latest/msbuild/getting-started.html#locating-your-ksp-install for more information"
+           Condition="'$(KSPRoot)' == ''"/>
+    <ItemGroup>
+      <_KSPRootMessage Include="KSPRoot Candidates:"/>
+      <_KSPRootMessage Include="Candidate: %(KSPRootCandidate.source) from %(KSPRootCandidate.identity)"/>
+      <_KSPRootMessage Include="Chosen KSPRoot: $(KSPRoot) in $(KSPRootSource)" Condition="'$(KSPRoot)' != ''"/>
+    </ItemGroup>
+    <Message Text="@(_KSPRootMessage, '%0a')" Importance="normal"/>
+
   </Target>
 
   <!-- Copy output files to mod folder -->

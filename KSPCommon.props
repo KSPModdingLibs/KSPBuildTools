@@ -52,20 +52,40 @@
   <PropertyGroup>
     <!-- Relative path that must exist for a path to be a valid KSP Install-->
     <KSPRootIdentifier>$(ManagedRelativePath)/Assembly-CSharp.dll</KSPRootIdentifier>
+    <KSPRootSource Condition="'$(KSPRoot)' != ''">property</KSPRootSource>
+  </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(KSPRoot)' == '' And '$(KSP_ROOT)' != '' ">
     <!-- Default KSPRoot to the "KSP_ROOT" environment variable if it exists -->
     <!-- Doing this skips any checks for a valid KSP install so be careful! -->
-    <KSPRoot Condition=" '$(KSPRoot)' == '' And '$(KSP_ROOT)' != '' ">$(KSP_ROOT)</KSPRoot>
+    <KSPRoot >$(KSP_ROOT)</KSPRoot>
+    <KSPRootSource>environment variable</KSPRootSource>
+  </PropertyGroup>
+  <ItemGroup>
+    <KSPRootCandidate Include="$(SolutionDir)KSP" source="solution directory"/>
+    <KSPRootCandidate Include="$(ReferencePath)" source="reference path"/>
+    <KSPRootCandidate Include="$(SteamKSPRoot)" source="steam"/>
+  </ItemGroup>
 
+  <PropertyGroup Condition=" '$(KSPRoot)' == '' And Exists('$(SolutionDir)KSP/$(KSPRootIdentifier)') ">
     <!-- Look for KSP install in Solution dir -->
-    <KSPRoot Condition=" '$(KSPRoot)' == '' And Exists('$(SolutionDir)KSP/$(KSPRootIdentifier)') ">$(SolutionDir)KSP</KSPRoot>
+    <KSPRoot >$(SolutionDir)KSP</KSPRoot>
+    <KSPRootSource>solution directory</KSPRootSource>
+  </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(KSPRoot)' == '' And Exists('$(ReferencePath)/$(KSPRootIdentifier)') ">
     <!-- Look for KSP install in ReferencePath -->
-    <KSPRoot Condition=" '$(KSPRoot)' == '' And Exists('$(ReferencePath)/$(KSPRootIdentifier)') ">$(ReferencePath)</KSPRoot>
+    <KSPRoot>$(ReferencePath)</KSPRoot>
+    <KSPRootSource>reference path</KSPRootSource>
+  </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(KSPRoot)' == '' And Exists('$(SteamKSPRoot)/$(KSPRootIdentifier)') ">
     <!-- Look for KSP steam install-->
-    <KSPRoot Condition=" '$(KSPRoot)' == '' And Exists('$(SteamKSPRoot)/$(KSPRootIdentifier)') ">$(SteamKSPRoot)</KSPRoot>
+    <KSPRoot>$(SteamKSPRoot)</KSPRoot>
+    <KSPRootSource>steam</KSPRootSource>
+  </PropertyGroup>
 
+  <PropertyGroup>
     <!-- Calculate ManagedPath -->
     <ManagedPath>$(KSPRoot)/$(ManagedRelativePath)</ManagedPath>
   </PropertyGroup>
