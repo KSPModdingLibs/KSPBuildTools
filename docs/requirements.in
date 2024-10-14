@@ -1,4 +1,4 @@
-sphinx==8
+sphinx>=8
 sphinx-rtd-theme>=2.0.0
 sphinx-copybutton
 sphinx-gha @ git+https://github.com/drewcassidy/sphinx-gha.git@main
