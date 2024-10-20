@@ -1,9 +1,7 @@
 # Build Assetbundles
 
 ```{gha:action}
----
-path: .github/actions/build-assetbundles
----
+:path: .github/actions/build-assetbundles
 ```
 
 ## Usage
@@ -14,8 +12,8 @@ The Unity editor requires a login to function, even with the free edition. You w
 ### Using a Unity project
 If your repo has a complete Unity project already checked in, you can point the action at it and have it build all your defined asset bundles.
 
-```yaml
-- uses: github.com/KSPModdingLibs/KSPBuildTools/.github/actions/build-assetbundles@main
+```{gha:example}
+- uses: ./.github/actions/build-assetbundles
   with: 
     project-dir: 'MyUnityProject'
   env:
@@ -26,8 +24,8 @@ If your repo has a complete Unity project already checked in, you can point the 
 ### Using a list of assets
 Alternatively, you can give the action an assetbundle name and a list of assets to compile, and it will create a temporary project in order to compile them
 
-```yaml
-- uses: github.com/KSPModdingLibs/KSPBuildTools/.github/actions/build-assetbundles@main
+```{gha:example}
+- uses: ./.github/actions/build-assetbundles
   with: 
     assetbundle-name: mybundle.shab
     asset-files: 'MyAssets/*.shader MyAssets/*.cginc'
