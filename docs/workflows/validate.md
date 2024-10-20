@@ -1,6 +1,6 @@
 # Validate
 
-````{gh-actions:workflow}
+````{gha:workflow}
 ---
 path: .github/workflows/validate.yml
 ---

@@ -1,6 +1,6 @@
 # Install Dependencies
 
-```{gh-actions:action}
+```{gha:action}
 ---
 path: .github/actions/install-dependencies
 ---

@@ -1,6 +1,6 @@
 # Get Release Info
 
-```{gh-actions:action}
+```{gha:action}
 ---
 path: .github/actions/get-release-info
 ---

@@ -1,6 +1,6 @@
 # Create Release
 
-````{gh-actions:workflow}
+````{gha:workflow}
 ---
 path: .github/workflows/create-release.yml
 ---
@@ -11,7 +11,7 @@ Builds and packages a new version of mod.  You can reference this workflow in yo
 This action DOES commit files to git (updated changelogs, version files, etc) so if you're testing it out you should do it on a separate branch.
 ```
 
-After running {gh-actions:action}`update-version`, this workflow commits the changelog and version file changes and creates a new tag.  Then it runs {gh-actions:action}`compile` and {gh-actions:action}`assemble-release`.  And then finally it creates a draft github release with the packaged mod attached.
+After running {gha:action}`update-version`, this workflow commits the changelog and version file changes and creates a new tag.  Then it runs {gha:action}`compile` and {gha:action}`assemble-release`.  And then finally it creates a draft github release with the packaged mod attached.
 For details:
 
 * [update-version action](#update-version)

@@ -78,7 +78,7 @@ If the {confval}`KSPRoot` MSBuild property is already set, KSPBuildTools will us
 
 ### Environment Variable
 
-Set the {envvar}`KSP_ROOT` environment variable to the root of a KSP install. This is useful for CI workflows such as those using the {gh-actions:action}`compile` action.
+Set the {envvar}`KSP_ROOT` environment variable to the root of a KSP install. This is useful for CI workflows such as those using the {gha:action}`compile` action.
 
 ### Solution Directory
 

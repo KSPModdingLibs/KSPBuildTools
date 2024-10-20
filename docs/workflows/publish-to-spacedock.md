@@ -1,6 +1,6 @@
 # Publish To Spacedock
 
-````{gh-actions:workflow}
+````{gha:workflow}
 ---
 path: .github/workflows/publish-to-spacedock.yml
 ---

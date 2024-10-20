@@ -1,6 +1,6 @@
 # Compile
 
-````{gh-actions:action}
+````{gha:action}
 :path: .github/actions/compile
 
 ```{warning}

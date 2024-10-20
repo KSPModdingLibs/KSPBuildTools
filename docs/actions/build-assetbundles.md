@@ -1,6 +1,6 @@
 # Build Assetbundles
 
-```{gh-actions:action}
+```{gha:action}
 ---
 path: .github/actions/build-assetbundles
 ---

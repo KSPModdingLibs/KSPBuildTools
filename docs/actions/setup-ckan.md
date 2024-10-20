@@ -1,6 +1,6 @@
 # Setup CKAN
 
-```{gh-actions:action}
+```{gha:action}
 ---
 path: .github/actions/setup-ckan
 ---

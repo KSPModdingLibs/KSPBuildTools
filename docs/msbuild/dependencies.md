@@ -22,7 +22,7 @@ the {confval}`KSPRoot` property can be used to reference the KSP install whereve
 
 ## Installing Dependencies Automatically
 
-KSPBuildTools can install CKAN mods automatically when built. This is useful for CI workflows such as those using the {gh-actions:action}`compile` action, or to make it easier for others to compile your mod themselves. Either add the `<CKANIdentifier>` metadata to your `<Reference>` items, or if the dependency mod doesn't have a dll you need to reference you can use the `<CKANDependency>` item.
+KSPBuildTools can install CKAN mods automatically when built. This is useful for CI workflows such as those using the {gha:action}`compile` action, or to make it easier for others to compile your mod themselves. Either add the `<CKANIdentifier>` metadata to your `<Reference>` items, or if the dependency mod doesn't have a dll you need to reference you can use the `<CKANDependency>` item.
 
 ```xml
 <ItemGroup>

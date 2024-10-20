@@ -1,6 +1,6 @@
 # Update Version
 
-```{gh-actions:action}
+```{gha:action}
 ---
 path: .github/actions/update-version
 ---

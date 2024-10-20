@@ -18,6 +18,10 @@ docutils==0.21.2
     #   sphinx
     #   sphinx-jinja
     #   sphinx-rtd-theme
+gitdb==4.0.11
+    # via gitpython
+gitpython==3.1.43
+    # via sphinx-gha
 idna==3.10
     # via requests
 imagesize==1.4.1
@@ -31,7 +35,7 @@ markdown-it-py==3.0.0
     # via
     #   mdit-py-plugins
     #   myst-parser
-markupsafe==3.0.1
+markupsafe==3.0.2
     # via jinja2
 mdit-py-plugins==0.4.2
     # via myst-parser
@@ -49,6 +53,8 @@ pyyaml==6.0.2
     #   sphinx-gha
 requests==2.32.3
     # via sphinx
+smmap==5.0.1
+    # via gitdb
 snowballstemmer==2.2.0
     # via sphinx
 sphinx==8.1.3
@@ -62,7 +68,7 @@ sphinx==8.1.3
     #   sphinxcontrib-jquery
 sphinx-copybutton==0.5.2
     # via -r docs/requirements.in
-sphinx-gha @ git+https://github.com/drewcassidy/sphinx-gha.git@main
+sphinx-gha==0.1.0
     # via -r docs/requirements.in
 sphinx-jinja==2.0.2
     # via -r docs/requirements.in

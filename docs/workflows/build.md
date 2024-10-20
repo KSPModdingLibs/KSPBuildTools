@@ -1,6 +1,6 @@
 # Build
 
-```{gh-actions:workflow}
+```{gha:workflow}
 ---
 path: .github/workflows/build.yml
 ---
