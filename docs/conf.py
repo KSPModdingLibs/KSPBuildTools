@@ -40,9 +40,10 @@ sphinx_gha_repo_slug = 'KSPModdingLibs/KSPBuildTools'
 # -- Detect version ----------------------------------------------------------
 
 nuget_version_regex = re.compile(r'(?:\.?[0-9]+){3,}(?:[-a-z]+)?')
-rtd_version = os.environ.get('READTHEDOCS_GIT_IDENTIFIER') or 'main'
+from sphinx_gha.git_ref import get_git_ref
+git_ref = get_git_ref(sphinx_gha_repo_root)
 
 jinja_globals = {
-    'git_ref': rtd_version,
-    'nuget_version': rtd_version if nuget_version_regex.match(rtd_version) else None,
+    'git_ref': git_ref,
+    'nuget_version': git_ref if nuget_version_regex.match(git_ref) else None,
 }
