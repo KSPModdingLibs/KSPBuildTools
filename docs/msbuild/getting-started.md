@@ -4,6 +4,8 @@
 ## Including the Package
 There are several ways to use the KSPBuildTools package in your mod.  [KSPBuildTools is available on NuGet](https://www.nuget.org/packages/KSPBuildTools), which is the recommended way to use it.
 
+A detailed walkthrough for creating a new mod project using KSPBuildTools can be found [here](https://github.com/KSPModdingLibs/KSPModdingWiki/wiki/Creating-a-new-Plugin-Mod).
+
 ### Install with NuGet - Older Framework Style projects
 
 1. Right-click on your project file in Visual Studio and select "Manage NuGet Packages."
