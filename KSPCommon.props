@@ -129,4 +129,8 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include = "$(MSBuildThisFileDirectory)/include/*.cs" Condition="exists('$(MSBuildThisFileDirectory)/include')"/>
+  </ItemGroup>
 </Project>

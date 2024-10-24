@@ -38,9 +38,11 @@
     <None Include="KSPCommon.props" Pack="True" PackagePath="build/KSPBuildTools.props" />
     <None Include="KSPCommon.targets" Pack="True" PackagePath="build/KSPBuildTools.targets" />
     <None Include="README.md" Pack="True" PackagePath="/"/>
+    <None Include="include/*.cs" Pack="True" PackagePath="/build/include/"/>
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="**/*.cs" />
     <Compile Remove="$(MSBuildThisFileDirectory)tests/**" />
     <None Remove="$(MSBuildThisFileDirectory)tests/**" />
     <Compile Remove="$(MSBuildThisFileDirectory).github/**" />
