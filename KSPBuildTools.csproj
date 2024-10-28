@@ -27,7 +27,10 @@
     <RepoRootPath>$(ProjectDir)</RepoRootPath>
     <PackageId>KSPBuildTools</PackageId>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Title>KSP Build Tools</Title>
+    <Description>Tools for developing mods for Kerbal Space Program</Description>
     <Authors>KSPModdingLibs Contributors</Authors>
+    <RepositoryUrl>https://github.com/KSPModdingLibs/KSPBuildTools</RepositoryUrl>
     <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
 
