@@ -28,10 +28,10 @@
   <!-- Copy output files to mod folder -->
   <Target Name="CopyBinariesToRepo" AfterTargets="CopyFilesToOutputDirectory">
     <ItemGroup>
-      <BinariesToCopy Include="$(TargetDir)/*.*"/>
+      <BinariesToCopy Include="$(TargetDir)/**"/>
     </ItemGroup>
     <MakeDir Directories="$(RepoRootPath)/$(BinariesOutputRelativePath)"/>
-    <Copy SourceFiles="@(BinariesToCopy)" DestinationFolder="$(RepoRootPath)/$(BinariesOutputRelativePath)"/>
+    <Copy SourceFiles="@(BinariesToCopy)" DestinationFolder="$(RepoRootPath)/$(BinariesOutputRelativePath)/%(RecursiveDir)"/>
   </Target>
 
   <!-- Use CKAN to install mods for any references tagged with a CKAN Identifier -->
