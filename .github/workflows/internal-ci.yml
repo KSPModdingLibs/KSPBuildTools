@@ -65,6 +65,7 @@ jobs:
 
   test-assetbundle:
     uses: './.github/workflows/internal-test-assetbundle.yml'
+    if: github.event_name != 'pull_request'
     secrets: inherit
 
   deploy-nuget:
