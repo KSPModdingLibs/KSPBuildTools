@@ -91,6 +91,7 @@ jobs:
           dependency-identifiers: ${{ inputs.dependency-identifiers }}
 
       - name: compile
+        if: ${{ inputs.use-msbuild }}
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@main
         with:
           build-configuration: ${{ inputs.build-configuration }}
