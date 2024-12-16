@@ -70,12 +70,16 @@ jobs:
 
   deploy-nuget:
     runs-on: ubuntu-22.04
-    needs: [  test-plugin, test-plugin-nuget, test-plugin-legacy, test-assetbundle ]
+    needs: [ test-plugin, test-plugin-nuget, test-plugin-legacy, test-assetbundle ]
     environment:
       name: "NuGet"
       url: "https://www.nuget.org/packages/KSPBuildTools"
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
     steps:
+      - name: Get Changelog Information
+        uses: drewcassidy/yaclog@1.5.0
+        id: yaclog-show
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -100,3 +104,12 @@ jobs:
       - name: Publish Package to Github
         run: |
           dotnet nuget push --source "github" ${{ env.NuGetDirectory }}/*.nupkg
+
+      - name: Publish to Github Releases
+        run: >
+          gh release create ${{ github.ref_name }}
+          --notes-file "${{ steps.yaclog-show.outputs.body-file }}"
+          --title "${{ steps.yaclog-show.outputs.name }}"
+          ${{ env.NuGetDirectory }}/*.nupkg
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
