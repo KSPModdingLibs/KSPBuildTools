@@ -77,7 +77,7 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git commit -m "bump version to $VERSION_STRING"
+          git commit --allow-empty -m "bump version to $VERSION_STRING"
           git tag -f -a "$VERSION_STRING" -m "$VERSION_STRING"
 
       # Install CKAN and set up an instance
