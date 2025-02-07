@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file
 * Support all forms of version numbers
   * KSPAssembly and KSPAssemblyDependency may optionally be major.minor (omitting patch)
   * KSPVersionFile.Version now defaults to $(FileVersion) if not set, which should support any number of elements
+* ProjectReference may now include <KSPAssemblyName> which will generate a `KSPAssemblyDependency` attribute
 
 ## 0.0.3 - 2024-12-16
 
