@@ -95,8 +95,8 @@
         <_Parameter2_TypeName>System.Int32</_Parameter2_TypeName>
         <_Parameter3>$(FileVersion.Split('.')[1])</_Parameter3>
         <_Parameter3_TypeName>System.Int32</_Parameter3_TypeName>
-        <_Parameter4>$(FileVersion.Split('.')[2])</_Parameter4>
-        <_Parameter4_TypeName>System.Int32</_Parameter4_TypeName>
+        <_Parameter4 Condition="$(FileVersion.Split('.').Length) &gt; 2">$(FileVersion.Split('.')[2])</_Parameter4>
+        <_Parameter4_TypeName Condition="$(FileVersion.Split('.').Length) &gt; 2">System.Int32</_Parameter4_TypeName>
       </AssemblyAttribute>
     </ItemGroup>
   </Target>
@@ -107,7 +107,7 @@
   Reference items must have a CKANIdentifier or a KSPAssemblyName.
   KSPAssemblyVersion can be optionally specified.
     Otherwise CKANVersion is used.
-    Otherwise 0.0.0 is used (no minimum version)
+    Otherwise 0.0 is used (no minimum version)
   -->
   <Target Name="GenerateKSPAssemblyDependencyAttributes" BeforeTargets="CoreGenerateAssemblyInfo"
           Condition="'$(GenerateKSPAssemblyDependencyAttributes)' == 'true'">
@@ -115,7 +115,8 @@
       <Reference Update="%(Reference.identity)" Condition="'%(Reference.CKANIdentifier)%(Reference.KSPAssemblyName)' != ''">
         <KSPAssemblyName Condition="'%(Reference.KSPAssemblyName)' == ''">$([System.String]::Copy('%(Reference.identity)').Split(',')[0])</KSPAssemblyName>
         <KSPAssemblyVersion Condition="'%(Reference.KSPAssemblyVersion)' == ''">%(Reference.CKANVersion)</KSPAssemblyVersion>
-        <KSPAssemblyVersion Condition="'%(Reference.KSPAssemblyVersion)' == ''">0.0.0</KSPAssemblyVersion>
+        <KSPAssemblyVersion Condition="'%(Reference.KSPAssemblyVersion)' == ''">0.0</KSPAssemblyVersion>
+        <KSPAssemblyVersionElementCount>$([System.String]::Copy('%(Reference.KSPAssemblyVersion)').Split('.').Length)</KSPAssemblyVersionElementCount>
       </Reference>
     </ItemGroup>
     <ItemGroup>
@@ -126,8 +127,8 @@
         <_Parameter2_TypeName>System.Int32</_Parameter2_TypeName>
         <_Parameter3>$([System.String]::Copy('%(Reference.KSPAssemblyVersion)').Split('.')[1])</_Parameter3>
         <_Parameter3_TypeName>System.Int32</_Parameter3_TypeName>
-        <_Parameter4>$([System.String]::Copy('%(Reference.KSPAssemblyVersion)').Split('.')[2])</_Parameter4>
-        <_Parameter4_TypeName>System.Int32</_Parameter4_TypeName>
+        <_Parameter4 Condition="%(Reference.KSPAssemblyVersionElementCount) &gt; 2">$([System.String]::Copy('%(Reference.KSPAssemblyVersion)').Split('.')[2])</_Parameter4>
+        <_Parameter4_TypeName Condition="%(Reference.KSPAssemblyVersionElementCount) &gt; 2">System.Int32</_Parameter4_TypeName>
       </AssemblyAttribute>
     </ItemGroup>
   </Target>
@@ -145,7 +146,7 @@
     <ItemGroup>
       <KSPVersionFile Update="@(KSPVersionFile)">
         <Name Condition="'%(KSPVersionFile.Name)' == ''">$(ProjectName)</Name>
-        <Version Condition="'%(KSPVersionFile.Version)' == ''">$(FileVersion.Split(`.`)[0]).$(FileVersion.Split(`.`)[1]).$(FileVersion.Split(`.`)[2])</Version>
+        <Version Condition="'%(KSPVersionFile.Version)' == ''">$(FileVersion)</Version>
       </KSPVersionFile>
     </ItemGroup>
     <ReadLinesFromFile File="%(KSPVersionFile.identity)" Condition="Exists('@(KSPVersionFile)')">
