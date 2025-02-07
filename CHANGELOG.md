@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file
 
+## Unreleased
+
+* Added a logging utility for use by mods
+* Fixed several places in KSPCommon.targets that didn't check for empty values properly
+* Support all forms of version numbers
+  * KSPAssembly and KSPAssemblyDependency may optionally be major.minor (omitting patch)
+  * KSPVersionFile.Version now defaults to $(FileVersion) if not set, which should support any number of elements
+
 ## 0.0.3 - 2024-12-16
 
 ### Actions
