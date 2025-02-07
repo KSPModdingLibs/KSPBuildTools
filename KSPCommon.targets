@@ -118,6 +118,10 @@
         <KSPAssemblyVersion Condition="'%(Reference.KSPAssemblyVersion)' == ''">0.0</KSPAssemblyVersion>
         <KSPAssemblyVersionElementCount>$([System.String]::Copy('%(Reference.KSPAssemblyVersion)').Split('.').Length)</KSPAssemblyVersionElementCount>
       </Reference>
+      <ProjectReference Update="%(ProjectReference.identity)" Condition="'%(Reference.KSPAssemblyName)' != ''">
+        <KSPAssemblyVersion Condition="'%(ProjectReference.KSPAssemblyVersion)' == ''">$(FileVersion)</KSPAssemblyVersion>
+        <KSPAssemblyVersionElementCount>$([System.String]::Copy('%(ProjectReference.KSPAssemblyVersion)').Split('.').Length)</KSPAssemblyVersionElementCount>
+      </ProjectReference>
     </ItemGroup>
     <ItemGroup>
       <AssemblyAttribute Include="KSPAssemblyDependency" Condition="'%(Reference.KSPAssemblyName)' != ''">
@@ -129,6 +133,16 @@
         <_Parameter3_TypeName>System.Int32</_Parameter3_TypeName>
         <_Parameter4 Condition="%(Reference.KSPAssemblyVersionElementCount) &gt; 2">$([System.String]::Copy('%(Reference.KSPAssemblyVersion)').Split('.')[2])</_Parameter4>
         <_Parameter4_TypeName Condition="%(Reference.KSPAssemblyVersionElementCount) &gt; 2">System.Int32</_Parameter4_TypeName>
+      </AssemblyAttribute>
+      <AssemblyAttribute Include="KSPAssemblyDependency" Condition="'%(ProjectReference.KSPAssemblyName)' != ''">
+        <_Parameter1>%(ProjectReference.KSPAssemblyName)</_Parameter1>
+        <_Parameter1_TypeName>System.String</_Parameter1_TypeName>
+        <_Parameter2>$([System.String]::Copy('%(ProjectReference.KSPAssemblyVersion)').Split('.')[0])</_Parameter2>
+        <_Parameter2_TypeName>System.Int32</_Parameter2_TypeName>
+        <_Parameter3>$([System.String]::Copy('%(ProjectReference.KSPAssemblyVersion)').Split('.')[1])</_Parameter3>
+        <_Parameter3_TypeName>System.Int32</_Parameter3_TypeName>
+        <_Parameter4 Condition="%(ProjectReference.KSPAssemblyVersionElementCount) &gt; 2">$([System.String]::Copy('%(ProjectReference.KSPAssemblyVersion)').Split('.')[2])</_Parameter4>
+        <_Parameter4_TypeName Condition="%(ProjectReference.KSPAssemblyVersionElementCount) &gt; 2">System.Int32</_Parameter4_TypeName>
       </AssemblyAttribute>
     </ItemGroup>
   </Target>
