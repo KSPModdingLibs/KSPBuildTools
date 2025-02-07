@@ -86,7 +86,7 @@
   Generate the KSPAssembly attribute based on the FileVersion property
   -->
   <Target Name="GenerateKSPAssemblyAttribute" BeforeTargets="CoreGenerateAssemblyInfo"
-          Condition="$(GenerateKSPAssemblyAttribute)">
+          Condition="'$(GenerateKSPAssemblyAttribute)' == 'true'">
     <ItemGroup>
       <AssemblyAttribute Include="KSPAssembly">
         <_Parameter1>$(AssemblyName)</_Parameter1>
@@ -110,7 +110,7 @@
     Otherwise 0.0.0 is used (no minimum version)
   -->
   <Target Name="GenerateKSPAssemblyDependencyAttributes" BeforeTargets="CoreGenerateAssemblyInfo"
-          Condition="$(GenerateKSPAssemblyDependencyAttributes) == 'true'">
+          Condition="'$(GenerateKSPAssemblyDependencyAttributes)' == 'true'">
     <ItemGroup>
       <Reference Update="%(Reference.identity)" Condition="'%(Reference.CKANIdentifier)%(Reference.KSPAssemblyName)' != ''">
         <KSPAssemblyName Condition="%(Reference.KSPAssemblyName) == ''">$([System.String]::Copy('%(Reference.identity)').Split(',')[0])</KSPAssemblyName>

@@ -71,12 +71,16 @@ runs:
         git add ${{ inputs.changelog-output-file }}
 
     - name: update version
-      id: result
+      if: ${{ inputs.template-extension != '' || inputs.files != '' }} 
       working-directory: ${{ github.workspace }}
       shell: bash
       run: |
         SCRIPT="${{inputs.ksp-build-tools-root}}/update-version.sh"
         chmod +x $SCRIPT
         $SCRIPT -g true -d true $VERSION_STRING ${{inputs.template-extension}} ${{inputs.files}}
-        echo "version-string=$VERSION_STRING" >> "$GITHUB_OUTPUT"
 
+    - name: output
+      id: result
+      shell: bash
+      run: |
+        echo "version-string=$VERSION_STRING" >> "$GITHUB_OUTPUT"
