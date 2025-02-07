@@ -5,7 +5,7 @@
   <!-- NuGet dependencies -->
   <ItemGroup>
     <!-- For GenerateKSPVersionFile -->
-    <PackageReference Include="JsonPoke" Version="1.2.0" Condition="@(KSPVersionFile) != ''"/>
+    <PackageReference Include="JsonPoke" Version="1.2.0" Condition="'@(KSPVersionFile)' != ''"/>
   </ItemGroup>
 
   <!--Custom Targets-->
@@ -41,8 +41,8 @@
   <Target Name="CKANInstallScriptGen">
     <ItemGroup>
       <_CKANCompatibleVersionItems Include="$(CKANCompatibleVersions.Split(' '))"/>
-      <_CKANDependency Include="%(Reference.CKANIdentifier)" Condition="%(Reference.CKANVersion) == ''"/>
-      <_CKANDependency Include="%(Reference.CKANIdentifier)=%(Reference.CKANVersion)" Condition="%(Reference.CKANVersion) != ''"/>
+      <_CKANDependency Include="%(Reference.CKANIdentifier)" Condition="'%(Reference.CKANVersion)' == ''"/>
+      <_CKANDependency Include="%(Reference.CKANIdentifier)=%(Reference.CKANVersion)" Condition="'%(Reference.CKANVersion)' != ''"/>
       <_CKANDependency Include="@(CKANDependency)"/>
     </ItemGroup>
     <PropertyGroup>
@@ -53,7 +53,7 @@
       <_CKANCommands Include="compat add --gamedir &quot;$(KSPROOT)&quot; %(_CKANCompatibleVersionItems.Identity)"
                      Condition=" '$(CKANCompatibleVersions)' != '' "/>
 
-      <_CKANCommands Include="install --no-recommends --gamedir &quot;$(KSPROOT)&quot; $(CKANDependencyList)" Condition="$(CKANDependencyList) != ''"/>
+      <_CKANCommands Include="install --no-recommends --gamedir &quot;$(KSPROOT)&quot; $(CKANDependencyList)" Condition="'$(CKANDependencyList)' != ''"/>
     </ItemGroup>
     <Message Text="Writing CKAN commands to $(CKANCommandFile)"/>
     <Message Text="@(_CKANCommands, '%0a')" Importance="Low"/>
@@ -77,7 +77,7 @@
   <Target Name="GetRequiredExternalTools">
     <ItemGroup>
       <CKANDependencyList Include="%(Reference.CKANIdentifier)"/>
-      <RequiredExternalTool Include="CKAN" Condition="@(CKANDependencyList) != ''"/>
+      <RequiredExternalTool Include="CKAN" Condition="'@(CKANDependencyList)' != ''"/>
     </ItemGroup>
     <Message Text="@(RequiredExternalTool)" Importance="high"/>
   </Target>
@@ -113,13 +113,13 @@
           Condition="'$(GenerateKSPAssemblyDependencyAttributes)' == 'true'">
     <ItemGroup>
       <Reference Update="%(Reference.identity)" Condition="'%(Reference.CKANIdentifier)%(Reference.KSPAssemblyName)' != ''">
-        <KSPAssemblyName Condition="%(Reference.KSPAssemblyName) == ''">$([System.String]::Copy('%(Reference.identity)').Split(',')[0])</KSPAssemblyName>
-        <KSPAssemblyVersion Condition="%(Reference.KSPAssemblyVersion) == ''">%(Reference.CKANVersion)</KSPAssemblyVersion>
-        <KSPAssemblyVersion Condition="%(Reference.KSPAssemblyVersion) == ''">0.0.0</KSPAssemblyVersion>
+        <KSPAssemblyName Condition="'%(Reference.KSPAssemblyName)' == ''">$([System.String]::Copy('%(Reference.identity)').Split(',')[0])</KSPAssemblyName>
+        <KSPAssemblyVersion Condition="'%(Reference.KSPAssemblyVersion)' == ''">%(Reference.CKANVersion)</KSPAssemblyVersion>
+        <KSPAssemblyVersion Condition="'%(Reference.KSPAssemblyVersion)' == ''">0.0.0</KSPAssemblyVersion>
       </Reference>
     </ItemGroup>
     <ItemGroup>
-      <AssemblyAttribute Include="KSPAssemblyDependency" Condition="%(Reference.KSPAssemblyName) != ''">
+      <AssemblyAttribute Include="KSPAssemblyDependency" Condition="'%(Reference.KSPAssemblyName)' != ''">
         <_Parameter1>%(Reference.KSPAssemblyName)</_Parameter1>
         <_Parameter1_TypeName>System.String</_Parameter1_TypeName>
         <_Parameter2>$([System.String]::Copy('%(Reference.KSPAssemblyVersion)').Split('.')[0])</_Parameter2>
@@ -144,8 +144,8 @@
   <Target Name="GenerateKSPVersionFile" AfterTargets="Build" Inputs="@(KSPVersionFile);$(FileVersion)" Outputs="%(KSPVersionFile.destination)">
     <ItemGroup>
       <KSPVersionFile Update="@(KSPVersionFile)">
-        <Name Condition="%(KSPVersionFile.Name) == ''">$(ProjectName)</Name>
-        <Version Condition="%(KSPVersionFile.Version) == ''">$(FileVersion.Split(`.`)[0]).$(FileVersion.Split(`.`)[1]).$(FileVersion.Split(`.`)[2])</Version>
+        <Name Condition="'%(KSPVersionFile.Name)' == ''">$(ProjectName)</Name>
+        <Version Condition="'%(KSPVersionFile.Version)' == ''">$(FileVersion.Split(`.`)[0]).$(FileVersion.Split(`.`)[1]).$(FileVersion.Split(`.`)[2])</Version>
       </KSPVersionFile>
     </ItemGroup>
     <ReadLinesFromFile File="%(KSPVersionFile.identity)" Condition="Exists('@(KSPVersionFile)')">
@@ -153,7 +153,7 @@
     </ReadLinesFromFile>
     <PropertyGroup>
       <_JSON>@(_JSONLines, '%0a')</_JSON>
-      <_JSON Condition="@(_JSONLines) == ''">{}</_JSON>
+      <_JSON Condition="'@(_JSONLines)' == ''">{}</_JSON>
     </PropertyGroup>
     <JsonPoke Content="$(_JSON)" Query="$.NAME" RawValue="'%(KSPVersionFile.Name)'">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
@@ -161,19 +161,19 @@
     <JsonPoke Content="$(_JSON)" Query="$.VERSION" RawValue="'%(KSPVersionFile.Version)'">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
-    <JsonPoke Content="$(_JSON)" Query="$.URL" RawValue="'%(KSPVersionFile.URL)'" Condition="%(KSPVersionFile.URL) != ''">
+    <JsonPoke Content="$(_JSON)" Query="$.URL" RawValue="'%(KSPVersionFile.URL)'" Condition="'%(KSPVersionFile.URL)' != ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
-    <JsonPoke Content="$(_JSON)" Query="$.DOWNLOAD" RawValue="'%(KSPVersionFile.Download)'" Condition="%(KSPVersionFile.Download) != ''">
+    <JsonPoke Content="$(_JSON)" Query="$.DOWNLOAD" RawValue="'%(KSPVersionFile.Download)'" Condition="'%(KSPVersionFile.Download)' != ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
-    <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION" RawValue="'%(KSPVersionFile.KSP_Version)'" Condition="%(KSPVersionFile.KSP_Version) != ''">
+    <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION" RawValue="'%(KSPVersionFile.KSP_Version)'" Condition="'%(KSPVersionFile.KSP_Version)' != ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
-    <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION_MIN" RawValue="'%(KSPVersionFile.KSP_Version_Min)'" Condition="%(KSPVersionFile.KSP_Version_Min) != ''">
+    <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION_MIN" RawValue="'%(KSPVersionFile.KSP_Version_Min)'" Condition="'%(KSPVersionFile.KSP_Version_Min)' != ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
-    <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION_MAX" Value="'%(KSPVersionFile.KSP_Version_Max)'" Condition="%(KSPVersionFile.KSP_Version_Max) != ''">
+    <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION_MAX" Value="'%(KSPVersionFile.KSP_Version_Max)'" Condition="'%(KSPVersionFile.KSP_Version_Max)' != ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
     <WriteLinesToFile File="%(KSPVersionFile.Destination)" Lines="$(_JSON)" Overwrite="true"/>
