@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file
   * KSPAssembly and KSPAssemblyDependency may optionally be major.minor (omitting patch)
   * KSPVersionFile.Version now defaults to $(FileVersion) if not set, which should support any number of elements
 * ProjectReference may now include <KSPAssemblyName> which will generate a `KSPAssemblyDependency` attribute
+* Added `ReferenceUnityAssemblies` and `ReferenceKSPAssemblies` for disabling the automatic inclusion of Unity and KSP assembly references
 
 ## 0.0.3 - 2024-12-16
 
