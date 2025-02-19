@@ -37,9 +37,15 @@ If set to `true`, automatically generates `KSPAssemblyDependency` attributes for
 ```
 
 ```{confval} ReferenceUnityAssemblies
-If set to `true` (default), adds assembly references to all UnityEngine assemblies in the KSP install.  You can set this to `false` to opt out of this behavior if you want to create a pure C# assembly that does not depend on Unity.
+---
+default: `true`
+---
+If set to `true`, adds assembly references to all UnityEngine assemblies in the KSP install.  You can set this to `false` to opt out of this behavior if you want to create a pure C# assembly that does not depend on Unity.
 ```
 
 ```{confval} ReferenceKSPAssemblies
-If set to `true` (default), adds references to Assembly-CSharp and Assembly-CSharp-firstpass assemblies from the KSP install.  You can set this to `false` to opt out of this behavior.
+---
+default: `true`
+---
+If set to `true`, adds references to Assembly-CSharp and Assembly-CSharp-firstpass assemblies from the KSP install.  You can set this to `false` to opt out of this behavior.
 ```
