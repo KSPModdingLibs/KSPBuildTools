@@ -9,6 +9,12 @@
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
   </PropertyGroup>
 
+  <!--reference unity and KSP assemblies unless explicitly disabled-->
+  <PropertyGroup>
+    <ReferenceUnityAssemblies Condition=" '$(ReferenceUnityAssemblies)' == '' ">true</ReferenceUnityAssemblies>
+    <ReferenceKSPAssemblies Condition=" '$(ReferenceKSPAssemblies)' == '' ">true</ReferenceKSPAssemblies>
+  </PropertyGroup>
+
   <!-- default CKAN compatibility versions -->
   <PropertyGroup>
     <CKANCompatibleVersions Condition="('$(CKANCompatibleVersions)' == '')">1.12 1.11 1.10 1.9 1.8</CKANCompatibleVersions>
@@ -116,10 +122,14 @@
       <Name>System.Xml (KSP/Mono)</Name>
       <Private>False</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(ReferenceUnityAssemblies)' == 'true' ">
     <Reference Include="$(ManagedPath)\UnityEngine*.dll">
       <Name>UnityEngine</Name>
       <Private>False</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(ReferenceKSPAssemblies)' == 'true' ">
     <Reference Include="$(ManagedPath)\Assembly-CSharp.dll">
       <Name>Assembly-CSharp</Name>
       <Private>False</Private>
