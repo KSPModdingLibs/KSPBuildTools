@@ -36,3 +36,10 @@ If set to `true`, automatically generates the `KSPAssembly` for your assembly fr
 If set to `true`, automatically generates `KSPAssemblyDependency` attributes for each dependency. Dependencies should have either the `CKANIdentifier` metadata or `KSPAssemblyName` metadata. Versions can be supplied with `CKANVersion` or `KSPAssemblyVersion`. 
 ```
 
+```{confval} ReferenceUnityAssemblies
+If set to `true` (default), adds assembly references to all UnityEngine assemblies in the KSP install.  You can set this to `false` to opt out of this behavior if you want to create a pure C# assembly that does not depend on Unity.
+```
+
+```{confval} ReferenceKSPAssemblies
+If set to `true` (default), adds references to Assembly-CSharp and Assembly-CSharp-firstpass assemblies from the KSP install.  You can set this to `false` to opt out of this behavior.
+```
