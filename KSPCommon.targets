@@ -2,12 +2,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Condition=" '$(KSPCommonPropsImported)' == '' And Exists('$(MSBuildThisFileDirectory)KSPCommon.props') " Project="$(MSBuildThisFileDirectory)KSPCommon.props"/>
 
-  <!-- NuGet dependencies -->
-  <ItemGroup>
-    <!-- For GenerateKSPVersionFile -->
-    <PackageReference Include="JsonPoke" Version="1.2.0" Condition="@(KSPVersionFile) != ''"/>
-  </ItemGroup>
-
   <!--Custom Targets-->
 
   <Target Name="CheckForKSPRoot" BeforeTargets="ResolveReferences">
@@ -132,28 +126,21 @@
     </ItemGroup>
   </Target>
 
-  <!-- Version file handling -->
-
+  <!-- Version file configuration -->
   <ItemDefinitionGroup>
     <KSPVersionFile>
       <Name/>
-      <Url/>
+      <URL/>
       <Download/>
-      <KspVersion>1.12</KspVersion>
-      <KspVersionMin>1.8</KspVersionMin>
-      <KspVersionMax>1.12</KspVersionMax>
-      <Destination></Destination>
+      <KSP_Version>1.12</KSP_Version>
+      <KSP_Version_Min>1.8</KSP_Version_Min>
+      <KSP_Version_Max>1.12</KSP_Version_Max>
+      <Destination/>
     </KSPVersionFile>
   </ItemDefinitionGroup>
 
   <!-- Target to generate the KSP version json file for AVC/CKAN etc-->
-  <Target Name="GenerateKSPVersionFile" AfterTargets="Build" Inputs="@(KSPVersionFile);$(FileVersion)" Outputs="%(KSPVersionFile.destination)">
-
-    <!-- Add back-compat support. Check if KSPVersionFile has these -->
-<!--     <KSP_Version>1.12</KSP_Version>
-    <KSP_Version_Min>1.8</KSP_Version_Min>
-    <KSP_Version_Max>1.12</KSP_Version_Max> -->
-
+  <Target Name="GenerateKSPVersionFile" AfterTargets="Build" Inputs="@(KSPVersionFile);$(FileVersion)" Outputs="%(KSPVersionFile.Destination)">
     <ItemGroup>
       <KSPVersionFile Update="@(KSPVersionFile)">
         <Name Condition="%(KSPVersionFile.Name) == ''">$(ProjectName)</Name>
@@ -166,11 +153,11 @@
       <JsonLine Include="{"/>
       <JsonLine Include="&quot;NAME&quot;: &quot;%(KSPVersionFile.Name)&quot;," Indent="  "/>
       <JsonLine Include="&quot;VERSION&quot;: &quot;%(KSPVersionFile.Version)&quot;," Indent="  "/>
-      <JsonLine Include="&quot;URL&quot;: &quot;%(KSPVersionFile.Url)&quot;," Indent="  "/>
-      <JsonLine Include="&quot;DOWNLOAD&quot;: &quot;%(KSPVersionFile.Download)&quot;," Indent="  "/>
-      <JsonLine Include="&quot;KSP_VERSION&quot;: &quot;%(KSPVersionFile.KspVersion)&quot;," Indent="  "/>
-      <JsonLine Include="&quot;KSP_VERSION_MIN&quot;: &quot;%(KSPVersionFile.KspVersionMin)&quot;," Indent="  "/>
-      <JsonLine Include="&quot;KSP_VERSION_MAX&quot;: &quot;%(KSPVersionFile.KspVersionMax)&quot;" Indent="  "/>
+      <JsonLine Include="&quot;URL&quot;: &quot;%(KSPVersionFile.URL)&quot;," Indent="  " Condition="%(KSPVersionFile.URL) != ''" />
+      <JsonLine Include="&quot;DOWNLOAD&quot;: &quot;%(KSPVersionFile.Download)&quot;," Indent="  " Condition="%(KSPVersionFile.Download) != ''" />
+      <JsonLine Include="&quot;KSP_VERSION&quot;: &quot;%(KSPVersionFile.KSP_Version)&quot;," Indent="  "/>
+      <JsonLine Include="&quot;KSP_VERSION_MIN&quot;: &quot;%(KSPVersionFile.KSP_Version_Min)&quot;," Indent="  "/>
+      <JsonLine Include="&quot;KSP_VERSION_MAX&quot;: &quot;%(KSPVersionFile.KSP_Version_Max)&quot;" Indent="  "/>
       <JsonLine Include="}"/>
     </ItemGroup>
 
@@ -189,6 +176,5 @@
             Encoding="UTF-8" />
 
     <Message Text="Writing KSP JSON version file to %(KSPVersionFile.Destination)"/>
-    <Message Text="Contents:%0a$(_JSON)" Importance="low"/>
   </Target>
 </Project>
