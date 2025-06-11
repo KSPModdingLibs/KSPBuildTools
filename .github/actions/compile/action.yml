@@ -10,13 +10,17 @@ inputs:
     default: Release
     description: The project configuration to build.
 
+  dotnet-version:
+    default: 5.x
+    description: Version of dotnet compiler to use.  Defaults to 5.x.
+
   ksp-zip-url:
     default: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
     description: >
-      A url for a zip file that contains the assemblies from the game to link against.  This should either be stripped 
+      A url for a zip file that contains the assemblies from the game to link against.  This should either be stripped
       so that it only contains public interfaces, or encrypted so that the libraries are not being redistributed unprotected.
 
-      Defaults to KSP 1.12.5 with stripped versions 
+      Defaults to KSP 1.12.5 with stripped versions
       of the libraries which should be suitable for most users. It does not require a password.
 
   ksp-zip-password:
@@ -25,7 +29,7 @@ inputs:
 
   solution-file-path:
     description: >
-      The path to the solution file to build.  Defaults to empty, which will invoke `msbuild` on the root directory of 
+      The path to the solution file to build.  Defaults to empty, which will invoke `msbuild` on the root directory of
       the repo and builds any `*.sln` file it finds there.
 
   working-directory:
@@ -54,7 +58,7 @@ runs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 5.x
+        dotnet-version: ${{ inputs.dotnet-version }}
 
     - name: Download KSP Libs
       shell: bash
