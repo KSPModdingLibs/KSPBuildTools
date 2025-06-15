@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file
 
-## Unreleased
+## 0.0.4 - 2025-06-15
 
 * Added a logging utility for use by mods
 * Fixed several places in KSPCommon.targets that didn't check for empty values properly
@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file
   * KSPVersionFile.Version now defaults to $(FileVersion) if not set, which should support any number of elements
 * ProjectReference may now include <KSPAssemblyName> which will generate a `KSPAssemblyDependency` attribute
 * Added `ReferenceUnityAssemblies` and `ReferenceKSPAssemblies` for disabling the automatic inclusion of Unity and KSP assembly references
+
 
 ## 0.0.3 - 2024-12-16
 
