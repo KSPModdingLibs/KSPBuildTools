@@ -8,8 +8,57 @@
     <PackageReference Include="JsonPoke" Version="1.2.0" Condition="'@(KSPVersionFile)' != ''"/>
   </ItemGroup>
 
-  <!--Custom Targets-->
+  <!-- Prevent the compiler from acquiring or referencing any external reference assemblies -->
+  <PropertyGroup Condition=" '$(ReferenceKSPSystemAssemblies)' != 'true' ">>
+    <!-- Do not download the .NET Framework Target Pack NuGet package automatically -->
+    <DisableTransitiveFrameworkReferenceDownloads>true</DisableTransitiveFrameworkReferenceDownloads>
+    <!-- Instruct the compiler to not automatically reference mscorlib -->
+    <NoStandardLib>true</NoStandardLib>
+    <!-- Prevent the GetReferenceAssemblyPaths task in Microsoft.Common.CurrentVersion.targets
+         from attempting to locate an external copy of the reference assemblies. -->
+    <AutomaticallyUseReferenceAssemblyPackages>false</AutomaticallyUseReferenceAssemblyPackages>
+    <FrameworkPathOverride>$(ManagedPath)</FrameworkPathOverride>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+  </PropertyGroup>
 
+  <!-- Import references -->
+  <ItemGroup Condition=" '$(ReferenceKSPSystemAssemblies)' == 'true' ">
+    <Reference Include="$(ManagedPath)/System.dll">
+      <Name>System (KSP/Mono)</Name>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(ManagedPath)/System.Core.dll">
+      <Name>System (KSP/Mono)</Name>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(ManagedPath)/mscorlib.dll">
+      <Name>System.Core (KSP/Mono)</Name>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(ManagedPath)/System.Xml.dll">
+      <Name>System.Xml (KSP/Mono)</Name>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(ReferenceKSPUnityAssemblies)' == 'true' ">
+    <Reference Include="$(ManagedPath)/UnityEngine*.dll">
+      <Name>UnityEngine</Name>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(ReferenceKSPGameAssemblies)' == 'true' ">
+    <Reference Include="$(ManagedPath)/Assembly-CSharp.dll">
+      <Name>Assembly-CSharp</Name>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(ManagedPath)/Assembly-CSharp-firstpass.dll">
+      <Name>Assembly-CSharp-firstpass</Name>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+
+  <!--Custom Targets-->
   <Target Name="CheckForKSPRoot" BeforeTargets="ResolveReferences">
     <Error Text="KSPBuildTools was unable to find a KSP installation. Please set the ReferencePath or KSPRoot property
                  in your csproj.user file to a valid KSP installation directory (the one with GameData in it)
@@ -22,16 +71,17 @@
       <_KSPRootMessage Include="Chosen KSPRoot: $(KSPRoot) in $(KSPRootSource)" Condition="'$(KSPRoot)' != ''"/>
     </ItemGroup>
     <Message Text="@(_KSPRootMessage, '%0a')" Importance="normal"/>
-
   </Target>
 
-  <!-- Copy output files to mod folder -->
-  <Target Name="CopyBinariesToRepo" AfterTargets="CopyFilesToOutputDirectory">
+  <!-- Copy DLLs to mod GameData folder-->
+  <Target Name="CopyDLLsToPluginFolder" AfterTargets="CopyFilesToOutputDirectory"
+          Condition="'$(CopyDLLsToPluginFolder)' == 'true'">
     <ItemGroup>
-      <BinariesToCopy Include="$(TargetDir)/**"/>
+      <BinariesToCopy Include="$(TargetDir)/**/*.dll"/>
+      <BinariesToCopy Include="$(TargetDir)/**/*.pdb" Condition="'$(Condition)' == 'Debug'"/>
     </ItemGroup>
-    <MakeDir Directories="$(RepoRootPath)/$(BinariesOutputRelativePath)"/>
-    <Copy SourceFiles="@(BinariesToCopy)" DestinationFolder="$(RepoRootPath)/$(BinariesOutputRelativePath)/%(RecursiveDir)"/>
+    <MakeDir Directories="$(KSPModPluginFolder)"/>
+    <Copy SourceFiles="@(BinariesToCopy)" DestinationFolder="$(KSPModPluginFolder)/%(RecursiveDir)"/>
   </Target>
 
   <!-- Use CKAN to install mods for any references tagged with a CKAN Identifier -->
@@ -82,9 +132,7 @@
     <Message Text="@(RequiredExternalTool)" Importance="high"/>
   </Target>
 
-  <!--
-  Generate the KSPAssembly attribute based on the FileVersion property
-  -->
+  <!-- Generate the KSPAssembly attribute based on the FileVersion property -->
   <Target Name="GenerateKSPAssemblyAttribute" BeforeTargets="CoreGenerateAssemblyInfo"
           Condition="'$(GenerateKSPAssemblyAttribute)' == 'true'">
     <ItemGroup>
@@ -110,7 +158,7 @@
     Otherwise 0.0 is used (no minimum version)
   -->
   <Target Name="GenerateKSPAssemblyDependencyAttributes" BeforeTargets="CoreGenerateAssemblyInfo"
-          Condition="'$(GenerateKSPAssemblyDependencyAttributes)' == 'true'">
+          Condition=" '$(GenerateKSPAssemblyDependencyAttributes)' == 'true' ">
     <ItemGroup>
       <Reference Update="%(Reference.identity)" Condition="'%(Reference.CKANIdentifier)%(Reference.KSPAssemblyName)' != ''">
         <KSPAssemblyName Condition="'%(Reference.KSPAssemblyName)' == ''">$([System.String]::Copy('%(Reference.identity)').Split(',')[0])</KSPAssemblyName>
@@ -156,7 +204,9 @@
   </ItemDefinitionGroup>
 
   <!-- Target to generate the KSP version json file for AVC/CKAN etc-->
-  <Target Name="GenerateKSPVersionFile" AfterTargets="Build" Inputs="@(KSPVersionFile);$(FileVersion)" Outputs="%(KSPVersionFile.destination)">
+  <Target Name="GenerateKSPVersionFile" AfterTargets="Build"
+          Inputs="@(KSPVersionFile);$(FileVersion)" Outputs="%(KSPVersionFile.destination)"
+          Condition= " '$(GenerateKSPVersionFile)' == 'true' ">
     <ItemGroup>
       <KSPVersionFile Update="@(KSPVersionFile)">
         <Name Condition="'%(KSPVersionFile.Name)' == ''">$(ProjectName)</Name>

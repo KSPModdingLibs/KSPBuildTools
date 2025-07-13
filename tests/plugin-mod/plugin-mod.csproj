@@ -17,8 +17,8 @@
     <NoWarn>1701;1702;CS0649;CS1591;</NoWarn>
     <AssemblyCopyright>2024 KSPModdingLibs Contributors</AssemblyCopyright>
     <AssemblyName>PluginMod</AssemblyName>
-    <RepoRootPath>$(MSBuildThisFileDirectory)</RepoRootPath>
-    <BinariesOutputRelativePath>GameData/plugin-mod</BinariesOutputRelativePath>
+    <KSPModRoot>$(MSBuildThisFileDirectory)GameData/plugin-mod/</KSPModRoot>
+    <KSPModPluginFolder>$(KSPModRoot)/</KSPModPluginFolder>
   </PropertyGroup>
 
   <!-- DLL Dependencies-->
@@ -34,14 +34,9 @@
   <!-- Version Files -->
   <ItemGroup>
     <KSPVersionFile Include=".">
-      <Destination>$(RepoRootPath)$(BinariesOutputRelativePath)/plugin-mod.version</Destination>
+      <Destination>$(KSPModRoot)/plugin-mod.version</Destination>
     </KSPVersionFile>
   </ItemGroup>
   
-  <PropertyGroup>
-    <GenerateKSPAssemblyAttribute>true</GenerateKSPAssemblyAttribute>
-    <GenerateKSPAssemblyDependencyAttributes>true</GenerateKSPAssemblyDependencyAttributes>
-  </PropertyGroup>
-
   <Import Project="$(MSBuildThisFileDirectory)../../KSPCommon.targets" />
 </Project>

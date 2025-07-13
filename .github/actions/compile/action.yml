@@ -76,5 +76,5 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         dotnet msbuild -p:Configuration=${{ inputs.build-configuration }} \
-        -p:ManagedRelativePath=KSP_x64_Data/Managed ${{ inputs.solution-file-path }} \
+        -p:KSPManagedRelativePath=KSP_x64_Data/Managed ${{ inputs.solution-file-path }} \
         ${{ runner.debug && '-v:detailed' }}

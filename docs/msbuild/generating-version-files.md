@@ -8,7 +8,7 @@ To use, add the following to your csproj, filling in the URLs and paths for your
 <!-- Version Files -->
 <ItemGroup>
   <KSPVersionFile Include=".">
-    <Destination>$(RepoRootPath)GameData/MyMod/mymod.version</Destination>
+    <Destination>$(KSPModRoot)/mymod.version</Destination>
     <URL>https://github.com/username/repo/releases/latest/download/mymod.version</URL>
     <Download>https://github.com/username.repo/releases/latest</Download>
   </KSPVersionFile>
@@ -44,7 +44,7 @@ The `include` value can also be set to a json file including any other values yo
 <!-- Version Files -->
 <ItemGroup>
   <KSPVersionFile Include="my-mod.version">
-    <Destination>$(RepoRootPath)GameData/MyMod/mymod.version</Destination>
+    <Destination>$(KSPModRoot)/mymod.version</Destination>
   </KSPVersionFile>
 </ItemGroup>
 ```
