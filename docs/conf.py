@@ -45,5 +45,5 @@ git_ref = get_git_ref(sphinx_gha_repo_root)
 
 jinja_globals = {
     'git_ref': git_ref,
-    'nuget_version': git_ref if nuget_version_regex.match(git_ref) else None,
+    'nuget_version': git_ref if nuget_version_regex.match(git_ref or "") else None,
 }
