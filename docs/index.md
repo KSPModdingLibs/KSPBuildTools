@@ -1,7 +1,9 @@
-```{include} ../README.md
+```
+{include} ../README.md
 ```
 
-```{toctree}
+```
+{toctree}
 ---
 caption: Contents
 maxdepth: 2
