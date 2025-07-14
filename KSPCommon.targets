@@ -7,57 +7,6 @@
     <!-- For GenerateKSPVersionFile -->
     <PackageReference Include="JsonPoke" Version="1.2.0" Condition="'@(KSPVersionFile)' != ''"/>
   </ItemGroup>
-
-  <!-- Prevent the compiler from acquiring or referencing any external reference assemblies -->
-  <PropertyGroup Condition=" '$(ReferenceKSPSystemAssemblies)' == 'true' ">
-    <!-- Do not download the .NET Framework Target Pack NuGet package automatically -->
-    <DisableTransitiveFrameworkReferenceDownloads>true</DisableTransitiveFrameworkReferenceDownloads>
-    <!-- Instruct the compiler to not automatically reference mscorlib -->
-    <NoStandardLib>true</NoStandardLib>
-    <!-- Prevent the GetReferenceAssemblyPaths task in Microsoft.Common.CurrentVersion.targets
-         from attempting to locate an external copy of the reference assemblies. -->
-    <AutomaticallyUseReferenceAssemblyPackages>false</AutomaticallyUseReferenceAssemblyPackages>
-    <FrameworkPathOverride>$(ManagedPath)</FrameworkPathOverride>
-    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
-  </PropertyGroup>
-
-  <!-- Import references -->
-  <ItemGroup Condition=" '$(ReferenceKSPSystemAssemblies)' == 'true' ">
-    <Reference Include="$(ManagedPath)/System.dll">
-      <Name>System (KSP/Mono)</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="$(ManagedPath)/System.Core.dll">
-      <Name>System (KSP/Mono)</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="$(ManagedPath)/mscorlib.dll">
-      <Name>System.Core (KSP/Mono)</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="$(ManagedPath)/System.Xml.dll">
-      <Name>System.Xml (KSP/Mono)</Name>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup Condition=" '$(ReferenceKSPUnityAssemblies)' == 'true' ">
-    <Reference Include="$(ManagedPath)/UnityEngine*.dll">
-      <Name>UnityEngine</Name>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup Condition=" '$(ReferenceKSPGameAssemblies)' == 'true' ">
-    <Reference Include="$(ManagedPath)/Assembly-CSharp.dll">
-      <Name>Assembly-CSharp</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="$(ManagedPath)/Assembly-CSharp-firstpass.dll">
-      <Name>Assembly-CSharp-firstpass</Name>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-
-
   <!--Custom Targets-->
   <Target Name="CheckForKSPRoot" BeforeTargets="ResolveReferences">
     <Error Text="KSPBuildTools was unable to find a KSP installation. Please set the ReferencePath or KSPRoot property
