@@ -46,7 +46,7 @@
   <!-- These can be overwritten by user, csproj, and props files -->
   <PropertyGroup>
     <!-- The root directory of the mod, the folder that gets placed in GameData -->
-    <KSPModRoot Condition=" '$(KSPModRoot)' == '' ">$(ProjectDir)/../GameData/$(ProjectName)/</KSPModRoot>
+    <KSPModRoot Condition=" '$(KSPModRoot)' == '' ">$(MSBuildProjectDirectory)/../GameData/$(MSBuildProjectName)/</KSPModRoot>
     <!-- The folder to place resulting DLLs into, relative to KSPModRoot -->
     <KSPModPluginFolder Condition=" '$(KSPModPluginFolder)' == '' "/>
   </PropertyGroup>
