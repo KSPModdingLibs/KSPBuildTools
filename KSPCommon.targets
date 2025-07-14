@@ -4,33 +4,33 @@
 
   <!-- NuGet dependencies -->
   <ItemGroup>
-    <!-- For GenerateKSPVersionFile -->
+    <!-- For KSPBTGenerateVersionFile -->
     <PackageReference Include="JsonPoke" Version="1.2.0" Condition="'@(KSPVersionFile)' != ''"/>
   </ItemGroup>
   <!--Custom Targets-->
-  <Target Name="CheckForKSPRoot" BeforeTargets="ResolveReferences">
-    <Error Text="KSPBuildTools was unable to find a KSP installation. Please set the ReferencePath or KSPRoot property
+  <Target Name="KSPBTCheckForGameRoot" BeforeTargets="ResolveReferences">
+    <Error Text="KSPBuildTools was unable to find a KSP installation. Please set the ReferencePath or KSPBTGameRoot property
                  in your csproj.user file to a valid KSP installation directory (the one with GameData in it)
 
                  See https://kspbuildtools.readthedocs.io/en/latest/msbuild/getting-started.html#locating-your-ksp-install for more information"
-           Condition="'$(KSPRoot)' == ''"/>
+           Condition="'$(KSPBTGameRoot)' == ''"/>
     <ItemGroup>
-      <_KSPRootMessage Include="KSPRoot Candidates:"/>
-      <_KSPRootMessage Include="Candidate: %(KSPRootCandidate.source) from %(KSPRootCandidate.identity)"/>
-      <_KSPRootMessage Include="Chosen KSPRoot: $(KSPRoot) in $(KSPRootSource)" Condition="'$(KSPRoot)' != ''"/>
+      <_GameRootMessage Include="KSPBTGameRoot Candidates:"/>
+      <_GameRootMessage Include="Candidate: %(KSPBTGameRootCandidate.source) from %(KSPBTGameRootCandidate.identity)"/>
+      <_GameRootMessage Include="Chosen KSPBTGameRoot: $(KSPBTGameRoot) in $(KSPBTGameRootSource)" Condition="'$(KSPBTGameRoot)' != ''"/>
     </ItemGroup>
-    <Message Text="@(_KSPRootMessage, '%0a')" Importance="normal"/>
+    <Message Text="@(_GameRootMessage, '%0a')" Importance="normal"/>
   </Target>
 
   <!-- Copy DLLs to mod GameData folder-->
-  <Target Name="CopyDLLsToPluginFolder" AfterTargets="CopyFilesToOutputDirectory"
-          Condition="'$(CopyDLLsToPluginFolder)' == 'true'">
+  <Target Name="KSPBTCopyDLLsToPluginFolder" AfterTargets="CopyFilesToOutputDirectory"
+          Condition="'$(KSPBTCopyDLLsToPluginFolder)' == 'true'">
     <ItemGroup>
-      <BinariesToCopy Include="$(TargetDir)/**/*.dll"/>
-      <BinariesToCopy Include="$(TargetDir)/**/*.pdb" Condition="'$(Condition)' == 'Debug'"/>
+      <_BinariesToCopy Include="$(TargetDir)/**/*.dll"/>
+      <_BinariesToCopy Include="$(TargetDir)/**/*.pdb" Condition="'$(Condition)' == 'Debug'"/>
     </ItemGroup>
-    <MakeDir Directories="$(KSPModRoot)/$(KSPModPluginFolder)"/>
-    <Copy SourceFiles="@(BinariesToCopy)" DestinationFolder="$(KSPModRoot)/$(KSPModPluginFolder)/%(RecursiveDir)"/>
+    <MakeDir Directories="$(KSPBTModRoot)/$(KSPBTModPluginFolder)"/>
+    <Copy SourceFiles="@(_BinariesToCopy)" DestinationFolder="$(KSPBTModRoot)/$(KSPBTModPluginFolder)/%(RecursiveDir)"/>
   </Target>
 
   <!-- Use CKAN to install mods for any references tagged with a CKAN Identifier -->
@@ -45,14 +45,14 @@
       <_CKANDependency Include="@(CKANDependency)"/>
     </ItemGroup>
     <PropertyGroup>
-      <CKANDependencyList>@(_CKANDependency, ' ')</CKANDependencyList>
+      <_CKANDependencyList>@(_CKANDependency, ' ')</_CKANDependencyList>
     </PropertyGroup>
     <ItemGroup>
       <!-- Not using `ckan compat set` because as of 2024-08-16 it is still only available in the dev branch -->
-      <_CKANCommands Include="compat add --gamedir &quot;$(KSPROOT)&quot; %(_CKANCompatibleVersionItems.Identity)"
+      <_CKANCommands Include="compat add --gamedir &quot;$(KSPBTGameRoot)&quot; %(_CKANCompatibleVersionItems.Identity)"
                      Condition=" '$(CKANCompatibleVersions)' != '' "/>
 
-      <_CKANCommands Include="install --no-recommends --gamedir &quot;$(KSPROOT)&quot; $(CKANDependencyList)" Condition="'$(CKANDependencyList)' != ''"/>
+      <_CKANCommands Include="install --no-recommends --gamedir &quot;$(KSPBTGameRoot)&quot; $(_CKANDependencyList)" Condition="'$(CKANDependencyList)' != ''"/>
     </ItemGroup>
     <Message Text="Writing CKAN commands to $(CKANCommandFile)"/>
     <Message Text="@(_CKANCommands, '%0a')" Importance="Low"/>
@@ -64,7 +64,7 @@
   </ItemGroup>
 
   <!-- Execute generated CKAN command list -->
-  <Target Name="CKANInstall" DependsOnTargets="CKANInstallScriptGen" BeforeTargets="_GenerateRestoreProjectSpec;Restore;ResolveAssemblyReferences" Inputs="$(CKANCommandFile)" Outputs="$(KSPRoot)/CKAN/registry.json">
+  <Target Name="CKANInstall" DependsOnTargets="CKANInstallScriptGen" BeforeTargets="_GenerateRestoreProjectSpec;Restore;ResolveAssemblyReferences" Inputs="$(CKANCommandFile)" Outputs="$(KSPBTGameRoot)/CKAN/registry.json">
     <Exec Command="ckan prompt --headless &lt; '$(CKANCommandFile)'" Condition="'$(CKANDependencyList)' != ''"/>
   </Target>
 
@@ -82,8 +82,8 @@
   </Target>
 
   <!-- Generate the KSPAssembly attribute based on the FileVersion property -->
-  <Target Name="GenerateKSPAssemblyAttribute" BeforeTargets="CoreGenerateAssemblyInfo"
-          Condition="'$(GenerateKSPAssemblyAttribute)' == 'true'">
+  <Target Name="KSPBTGenerateAssemblyAttribute" BeforeTargets="CoreGenerateAssemblyInfo"
+          Condition="'$(KSPBTGenerateAssemblyAttribute)' == 'true'">
     <ItemGroup>
       <AssemblyAttribute Include="KSPAssembly">
         <_Parameter1>$(AssemblyName)</_Parameter1>
@@ -106,8 +106,8 @@
     Otherwise CKANVersion is used.
     Otherwise 0.0 is used (no minimum version)
   -->
-  <Target Name="GenerateKSPAssemblyDependencyAttributes" BeforeTargets="CoreGenerateAssemblyInfo"
-          Condition=" '$(GenerateKSPAssemblyDependencyAttributes)' == 'true' ">
+  <Target Name="KSPBTGenerateDependencyAttributes" BeforeTargets="CoreGenerateAssemblyInfo"
+          Condition=" '$(KSPBTGenerateDependencyAttributes)' == 'true' ">
     <ItemGroup>
       <Reference Update="%(Reference.identity)" Condition="'%(Reference.CKANIdentifier)%(Reference.KSPAssemblyName)' != ''">
         <KSPAssemblyName Condition="'%(Reference.KSPAssemblyName)' == ''">$([System.String]::Copy('%(Reference.identity)').Split(',')[0])</KSPAssemblyName>
@@ -153,9 +153,9 @@
   </ItemDefinitionGroup>
 
   <!-- Target to generate the KSP version json file for AVC/CKAN etc-->
-  <Target Name="GenerateKSPVersionFile" AfterTargets="Build"
+  <Target Name="KSPBTGenerateVersionFile" AfterTargets="Build"
           Inputs="@(KSPVersionFile);$(FileVersion)" Outputs="%(KSPVersionFile.destination)"
-          Condition= " '$(GenerateKSPVersionFile)' == 'true' ">
+          Condition= " '$(KSPBTGenerateVersionFile)' == 'true' ">
     <ItemGroup>
       <KSPVersionFile Update="@(KSPVersionFile)">
         <Name Condition="'%(KSPVersionFile.Name)' == ''">$(ProjectName)</Name>
