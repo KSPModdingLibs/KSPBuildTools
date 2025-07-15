@@ -61,6 +61,7 @@
 
   <ItemGroup>
     <ResolveAssemblyReferencesDependsOn Include="CKANInstall"/>
+    <ResolveAssemblyReferencesDependsOn Include="KSPBTGenerateAssemblyReferences"/>
   </ItemGroup>
 
   <!-- Execute generated CKAN command list -->
@@ -71,6 +72,23 @@
   <Target Name="CKANClean" AfterTargets="Clean">
     <Delete Files="$(CKANCommandFile)"/>
   </Target>
+
+  <!--
+  Convert ModReference items to Reference items. This allows KSPBTInstallRoot to be evaluated
+  after the csproj body or in a target, giving greater flexibility.
+
+  The value of the item should be name of the assembly as defined in its KSPAssembly attribute.
+  The DLLPath attribute is the path to the DLL relative to the installation root, e.g. "GameData/CoolMod/mod.dll"
+  -->
+  <Target Name="KSPBTGenerateAssemblyReferences" BeforeTargets="ResolveAssemblyReferences"
+          Inputs="@(ModReference)" Outputs="@(Reference)">
+    <ItemGroup>
+      <Reference Include="@(ModReference->'$(KSPBTGameRoot)/%(DLLPath)')">
+        <KSPAssemblyName>%(ModReference.identity)</KSPAssemblyName>
+      </Reference>
+    </ItemGroup>
+  </Target>
+
 
   <!--  For use like so: `msbuild -t:"GetRequiredExternalTools" -verbosity:minimal -nologo`, then pipe into your destination of choice -->
   <Target Name="GetRequiredExternalTools">
