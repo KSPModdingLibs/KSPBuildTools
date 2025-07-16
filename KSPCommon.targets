@@ -116,7 +116,7 @@
 
   <!-- Execute generated CKAN command list -->
   <Target Name="CKANInstall" DependsOnTargets="CKANInstallScriptGen" BeforeTargets="_GenerateRestoreProjectSpec;Restore;ResolveAssemblyReferences" Inputs="$(CKANCommandFile)" Outputs="$(KSPBTGameRoot)/CKAN/registry.json">
-    <Exec Command="ckan prompt --headless &lt; '$(CKANCommandFile)'" Condition="'$(CKANDependencyList)' != ''"/>
+    <Exec Command="ckan prompt --headless &lt; '$(CKANCommandFile)'" Condition="'$(_CKANDependencyList)' != ''"/>
   </Target>
 
   <Target Name="CKANClean" AfterTargets="Clean">
