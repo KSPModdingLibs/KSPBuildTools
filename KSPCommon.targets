@@ -2,6 +2,56 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Condition=" '$(KSPCommonPropsImported)' == '' And Exists('$(MSBuildThisFileDirectory)KSPCommon.props') " Project="$(MSBuildThisFileDirectory)KSPCommon.props"/>
 
+  <!-- Prevent the compiler from acquiring or referencing any external reference assemblies -->
+  <PropertyGroup Condition=" '$(KSPBTReferenceSystemAssemblies)' == 'true' ">
+    <!-- Do not download the .NET Framework Target Pack NuGet package automatically -->
+    <DisableTransitiveFrameworkReferenceDownloads>true</DisableTransitiveFrameworkReferenceDownloads>
+    <!-- Instruct the compiler to not automatically reference mscorlib -->
+    <NoStandardLib>true</NoStandardLib>
+    <!-- Prevent the GetReferenceAssemblyPaths task in Microsoft.Common.CurrentVersion.targets
+         from attempting to locate an external copy of the reference assemblies. -->
+    <AutomaticallyUseReferenceAssemblyPackages>false</AutomaticallyUseReferenceAssemblyPackages>
+    <FrameworkPathOverride>$(KSPBTManagedPath)</FrameworkPathOverride>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+  </PropertyGroup>
+
+
+  <!-- Import references -->
+  <ItemGroup Condition=" '$(KSPBTReferenceSystemAssemblies)' == 'true' ">
+    <Reference Include="$(KSPBTManagedPath)/System.dll">
+      <Name>System (KSP/Mono)</Name>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(KSPBTManagedPath)/System.Core.dll">
+      <Name>System (KSP/Mono)</Name>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(KSPBTManagedPath)/mscorlib.dll">
+      <Name>System.Core (KSP/Mono)</Name>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(KSPBTManagedPath)/System.Xml.dll">
+      <Name>System.Xml (KSP/Mono)</Name>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(KSPBTReferenceUnityAssemblies)' == 'true' ">
+    <Reference Include="$(KSPBTManagedPath)/UnityEngine*.dll">
+      <Name>UnityEngine</Name>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(KSPBTReferenceGameAssemblies)' == 'true' ">
+    <Reference Include="$(KSPBTManagedPath)/Assembly-CSharp.dll">
+      <Name>Assembly-CSharp</Name>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(KSPBTManagedPath)/Assembly-CSharp-firstpass.dll">
+      <Name>Assembly-CSharp-firstpass</Name>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
   <!-- NuGet dependencies -->
   <ItemGroup>
     <!-- For KSPBTGenerateVersionFile -->
