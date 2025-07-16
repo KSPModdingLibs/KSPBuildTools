@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file
 
+## Unreleased
+
+### Msbuild
+
+- Renamed global msbuild properties to have the `KSPBT` prefix to avoid namespace collisions with other frameworks
+  - `KSPRoot` is now `KSPBTGameRoot`. It should no longer be referenced within a .csproj file
+  - `RepoRootPath` is now `KSPBTModRoot`, and should now point to the mod folder within GameData rather than the
+    root of a git repo
+  - `BinariesOutputRelativePath` is now `KSPBTModPluginFolder`
+  - `GenerateKSPAssemblyAttribute` is now `KSPBTGenerateAssemblyAttribute` and defaults to true
+  - `GenerateKSPAssemblyDependencyAttributes` is now `KSPBTGenerateDependencyAttributes` and defaults to true
+  - `ReferenceUnityAssemblies` is now `KSPBTReferenceUnityAssemblies`
+  - `ReferenceKSPAssemblies` is now `KSPBTReferenceGameAssemblies`
+- Added the `KSPBTReferenceSystemAssemblies` property to control referencing the mono system DLLs within the KSP
+  managed folder. Setting this property to false will load the implicit framework DLLs instead.
+- Mod dependencies should now be declared with
+  `ModReference` items. This avoids the need for the KSP install path to be known at evaluation time.
+
+
 ## 0.0.4 - 2025-06-15
 
 ### Library
