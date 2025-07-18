@@ -2,20 +2,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Condition=" '$(KSPCommonPropsImported)' == '' And Exists('$(MSBuildThisFileDirectory)KSPCommon.props') " Project="$(MSBuildThisFileDirectory)KSPCommon.props"/>
 
-  <!-- Prevent the compiler from acquiring or referencing any external reference assemblies -->
-  <PropertyGroup Condition=" '$(KSPBTReferenceSystemAssemblies)' == 'true' ">
-    <!-- Do not download the .NET Framework Target Pack NuGet package automatically -->
-    <DisableTransitiveFrameworkReferenceDownloads>true</DisableTransitiveFrameworkReferenceDownloads>
-    <!-- Instruct the compiler to not automatically reference mscorlib -->
-    <NoStandardLib>true</NoStandardLib>
-    <!-- Prevent the GetReferenceAssemblyPaths task in Microsoft.Common.CurrentVersion.targets
-         from attempting to locate an external copy of the reference assemblies. -->
-    <AutomaticallyUseReferenceAssemblyPackages>false</AutomaticallyUseReferenceAssemblyPackages>
-    <FrameworkPathOverride>$(KSPBTManagedPath)</FrameworkPathOverride>
-    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
-  </PropertyGroup>
-
-
   <!-- Import references -->
   <ItemGroup Condition=" '$(KSPBTReferenceSystemAssemblies)' == 'true' ">
     <Reference Include="$(KSPBTManagedPath)/System.dll">
