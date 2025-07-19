@@ -3,6 +3,7 @@
 
   <PropertyGroup>
     <KSPBuildToolsVersion Condition = " '$(KSPBuildToolsVersion)' == ''">*-*</KSPBuildToolsVersion>
+    <RootNamespace>plugin-mod</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

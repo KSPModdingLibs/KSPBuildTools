@@ -50,8 +50,4 @@
     <Compile Remove="$(MSBuildThisFileDirectory)docs/**" />
     <None Remove="$(MSBuildThisFileDirectory)docs/**" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="tests\plugin-mod\plugin-mod.csproj" />
-  </ItemGroup>
 </Project>
