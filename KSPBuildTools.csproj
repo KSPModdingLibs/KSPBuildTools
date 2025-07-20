@@ -24,7 +24,7 @@
     <NoWarn>1701;1702;CS0649;CS1591;NU5128</NoWarn>
     <AssemblyCopyright>2024 KSPModdingLibs Contributors</AssemblyCopyright>
     <AssemblyName>KSPBuildTools</AssemblyName>
-    <KSPBTModRoot>$(ProjectDir)</KSPBTModRoot>
+    <KSPBT_ModRoot>$(ProjectDir)</KSPBT_ModRoot>
     <PackageId>KSPBuildTools</PackageId>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Title>KSP Build Tools</Title>

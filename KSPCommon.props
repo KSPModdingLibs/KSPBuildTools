@@ -4,55 +4,61 @@
     <KSPCommonPropsImported>true</KSPCommonPropsImported>
   </PropertyGroup>
 
-  <!-- default settings for KSPBT targets and references -->
-  <PropertyGroup>
-    <!-- reference unity and KSP assemblies unless explicitly disabled -->
-    <KSPBTReferenceSystemAssemblies Condition=" '$(KSPBTReferenceSystemAssemblies)' == '' ">true</KSPBTReferenceSystemAssemblies>
-    <KSPBTReferenceUnityAssemblies Condition=" '$(KSPBTReferenceUnityAssemblies)' == '' ">true</KSPBTReferenceUnityAssemblies>
-    <KSPBTReferenceGameAssemblies Condition=" '$(KSPBTReferenceGameAssemblies)' == '' ">true</KSPBTReferenceGameAssemblies>
-
-    <!-- Copy DLLs to mod folder -->
-    <KSPBTCopyDLLsToPluginFolder Condition=" '$(KSPBTCopyDLLsToPluginFolder)' == '' ">true</KSPBTCopyDLLsToPluginFolder>
-
-
-    <KSPBTGenerateAssemblyAttribute Condition=" '$(KSPBTGenerateAssemblyAttribute)' == '' ">true</KSPBTGenerateAssemblyAttribute>
-
-    <KSPBTGenerateDependencyAttributes Condition=" '$(KSPBTGenerateDependencyAttributes)' == '' ">true</KSPBTGenerateDependencyAttributes>
-
-    <KSPBTGenerateVersionFile Condition=" '$(KSPBTGenerateVersionFile)' == '' ">true</KSPBTGenerateVersionFile>
-
-    <!-- default CKAN compatibility versions -->
-    <CKANCompatibleVersions Condition=" '$(CKANCompatibleVersions)' == '' ">1.12 1.11 1.10 1.9 1.8</CKANCompatibleVersions>
-  </PropertyGroup>
-
-  <!--Parse KSP platform-specific paths -->
-  <!-- These can be overwritten by user and props files -->
-  <PropertyGroup Condition=" '$(KSPBTManagedRelativePath)' == '' ">
-    <KSPBTManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('Windows')) ">KSP_x64_Data/Managed</KSPBTManagedRelativePath>
-    <KSPBTManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('OSX')) ">KSP.app/Contents/Resources/Data/Managed</KSPBTManagedRelativePath>
-    <KSPBTManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('Linux')) ">KSP_Data/Managed</KSPBTManagedRelativePath>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <KSPBTGameExecutable Condition=" $([MSBuild]::IsOsPlatform('Windows')) ">KSP_x64.exe</KSPBTGameExecutable>
-    <KSPBTGameExecutable Condition=" $([MSBuild]::IsOsPlatform('OSX')) ">KSP.app/Contents/MacOS/KSP</KSPBTGameExecutable>
-    <KSPBTGameExecutable Condition=" $([MSBuild]::IsOsPlatform('Linux')) ">KSP.x86_64</KSPBTGameExecutable>
-    <KSPBTSteamGameRoot Condition=" $([MSBuild]::IsOsPlatform('Windows')) ">C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program</KSPBTSteamGameRoot>
-    <KSPBTSteamGameRoot Condition=" $([MSBuild]::IsOsPlatform('OSX')) ">$(HOME)/Library/Application Support/Steam/steamapps/common/Kerbal Space Program</KSPBTSteamGameRoot>
-  </PropertyGroup>
-
-  <!-- Calculate mod paths -->
-  <!-- These can be overwritten by user, csproj, and props files -->
+  <!-- default settings for KSPBT_ targets and references -->
   <PropertyGroup>
     <!-- The root directory of the mod, the folder that gets placed in GameData -->
-    <KSPBTModRoot Condition=" '$(KSPBTModRoot)' == '' ">$(MSBuildProjectDirectory)/../GameData/$(MSBuildProjectName)/</KSPBTModRoot>
-    <!-- The folder to place resulting DLLs into, relative to KSPBTModRoot -->
-    <KSPBTModPluginFolder Condition=" '$(KSPBTModPluginFolder)' == '' "/>
+    <KSPBT_ModRoot Condition=" '$(KSPBT_ModRoot)' == '' ">$(MSBuildProjectDirectory)/../GameData/$(MSBuildProjectName)/</KSPBT_ModRoot>
+
+    <!-- The folder to place resulting DLLs into, relative to KSPBT_ModRoot -->
+    <KSPBT_ModPluginFolder Condition=" '$(KSPBT_ModPluginFolder)' == '' "/>
+
+    <!-- default CKAN compatibility versions -->
+    <KSPBT_CKANCompatibleVersions Condition=" '$(KSPBT_CKANCompatibleVersions)' == '' ">1.12 1.11 1.10 1.9 1.8</KSPBT_CKANCompatibleVersions>
+
+    <!-- reference unity and KSP assemblies unless explicitly disabled -->
+    <KSPBT_ReferenceSystemAssemblies Condition=" '$(KSPBT_ReferenceSystemAssemblies)' == '' ">true</KSPBT_ReferenceSystemAssemblies>
+    <KSPBT_ReferenceUnityAssemblies Condition=" '$(KSPBT_ReferenceUnityAssemblies)' == '' ">true</KSPBT_ReferenceUnityAssemblies>
+    <KSPBT_ReferenceGameAssemblies Condition=" '$(KSPBT_ReferenceGameAssemblies)' == '' ">true</KSPBT_ReferenceGameAssemblies>
+    <KSPBT_ReferenceModAssemblies Condition=" '$(KSPBT_ReferenceModAssemblies)' == '' ">true</KSPBT_ReferenceModAssemblies>
+
+    <!-- Copy DLLs to mod folder -->
+    <KSPBT_InstallCKANDependencies Condition=" '$(KSPBT_InstallCKANDependencies)' == '' ">true</KSPBT_InstallCKANDependencies>
+
+    <KSPBT_CopyDLLsToPluginFolder Condition=" '$(KSPBT_CopyDLLsToPluginFolder)' == '' ">true</KSPBT_CopyDLLsToPluginFolder>
+
+    <KSPBT_GenerateAssemblyAttribute Condition=" '$(KSPBT_GenerateAssemblyAttribute)' == '' ">true</KSPBT_GenerateAssemblyAttribute>
+
+    <KSPBT_GenerateDependencyAttributes Condition=" '$(KSPBT_GenerateDependencyAttributes)' == '' ">true</KSPBT_GenerateDependencyAttributes>
+
+
+    <KSPBT_GenerateVersionFile Condition=" '$(KSPBT_GenerateVersionFile)' == '' ">true</KSPBT_GenerateVersionFile>
+  </PropertyGroup>
+
+  <!-- Define the ModReference item type and its defaults -->
+  <ItemDefinitionGroup>
+    <ModReference>
+      <Private>false</Private>
+    </ModReference>
+  </ItemDefinitionGroup>
+
+  <!--Parse KSP platform-specific paths -->
+  <PropertyGroup Condition=" '$(_KSPBT_ManagedRelativePath)' == '' ">
+    <_KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('Windows')) ">KSP_x64_Data/Managed</_KSPBT_ManagedRelativePath>
+    <_KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('OSX')) ">KSP.app/Contents/Resources/Data/Managed</_KSPBT_ManagedRelativePath>
+    <_KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('Linux')) ">KSP_Data/Managed</_KSPBT_ManagedRelativePath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <_KSPBT_GameExecutable Condition=" $([MSBuild]::IsOsPlatform('Windows')) ">KSP_x64.exe</_KSPBT_GameExecutable>
+    <_KSPBT_GameExecutable Condition=" $([MSBuild]::IsOsPlatform('OSX')) ">KSP.app/Contents/MacOS/KSP</_KSPBT_GameExecutable>
+    <_KSPBT_GameExecutable Condition=" $([MSBuild]::IsOsPlatform('Linux')) ">KSP.x86_64</_KSPBT_GameExecutable>
+    <_KSPBT_SteamGameRoot Condition=" $([MSBuild]::IsOsPlatform('Windows')) ">C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program</_KSPBT_SteamGameRoot>
+    <_KSPBT_SteamGameRoot Condition=" $([MSBuild]::IsOsPlatform('OSX')) ">$(HOME)/Library/Application Support/Steam/steamapps/common/Kerbal Space Program</_KSPBT_SteamGameRoot>
   </PropertyGroup>
 
   <!-- Import the csproj.user file. -->
-  <!-- This can overwrite KSPBTManagedRelativePath and KSPBTGameExecutable,
-       set KSPBTGameRoot and ReferencePath, and any other user-specific settings -->
+  <!-- This can overwrite _KSPBT_ManagedRelativePath and _KSPBT_GameExecutable,
+       set KSPBT_GameRoot and ReferencePath, and any other user-specific settings -->
   <Import Project="$(MSBuildProjectFullPath).user" Condition="Exists('$(MSBuildProjectFullPath).user')"/>
 
   <!-- Import a props.user file -->
@@ -64,50 +70,45 @@
 
   <!-- Relative path that must exist for a path to be a valid KSP Install-->
   <PropertyGroup>
-    <KSPBTGameIdentifier>$(KSPBTManagedRelativePath)/Assembly-CSharp.dll</KSPBTGameIdentifier>
-    <KSPBTGameRootSource Condition="'$(KSPBTGameRoot)' != ''">property</KSPBTGameRootSource>
+    <KSPBT_GameIdentifier>$(_KSPBT_ManagedRelativePath)/Assembly-CSharp.dll</KSPBT_GameIdentifier>
+    <KSPBT_GameRootSource Condition="'$(KSPBT_GameRoot)' != ''">property</KSPBT_GameRootSource>
   </PropertyGroup>
 
-  <!-- Default KSPBTGameRoot to the "KSP_ROOT" environment variable if it exists -->
+  <!-- Default KSPBT_GameRoot to the "KSP_ROOT" environment variable if it exists -->
   <!-- Doing this skips any checks for a valid KSP install so be careful! -->
-  <PropertyGroup Condition=" '$(KSPBTGameRoot)' == '' And '$(KSP_ROOT)' != '' ">
-    <KSPBTGameRoot>$(KSP_ROOT)</KSPBTGameRoot>
-    <KSPBTGameRootSource>environment variable</KSPBTGameRootSource>
+  <PropertyGroup Condition=" '$(KSPBT_GameRoot)' == '' And '$(KSP_ROOT)' != '' ">
+    <KSPBT_GameRoot>$(KSP_ROOT)</KSPBT_GameRoot>
+    <KSPBT_GameRootSource>environment variable</KSPBT_GameRootSource>
   </PropertyGroup>
   <ItemGroup>
-    <KSPBTGameRootCandidate Include="$(SolutionDir)KSP" source="solution directory"/>
-    <KSPBTGameRootCandidate Include="$(ReferencePath)" source="reference path"/>
-    <KSPBTGameRootCandidate Include="$(KSPBTSteamGameRoot)" source="steam"/>
+    <KSPBT_GameRootCandidate Include="$(SolutionDir)KSP" source="solution directory"/>
+    <KSPBT_GameRootCandidate Include="$(ReferencePath)" source="reference path"/>
+    <KSPBT_GameRootCandidate Include="$(_KSPBT_SteamGameRoot)" source="steam"/>
   </ItemGroup>
 
   <!-- Look for KSP install in Solution dir -->
-  <PropertyGroup Condition=" '$(KSPBTGameRoot)' == '' And Exists('$(SolutionDir)KSP/$(KSPBTGameIdentifier)') ">
-    <KSPBTGameRoot>$(SolutionDir)KSP</KSPBTGameRoot>
-    <KSPBTGameRootSource>solution directory</KSPBTGameRootSource>
+  <PropertyGroup Condition=" '$(KSPBT_GameRoot)' == '' And Exists('$(SolutionDir)KSP/$(KSPBT_GameIdentifier)') ">
+    <KSPBT_GameRoot>$(SolutionDir)KSP</KSPBT_GameRoot>
+    <KSPBT_GameRootSource>solution directory</KSPBT_GameRootSource>
   </PropertyGroup>
 
   <!-- Look for KSP install in ReferencePath -->
-  <PropertyGroup Condition=" '$(KSPBTGameRoot)' == '' And Exists('$(ReferencePath)/$(KSPBTGameIdentifier)') ">
-    <KSPBTGameRoot>$(ReferencePath)</KSPBTGameRoot>
-    <KSPBTGameRootSource>reference path</KSPBTGameRootSource>
+  <PropertyGroup Condition=" '$(KSPBT_GameRoot)' == '' And Exists('$(ReferencePath)/$(KSPBT_GameIdentifier)') ">
+    <KSPBT_GameRoot>$(ReferencePath)</KSPBT_GameRoot>
+    <KSPBT_GameRootSource>reference path</KSPBT_GameRootSource>
   </PropertyGroup>
 
   <!-- Look for KSP steam install-->
-  <PropertyGroup Condition=" '$(KSPBTGameRoot)' == '' And Exists('$(KSPBTSteamGameRoot)/$(KSPBTGameIdentifier)') ">
-    <KSPBTGameRoot>$(KSPBTSteamGameRoot)</KSPBTGameRoot>
-    <KSPBTGameRootSource>steam</KSPBTGameRootSource>
-  </PropertyGroup>
-
-  <!-- Calculate KSPBTManagedPath -->
-  <PropertyGroup Condition=" '$(KSPBTManagedPath)' == ''">
-    <KSPBTManagedPath>$(KSPBTGameRoot)/$(KSPBTManagedRelativePath)</KSPBTManagedPath>
+  <PropertyGroup Condition=" '$(KSPBT_GameRoot)' == '' And Exists('$(_KSPBT_SteamGameRoot)/$(KSPBT_GameIdentifier)') ">
+    <KSPBT_GameRoot>$(_KSPBT_SteamGameRoot)</KSPBT_GameRoot>
+    <KSPBT_GameRootSource>steam</KSPBT_GameRootSource>
   </PropertyGroup>
 
   <!-- set the start action so that you can launch directly from VS -->
   <PropertyGroup>
     <StartAction>Program</StartAction>
-    <StartProgram>$(KSPBTGameRoot)/$(KSPBTGameExecutable)</StartProgram>
-    <StartWorkingDirectory>$(KSPBTGameRoot)</StartWorkingDirectory>
+    <StartProgram>$(KSPBT_GameRoot)/$(_KSPBT_GameExecutable)</StartProgram>
+    <StartWorkingDirectory>$(KSPBT_GameRoot)</StartWorkingDirectory>
     <DebugType>portable</DebugType>
   </PropertyGroup>
 
@@ -120,7 +121,7 @@
     <!-- Prevent the GetReferenceAssemblyPaths task in Microsoft.Common.CurrentVersion.targets
          from attempting to locate an external copy of the reference assemblies. -->
     <AutomaticallyUseReferenceAssemblyPackages>false</AutomaticallyUseReferenceAssemblyPackages>
-    <FrameworkPathOverride>$(KSPBTManagedPath)</FrameworkPathOverride>
+    <FrameworkPathOverride>$(KSPBT_ManagedPath)</FrameworkPathOverride>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
   </PropertyGroup>
 
