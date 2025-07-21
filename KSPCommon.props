@@ -104,6 +104,11 @@
     <KSPBT_GameRootSource>steam</KSPBT_GameRootSource>
   </PropertyGroup>
 
+  <!-- Calculate KSPBT_ManagedPath -->
+  <PropertyGroup Condition=" '$(KSPBT_ManagedPath)' == ''">
+    <KSPBT_ManagedPath>$(KSPBT_GameRoot)/$(_KSPBT_ManagedRelativePath)</KSPBT_ManagedPath>
+  </PropertyGroup>
+
   <!-- set the start action so that you can launch directly from VS -->
   <PropertyGroup>
     <StartAction>Program</StartAction>

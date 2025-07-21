@@ -2,11 +2,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Condition=" '$(KSPCommonPropsImported)' == '' And Exists('$(MSBuildThisFileDirectory)KSPCommon.props') " Project="$(MSBuildThisFileDirectory)KSPCommon.props"/>
 
-  <!-- Calculate KSPBT_ManagedPath -->
-  <PropertyGroup Condition=" '$(KSPBT_ManagedPath)' == ''">
-    <KSPBT_ManagedPath>$(KSPBT_GameRoot)/$(_KSPBT_ManagedRelativePath)</KSPBT_ManagedPath>
-  </PropertyGroup>
-
   <!-- Import references -->
   <ItemGroup Condition=" '$(KSPBT_ReferenceSystemAssemblies)' == 'true' ">
     <Reference Include="$(KSPBT_ManagedPath)/System.dll">
