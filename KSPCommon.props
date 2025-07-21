@@ -112,11 +112,6 @@
     <DebugType>portable</DebugType>
   </PropertyGroup>
 
-  <!-- Prevent the compiler from acquiring or referencing any external reference assemblies -->
-  <PropertyGroup>
-
-  </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)/include/*.cs" Condition="exists('$(MSBuildThisFileDirectory)/include')"/>
   </ItemGroup>

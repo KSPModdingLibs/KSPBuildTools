@@ -7,8 +7,6 @@
     <KSPBT_ManagedPath>$(KSPBT_GameRoot)/$(KSPBT_ManagedRelativePath)</KSPBT_ManagedPath>
   </PropertyGroup>
 
-  <Target Name="GetReferenceAssemblyPaths" />                 <!-- Don't go looking for framewoek reference assemblies-->
-
   <!-- Prevent the compiler from acquiring or referencing any external reference assemblies -->
   <PropertyGroup>
     <!-- Do not download the .NET Framework Target Pack NuGet package automatically -->
@@ -20,6 +18,8 @@
     <AutomaticallyUseReferenceAssemblyPackages>false</AutomaticallyUseReferenceAssemblyPackages>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
     <FrameworkPathOverride>$(KSPBT_ManagedPath)</FrameworkPathOverride>
+    <_FullFrameworkReferenceAssemblyPaths>$(KSPBT_ManagedPath)</_FullFrameworkReferenceAssemblyPaths>
+    <_TargetFrameworkDirectories>$(KSPBT_ManagedPath)</_TargetFrameworkDirectories>
   </PropertyGroup>
 
   <!-- Import references -->
