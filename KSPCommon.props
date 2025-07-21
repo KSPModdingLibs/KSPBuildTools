@@ -42,10 +42,10 @@
   </ItemDefinitionGroup>
 
   <!--Parse KSP platform-specific paths -->
-  <PropertyGroup Condition=" '$(_KSPBT_ManagedRelativePath)' == '' ">
-    <_KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('Windows')) ">KSP_x64_Data/Managed</_KSPBT_ManagedRelativePath>
-    <_KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('OSX')) ">KSP.app/Contents/Resources/Data/Managed</_KSPBT_ManagedRelativePath>
-    <_KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('Linux')) ">KSP_Data/Managed</_KSPBT_ManagedRelativePath>
+  <PropertyGroup Condition=" '$(KSPBT_ManagedRelativePath)' == '' ">
+    <KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('Windows')) ">KSP_x64_Data/Managed</KSPBT_ManagedRelativePath>
+    <KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('OSX')) ">KSP.app/Contents/Resources/Data/Managed</KSPBT_ManagedRelativePath>
+    <KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('Linux')) ">KSP_Data/Managed</KSPBT_ManagedRelativePath>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -57,7 +57,7 @@
   </PropertyGroup>
 
   <!-- Import the csproj.user file. -->
-  <!-- This can overwrite _KSPBT_ManagedRelativePath and _KSPBT_GameExecutable,
+  <!-- This can overwrite KSPBT_ManagedRelativePath and _KSPBT_GameExecutable,
        set KSPBT_GameRoot and ReferencePath, and any other user-specific settings -->
   <Import Project="$(MSBuildProjectFullPath).user" Condition="Exists('$(MSBuildProjectFullPath).user')"/>
 
@@ -70,7 +70,7 @@
 
   <!-- Relative path that must exist for a path to be a valid KSP Install-->
   <PropertyGroup>
-    <KSPBT_GameIdentifier>$(_KSPBT_ManagedRelativePath)/Assembly-CSharp.dll</KSPBT_GameIdentifier>
+    <KSPBT_GameIdentifier>$(KSPBT_ManagedRelativePath)/Assembly-CSharp.dll</KSPBT_GameIdentifier>
     <KSPBT_GameRootSource Condition="'$(KSPBT_GameRoot)' != ''">property</KSPBT_GameRootSource>
   </PropertyGroup>
 
@@ -102,11 +102,6 @@
   <PropertyGroup Condition=" '$(KSPBT_GameRoot)' == '' And Exists('$(_KSPBT_SteamGameRoot)/$(KSPBT_GameIdentifier)') ">
     <KSPBT_GameRoot>$(_KSPBT_SteamGameRoot)</KSPBT_GameRoot>
     <KSPBT_GameRootSource>steam</KSPBT_GameRootSource>
-  </PropertyGroup>
-
-  <!-- Calculate KSPBT_ManagedPath -->
-  <PropertyGroup Condition=" '$(KSPBT_ManagedPath)' == ''">
-    <KSPBT_ManagedPath>$(KSPBT_GameRoot)/$(_KSPBT_ManagedRelativePath)</KSPBT_ManagedPath>
   </PropertyGroup>
 
   <!-- set the start action so that you can launch directly from VS -->
