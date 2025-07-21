@@ -4,7 +4,7 @@
 
   <!-- Calculate KSPBT_ManagedPath -->
   <PropertyGroup Condition=" '$(KSPBT_ManagedPath)' == ''">
-    <KSPBT_ManagedPath>$(KSPBT_GameRoot)/$(KSPBT_ManagedRelativePath)</KSPBT_ManagedPath>
+    <KSPBT_ManagedPath>$(KSPBT_GameRoot)/$(_KSPBT_ManagedRelativePath)</KSPBT_ManagedPath>
   </PropertyGroup>
 
   <!-- Import references -->
