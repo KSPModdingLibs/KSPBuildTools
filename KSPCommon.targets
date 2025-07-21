@@ -7,6 +7,8 @@
     <KSPBT_ManagedPath>$(KSPBT_GameRoot)/$(KSPBT_ManagedRelativePath)</KSPBT_ManagedPath>
   </PropertyGroup>
 
+  <Target Name="GetReferenceAssemblyPaths" />                 <!-- Don't go looking for framewoek reference assemblies-->
+
   <!-- Prevent the compiler from acquiring or referencing any external reference assemblies -->
   <PropertyGroup>
     <FrameworkPathOverride>$(KSPBT_ManagedPath)</FrameworkPathOverride>
