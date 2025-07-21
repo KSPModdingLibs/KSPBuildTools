@@ -4,7 +4,7 @@
 
   <!-- Calculate KSPBT_ManagedPath -->
   <PropertyGroup Condition=" '$(KSPBT_ManagedPath)' == ''">
-    <KSPBT_ManagedPath>$(KSPBT_GameRoot)/$(_KSPBT_ManagedRelativePath)</KSPBT_ManagedPath>
+    <KSPBT_ManagedPath>$(KSPBT_GameRoot)/$(KSPBT_ManagedRelativePath)</KSPBT_ManagedPath>
   </PropertyGroup>
 
   <!-- Import references -->
@@ -81,7 +81,7 @@
   </PropertyGroup>
   <Target Name="KSPBT_GenerateCKANScript">
     <ItemGroup>
-      <_CKANCompatibleVersionItems Include="$(KSPBT_KSPBT_CKANCompatibleVersions.Split(' '))"/>
+      <_CKANCompatibleVersionItems Include="$(KSPBT_CKANCompatibleVersions.Split(' '))"/>
       <_CKANDependency Include="%(Reference.CKANIdentifier)" Condition="'%(Reference.CKANVersion)' == ''"/>
       <_CKANDependency Include="%(Reference.CKANIdentifier)=%(Reference.CKANVersion)" Condition="'%(Reference.CKANVersion)' != ''"/>
       <_CKANDependency Include="@(CKANDependency)"/>
