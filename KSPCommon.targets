@@ -32,7 +32,7 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup Condition=" '$(KSPBT_ReferenceGameAssemblies)' == 'true' and '$(Configuration)' == 'Unity'">
+  <ItemGroup Condition=" '$(KSPBT_ReferenceGameAssemblies)' == 'true'">
     <Reference Include="$(KSPBT_ManagedPath)/Assembly-CSharp.dll">
       <Name>Assembly-CSharp</Name>
       <Private>False</Private>
