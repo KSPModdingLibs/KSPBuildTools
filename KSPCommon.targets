@@ -7,6 +7,19 @@
     <KSPBT_ManagedPath>$(KSPBT_GameRoot)/$(KSPBT_ManagedRelativePath)</KSPBT_ManagedPath>
   </PropertyGroup>
 
+  <!-- Prevent the compiler from acquiring or referencing any external reference assemblies -->
+  <PropertyGroup>
+    <!-- Do not download the .NET Framework Target Pack NuGet package automatically -->
+    <DisableTransitiveFrameworkReferenceDownloads>true</DisableTransitiveFrameworkReferenceDownloads>
+    <!-- Instruct the compiler to not automatically reference mscorlib -->
+    <NoStandardLib>true</NoStandardLib>
+    <!-- Prevent the GetReferenceAssemblyPaths task in Microsoft.Common.CurrentVersion.targets
+         from attempting to locate an external copy of the reference assemblies. -->
+    <AutomaticallyUseReferenceAssemblyPackages>false</AutomaticallyUseReferenceAssemblyPackages>
+    <FrameworkPathOverride>$(KSPBT_ManagedPath)</FrameworkPathOverride>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+  </PropertyGroup>
+
   <!-- Import references -->
   <ItemGroup Condition=" '$(KSPBT_ReferenceSystemAssemblies)' == 'true' ">
     <Reference Include="$(KSPBT_ManagedPath)/System.dll">
