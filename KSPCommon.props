@@ -56,61 +56,12 @@
     <_KSPBT_SteamGameRoot Condition=" $([MSBuild]::IsOsPlatform('OSX')) ">$(HOME)/Library/Application Support/Steam/steamapps/common/Kerbal Space Program</_KSPBT_SteamGameRoot>
   </PropertyGroup>
 
-  <!-- Import the csproj.user file. -->
-  <!-- This can overwrite KSPBT_ManagedRelativePath and _KSPBT_GameExecutable,
-       set KSPBT_GameRoot and ReferencePath, and any other user-specific settings -->
-  <Import Project="$(MSBuildProjectFullPath).user" Condition="Exists('$(MSBuildProjectFullPath).user')"/>
-
   <!-- Import a props.user file -->
   <!-- serves the same role as the csproj.user file -->
   <Import Condition=" Exists('$(SolutionDir)$(SolutionName).props.user') " Project="$(SolutionDir)$(SolutionName).props.user"/>
 
   <!-- Import solution-wide props if it exists -->
   <Import Condition=" Exists('$(SolutionDir)$(SolutionName).props') " Project="$(SolutionDir)$(SolutionName).props"/>
-
-  <!-- Relative path that must exist for a path to be a valid KSP Install-->
-  <PropertyGroup>
-    <KSPBT_GameIdentifier>$(KSPBT_ManagedRelativePath)/Assembly-CSharp.dll</KSPBT_GameIdentifier>
-    <KSPBT_GameRootSource Condition="'$(KSPBT_GameRoot)' != ''">property</KSPBT_GameRootSource>
-  </PropertyGroup>
-
-  <!-- Default KSPBT_GameRoot to the "KSP_ROOT" environment variable if it exists -->
-  <!-- Doing this skips any checks for a valid KSP install so be careful! -->
-  <PropertyGroup Condition=" '$(KSPBT_GameRoot)' == '' And '$(KSP_ROOT)' != '' ">
-    <KSPBT_GameRoot>$(KSP_ROOT)</KSPBT_GameRoot>
-    <KSPBT_GameRootSource>environment variable</KSPBT_GameRootSource>
-  </PropertyGroup>
-  <ItemGroup>
-    <KSPBT_GameRootCandidate Include="$(SolutionDir)KSP" source="solution directory"/>
-    <KSPBT_GameRootCandidate Include="$(ReferencePath)" source="reference path"/>
-    <KSPBT_GameRootCandidate Include="$(_KSPBT_SteamGameRoot)" source="steam"/>
-  </ItemGroup>
-
-  <!-- Look for KSP install in Solution dir -->
-  <PropertyGroup Condition=" '$(KSPBT_GameRoot)' == '' And Exists('$(SolutionDir)KSP/$(KSPBT_GameIdentifier)') ">
-    <KSPBT_GameRoot>$(SolutionDir)KSP</KSPBT_GameRoot>
-    <KSPBT_GameRootSource>solution directory</KSPBT_GameRootSource>
-  </PropertyGroup>
-
-  <!-- Look for KSP install in ReferencePath -->
-  <PropertyGroup Condition=" '$(KSPBT_GameRoot)' == '' And Exists('$(ReferencePath)/$(KSPBT_GameIdentifier)') ">
-    <KSPBT_GameRoot>$(ReferencePath)</KSPBT_GameRoot>
-    <KSPBT_GameRootSource>reference path</KSPBT_GameRootSource>
-  </PropertyGroup>
-
-  <!-- Look for KSP steam install-->
-  <PropertyGroup Condition=" '$(KSPBT_GameRoot)' == '' And Exists('$(_KSPBT_SteamGameRoot)/$(KSPBT_GameIdentifier)') ">
-    <KSPBT_GameRoot>$(_KSPBT_SteamGameRoot)</KSPBT_GameRoot>
-    <KSPBT_GameRootSource>steam</KSPBT_GameRootSource>
-  </PropertyGroup>
-
-  <!-- set the start action so that you can launch directly from VS -->
-  <PropertyGroup>
-    <StartAction>Program</StartAction>
-    <StartProgram>$(KSPBT_GameRoot)/$(_KSPBT_GameExecutable)</StartProgram>
-    <StartWorkingDirectory>$(KSPBT_GameRoot)</StartWorkingDirectory>
-    <DebugType>portable</DebugType>
-  </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)/include/*.cs" Condition="exists('$(MSBuildThisFileDirectory)/include')"/>
