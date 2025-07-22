@@ -1,10 +1,6 @@
-# MSBuild Items And Properties
+# Configuration
 
 ## Properties
-
-```{confval} KSPBT_GameRoot
-This property should be set to the root directory of your KSP install. You should not set this in your csproj, see [Locating your KSP Install](getting-started.md/#locating-your-ksp-install)
-```
 
 ```{confval} KSPBT_ModRoot
 ---
@@ -71,3 +67,10 @@ default: `true`
 ---
 If set to `true`, adds references to the assemblies included in `ModReference` list.
 ```
+
+````{confval} KSPBT_GameRoot
+```{warning}
+You should **not** set or use this property in your csproj file.
+```
+This property should be set to the root directory of your KSP install. see [Locating your KSP Install](getting-started.md/#locating-your-ksp-install)
+````
