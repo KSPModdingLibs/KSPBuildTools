@@ -103,12 +103,6 @@
     </Reference>
   </ItemGroup>
 
-  <!-- NuGet dependencies -->
-  <ItemGroup>
-    <!-- For KSPBT_GenerateVersionFile -->
-    <PackageReference Include="JsonPoke" Version="1.2.0" Condition="'@(KSPVersionFile)' != ''"/>
-  </ItemGroup>
-
   <!--Custom Targets-->
   <Target Name="KSPBT_CheckForGameRoot" BeforeTargets="ResolveReferences">
     <Error Text="KSPBuildTools was unable to find a KSP installation. Please set the ReferencePath or KSPBT_GameRoot property
@@ -124,22 +118,33 @@
     <Message Text="@(_GameRootMessage, '%0a')" Importance="normal"/>
   </Target>
 
-  <!-- Copy DLLs to mod GameData folder-->
-  <Target Name="KSPBT_CopyDLLsToPluginFolder" AfterTargets="CopyFilesToOutputDirectory"
-          Condition=" '$(KSPBT_CopyDLLsToPluginFolder)' == 'true'">
+  <!--
+  Convert ModReference items to Reference items. This allows KSPBT_InstallRoot to be evaluated
+  after the csproj body or in a target, giving greater flexibility.
+
+  The value of the item should be name of the assembly as defined in its KSPAssembly attribute.
+  The DLLPath attribute is the path to the DLL relative to the installation root, e.g. "GameData/CoolMod/mod.dll"
+  -->
+  <PropertyGroup Condition=" '$(KSPBT_ReferenceModAssemblies)' == 'true' ">
+    <ResolveAssemblyReferencesDependsOn>KSPBT_ReferenceModAssemblies;$(ResolveAssemblyReferencesDependsOn)</ResolveAssemblyReferencesDependsOn>
+    <KSPBT_GenerateCKANScriptDependsOn>KSPBT_ReferenceModAssemblies;$(KSPBT_GenerateCKANScriptDependsOn)</KSPBT_GenerateCKANScriptDependsOn>
+  </PropertyGroup>
+  <Target Name="KSPBT_ReferenceModAssemblies" BeforeTargets="ResolveAssemblyReferences"
+          Condition=" '$(KSPBT_ReferenceModAssemblies)' == 'true' ">
     <ItemGroup>
-      <_BinariesToCopy Include="$(TargetDir)/**/*.dll"/>
-      <_BinariesToCopy Include="$(TargetDir)/**/*.pdb" Condition="'$(Condition)' == 'Debug'"/>
+      <Reference Include="@(ModReference->'$(KSPBT_GameRoot)/%(DLLPath)')">
+        <KSPAssemblyName>%(ModReference.identity)</KSPAssemblyName>
+      </Reference>
     </ItemGroup>
-    <MakeDir Directories="$(KSPBT_ModRoot)/$(KSPBT_ModPluginFolder)"/>
-    <Copy SourceFiles="@(_BinariesToCopy)" DestinationFolder="$(KSPBT_ModRoot)/$(KSPBT_ModPluginFolder)/%(RecursiveDir)"/>
   </Target>
+
+
 
   <!-- Generate script to run to install CKAN dependencies -->
   <PropertyGroup>
     <_CKANScript>$(BaseIntermediateOutputPath)ckancommands.cache</_CKANScript>
   </PropertyGroup>
-  <Target Name="KSPBT_GenerateCKANScript">
+  <Target Name="KSPBT_GenerateCKANScript" DependsOnTargets="$(KSPBT_GenerateCKANScriptDependsOn)">
     <ItemGroup>
       <_CKANCompatibleVersionItems Include="$(KSPBT_CKANCompatibleVersions.Split(' '))"/>
       <_CKANDependency Include="%(Reference.CKANIdentifier)" Condition="'%(Reference.CKANVersion)' == ''"/>
@@ -162,9 +167,9 @@
   </Target>
 
   <!-- Execute generated CKAN command list -->
-  <ItemGroup Condition=" '$(KSPBT_InstallCKANDependencies)' == 'true' ">
-    <ResolveAssemblyReferencesDependsOn Include="KSPBT_InstallCKANDependencies"/>
-  </ItemGroup>
+  <PropertyGroup Condition=" '$(KSPBT_InstallCKANDependencies)' == 'true' ">
+    <ResolveAssemblyReferencesDependsOn>KSPBT_InstallCKANDependencies;$(ResolveAssemblyReferencesDependsOn)</ResolveAssemblyReferencesDependsOn>
+  </PropertyGroup>
   <Target Name="KSPBT_InstallCKANDependencies" DependsOnTargets="KSPBT_GenerateCKANScript" BeforeTargets="_GenerateRestoreProjectSpec;Restore;ResolveAssemblyReferences"
           Inputs="$(_CKANScript)" Outputs="$(KSPBT_GameRoot)/CKAN/registry.json"
           Condition=" '$(KSPBT_InstallCKANDependencies)' == 'true' ">
@@ -173,26 +178,6 @@
 
   <Target Name="KSPBT_CleanCKANScript" AfterTargets="Clean">
     <Delete Files="$(_CKANScript)"/>
-  </Target>
-
-  <!--
-  Convert ModReference items to Reference items. This allows KSPBT_InstallRoot to be evaluated
-  after the csproj body or in a target, giving greater flexibility.
-
-  The value of the item should be name of the assembly as defined in its KSPAssembly attribute.
-  The DLLPath attribute is the path to the DLL relative to the installation root, e.g. "GameData/CoolMod/mod.dll"
-  -->
-  <ItemGroup Condition=" '$(KSPBT_ReferenceModAssemblies)' == 'true' ">
-    <ResolveAssemblyReferencesDependsOn Include="KSPBT_ReferenceModAssemblies"/>
-  </ItemGroup>
-  <Target Name="KSPBT_ReferenceModAssemblies" BeforeTargets="ResolveAssemblyReferences"
-          Inputs="@(ModReference)" Outputs="@(Reference)"
-          Condition=" '$(KSPBT_ReferenceModAssemblies)' == 'true' ">
-    <ItemGroup>
-      <Reference Include="@(ModReference->'$(KSPBT_GameRoot)/%(DLLPath)')">
-        <KSPAssemblyName>%(ModReference.identity)</KSPAssemblyName>
-      </Reference>
-    </ItemGroup>
   </Target>
 
   <!-- Generate the KSPAssembly attribute based on the FileVersion property -->
@@ -308,5 +293,16 @@
 
     <Message Text="Writing JSON version file to %(KSPVersionFile.Destination)"/>
     <Message Text="Contents:%0a$(_JSON)" Importance="low"/>
+  </Target>
+
+  <!-- Copy DLLs to mod GameData folder-->
+  <Target Name="KSPBT_CopyDLLsToPluginFolder" AfterTargets="CopyFilesToOutputDirectory"
+          Condition=" '$(KSPBT_CopyDLLsToPluginFolder)' == 'true'">
+    <ItemGroup>
+      <_BinariesToCopy Include="$(TargetDir)/**/*.dll"/>
+      <_BinariesToCopy Include="$(TargetDir)/**/*.pdb" Condition="'$(Condition)' == 'Debug'"/>
+    </ItemGroup>
+    <MakeDir Directories="$(KSPBT_ModRoot)/$(KSPBT_ModPluginFolder)"/>
+    <Copy SourceFiles="@(_BinariesToCopy)" DestinationFolder="$(KSPBT_ModRoot)/$(KSPBT_ModPluginFolder)/%(RecursiveDir)"/>
   </Target>
 </Project>
