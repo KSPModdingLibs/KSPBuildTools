@@ -53,7 +53,7 @@
   </PropertyGroup>
 
   <!-- Prevent the compiler from acquiring or referencing any external reference assemblies -->
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(KSPBT_ReferenceSystemAssemblies)' == 'true' ">
     <!-- Do not download the .NET Framework Target Pack NuGet package automatically -->
     <DisableTransitiveFrameworkReferenceDownloads>true</DisableTransitiveFrameworkReferenceDownloads>
     <!-- Instruct the compiler to not automatically reference mscorlib -->
