@@ -243,13 +243,7 @@
     </ItemGroup>
   </Target>
 
-  <ItemDefinitionGroup>
-    <KSPVersionFile>
-      <KSP_Version>1.12</KSP_Version>
-      <KSP_Version_Min>1.8</KSP_Version_Min>
-      <KSP_Version_Max>1.12</KSP_Version_Max>
-    </KSPVersionFile>
-  </ItemDefinitionGroup>
+
 
   <!-- Target to generate the KSP version json file for AVC/CKAN etc-->
   <Target Name="KSPBT_GenerateVersionFile" AfterTargets="Build"

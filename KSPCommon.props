@@ -4,7 +4,27 @@
     <KSPCommonPropsImported>true</KSPCommonPropsImported>
   </PropertyGroup>
 
-  <!-- default settings for KSPBT_ targets and references -->
+  <!-- default settings for when building for Unity-->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Unity' ">
+    <!-- Dont KSP and mod assemblies -->
+    <KSPBT_ReferenceGameAssemblies Condition=" '$(KSPBT_ReferenceGameAssemblies)' == '' ">false</KSPBT_ReferenceGameAssemblies>
+    <KSPBT_ReferenceModAssemblies Condition=" '$(KSPBT_ReferenceModAssemblies)' == '' ">false</KSPBT_ReferenceModAssemblies>
+
+    <!-- Dont install mod dependencies from CKAN (they wont be referenced anyways) -->
+    <KSPBT_InstallCKANDependencies Condition=" '$(KSPBT_InstallCKANDependencies)' == '' ">false</KSPBT_InstallCKANDependencies>
+
+    <!-- Dont generate attributes since they depend on the KSP Assembly_Csharp.dll -->
+    <KSPBT_GenerateAssemblyAttribute Condition=" '$(KSPBT_GenerateAssemblyAttribute)' == '' ">false</KSPBT_GenerateAssemblyAttribute>
+    <KSPBT_GenerateDependencyAttributes Condition=" '$(KSPBT_GenerateDependencyAttributes)' == '' ">false</KSPBT_GenerateDependencyAttributes>
+
+    <!-- Dont copy DLLs to mod folder, since theyre not the full mod-->
+    <KSPBT_CopyDLLsToPluginFolder Condition=" '$(KSPBT_CopyDLLsToPluginFolder)' == '' ">false</KSPBT_CopyDLLsToPluginFolder>
+
+    <!-- Dont generate a version file -->
+    <KSPBT_GenerateVersionFile Condition=" '$(KSPBT_GenerateVersionFile)' == '' ">false</KSPBT_GenerateVersionFile>
+  </PropertyGroup>
+
+  <!-- default settings when building normally -->
   <PropertyGroup>
     <!-- The root directory of the mod, the folder that gets placed in GameData -->
     <KSPBT_ModRoot Condition=" '$(KSPBT_ModRoot)' == '' ">$(MSBuildProjectDirectory)/../GameData/$(MSBuildProjectName)/</KSPBT_ModRoot>
@@ -15,30 +35,35 @@
     <!-- default CKAN compatibility versions -->
     <KSPBT_CKANCompatibleVersions Condition=" '$(KSPBT_CKANCompatibleVersions)' == '' ">1.12 1.11 1.10 1.9 1.8</KSPBT_CKANCompatibleVersions>
 
-    <!-- reference unity and KSP assemblies unless explicitly disabled -->
+    <!-- reference system, unity, KSP, and dependency mod assemblies -->
     <KSPBT_ReferenceSystemAssemblies Condition=" '$(KSPBT_ReferenceSystemAssemblies)' == '' ">true</KSPBT_ReferenceSystemAssemblies>
     <KSPBT_ReferenceUnityAssemblies Condition=" '$(KSPBT_ReferenceUnityAssemblies)' == '' ">true</KSPBT_ReferenceUnityAssemblies>
     <KSPBT_ReferenceGameAssemblies Condition=" '$(KSPBT_ReferenceGameAssemblies)' == '' ">true</KSPBT_ReferenceGameAssemblies>
     <KSPBT_ReferenceModAssemblies Condition=" '$(KSPBT_ReferenceModAssemblies)' == '' ">true</KSPBT_ReferenceModAssemblies>
 
-    <!-- Copy DLLs to mod folder -->
+    <!-- Install all dependency mods from CKAN -->
     <KSPBT_InstallCKANDependencies Condition=" '$(KSPBT_InstallCKANDependencies)' == '' ">true</KSPBT_InstallCKANDependencies>
 
-    <KSPBT_CopyDLLsToPluginFolder Condition=" '$(KSPBT_CopyDLLsToPluginFolder)' == '' ">true</KSPBT_CopyDLLsToPluginFolder>
-
+    <!-- Generate KSP assembly and dependency attributes for the assembly -->
     <KSPBT_GenerateAssemblyAttribute Condition=" '$(KSPBT_GenerateAssemblyAttribute)' == '' ">true</KSPBT_GenerateAssemblyAttribute>
-
     <KSPBT_GenerateDependencyAttributes Condition=" '$(KSPBT_GenerateDependencyAttributes)' == '' ">true</KSPBT_GenerateDependencyAttributes>
 
+    <!-- Copy DLLs to mod folder -->
+    <KSPBT_CopyDLLsToPluginFolder Condition=" '$(KSPBT_CopyDLLsToPluginFolder)' == '' ">true</KSPBT_CopyDLLsToPluginFolder>
 
     <KSPBT_GenerateVersionFile Condition=" '$(KSPBT_GenerateVersionFile)' == '' ">true</KSPBT_GenerateVersionFile>
   </PropertyGroup>
 
-  <!-- Define the ModReference item type and its defaults -->
+  <!-- Define items -->
   <ItemDefinitionGroup>
     <ModReference>
       <Private>false</Private>
     </ModReference>
+    <KSPVersionFile>
+      <KSP_Version>1.12</KSP_Version>
+      <KSP_Version_Min>1.8</KSP_Version_Min>
+      <KSP_Version_Max>1.12</KSP_Version_Max>
+    </KSPVersionFile>
   </ItemDefinitionGroup>
 
   <!--Parse KSP platform-specific paths -->
