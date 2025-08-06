@@ -66,10 +66,23 @@ The version is taken from the `<KSPAssemblyVersion>` metadata value, however lea
 ```xml
 <ItemGroup>
   <!-- Depends on Tweakscale -->
-  <Reference Include="Scale">
+  <ModReference Include="Scale">
     <DLLPath>GameData/TweakScale/plugins/Scale.dll</DLLPath>
     <CKANIdentifier>TweakScaleRescaled</CKANIdentifier>
     <KSPAssemblyVersion>3.2.0</KSPAssemblyVersion>
-  </Reference>
+  </ModReference>
+</ItemGroup>
+```
+
+To disable generating the `KSPAssemblyDependency` attribute for a single dependency (for example, if it lacks the `KSPAssembly` attribute), you can set `GenerateDependencyAttribute` to false
+
+```xml
+<ItemGroup>
+  <!-- Depends on Tweakscale, but without the `KSPAssemblyDependency` attribute -->
+  <ModReference Include="Scale">
+    <DLLPath>GameData/TweakScale/plugins/Scale.dll</DLLPath>
+    <CKANIdentifier>TweakScaleRescaled</CKANIdentifier>
+    <GenerateDependencyAttribute>false</GenerateDependencyAttribute>
+  </ModReference>
 </ItemGroup>
 ```

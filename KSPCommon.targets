@@ -133,7 +133,7 @@
           Condition=" '$(KSPBT_ReferenceModAssemblies)' == 'true' ">
     <ItemGroup>
       <Reference Include="@(ModReference->'$(KSPBT_GameRoot)/%(DLLPath)')">
-        <KSPAssemblyName>%(ModReference.identity)</KSPAssemblyName>
+        <KSPAssemblyName Condition=" '%(ModReference.KSPAssemblyName' == '' ">%(ModReference.identity)</KSPAssemblyName>
       </Reference>
     </ItemGroup>
   </Target>
@@ -208,7 +208,7 @@
   <Target Name="KSPBT_GenerateDependencyAttributes" BeforeTargets="CoreGenerateAssemblyInfo"
           Condition=" '$(KSPBT_GenerateDependencyAttributes)' == 'true' ">
     <ItemGroup>
-      <Reference Update="%(Reference.identity)" Condition="'%(Reference.CKANIdentifier)%(Reference.KSPAssemblyName)' != ''">
+      <Reference Update="%(Reference.identity)" Condition=" '%(Reference.CKANIdentifier)%(Reference.KSPAssemblyName)' != '' and '%(Reference.GenerateDependencyAttribute)' == 'true' ">
         <KSPAssemblyName Condition="'%(Reference.KSPAssemblyName)' == ''">$([System.String]::Copy('%(Reference.identity)').Split(',')[0])</KSPAssemblyName>
         <KSPAssemblyVersion Condition="'%(Reference.KSPAssemblyVersion)' == ''">%(Reference.CKANVersion)</KSPAssemblyVersion>
         <KSPAssemblyVersion Condition="'%(Reference.KSPAssemblyVersion)' == ''">0.0</KSPAssemblyVersion>

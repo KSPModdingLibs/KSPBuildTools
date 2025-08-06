@@ -58,6 +58,7 @@
   <ItemDefinitionGroup>
     <ModReference>
       <Private>false</Private>
+      <GenerateDependencyAttribute>true</GenerateDependencyAttribute>
     </ModReference>
     <KSPVersionFile>
       <KSP_Version>1.12</KSP_Version>
