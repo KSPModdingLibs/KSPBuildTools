@@ -10,7 +10,7 @@ the {confval}`KSPRoot` property can be used to reference the KSP install whereve
 ```xml
 <ItemGroup>
   <!-- Depends on Modulemanager and Harmony -->
-  <Reference Include="$(KSPRoot)/Modulemanager*.dll">
+  <Reference Include="$(KSPRoot)/GameData/Modulemanager*.dll">
     <Private>False</Private>
   </Reference>
   <Reference Include="0Harmony, Culture=neutral, PublicKeyToken=null">
@@ -27,7 +27,7 @@ KSPBuildTools can install CKAN mods automatically when built. This is useful for
 ```xml
 <ItemGroup>
   <!-- Depends on Modulemanager -->
-  <Reference Include="$(KSPRoot)/Modulemanager*.dll">
+  <Reference Include="$(KSPRoot)/GameData/Modulemanager*.dll">
     <Private>False</Private>
     <CKANIdentifier>ModuleManager</CKANIdentifier>
   </Reference>
@@ -42,7 +42,7 @@ You can also mark explicit versions to install.
 ```xml
 <ItemGroup>
   <!-- Depends on Modulemanager 4.2.3 ONLY -->
-  <Reference Include="$(KSPRoot)/Modulemanager*.dll">
+  <Reference Include="$(KSPRoot)/GameData/Modulemanager*.dll">
     <Private>False</Private>
     <CKANIdentifier>ModuleManager</CKANIdentifier>
     <CKANVersion>4.2.3</CKANVersion>
