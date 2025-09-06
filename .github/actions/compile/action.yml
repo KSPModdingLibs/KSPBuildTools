@@ -44,10 +44,10 @@ runs:
       shell: bash
       if: runner.debug
       run: |
-        echo "${{ toJson(env) }}"
-        echo "${{ toJson(github )}}"
-        echo "${{ toJson(job) }}"
-        echo "${{ toJson(steps) }}"
+        echo '${{ toJson(env) }}'
+        echo '${{ toJson(github) }}'
+        echo '${{ toJson(job) }}'
+        echo '${{ toJson(steps) }}'
         printenv
 
     - name: Set KSP_ROOT
