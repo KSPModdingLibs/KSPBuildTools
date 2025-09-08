@@ -118,7 +118,7 @@
         <KSPAssemblyVersion Condition="'%(Reference.KSPAssemblyVersion)' == ''">0.0</KSPAssemblyVersion>
         <KSPAssemblyVersionElementCount>$([System.String]::Copy('%(Reference.KSPAssemblyVersion)').Split('.').Length)</KSPAssemblyVersionElementCount>
       </Reference>
-      <ProjectReference Update="%(ProjectReference.identity)" Condition="'%(Reference.KSPAssemblyName)' != ''">
+      <ProjectReference Update="%(ProjectReference.identity)" Condition="'%(ProjectReference.KSPAssemblyName)' != ''">
         <KSPAssemblyVersion Condition="'%(ProjectReference.KSPAssemblyVersion)' == ''">$(FileVersion)</KSPAssemblyVersion>
         <KSPAssemblyVersionElementCount>$([System.String]::Copy('%(ProjectReference.KSPAssemblyVersion)').Split('.').Length)</KSPAssemblyVersionElementCount>
       </ProjectReference>
