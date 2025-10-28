@@ -41,7 +41,9 @@ First, run the following command in your git project root:
 
 ````{jinja}
 ```console
-git submodule add{% if git_ref %} --branch {{git_ref}} {% endif %}https://github.com/KSPModdingLibs/KSPBuildTools.git
+git submodule add https://github.com/KSPModdingLibs/KSPBuildTools.git
+{% if git_ref %}git -C KSPBuildTools/ fetch{% endif %}
+{% if git_ref %}git -C KSPBuildTools/ checkout {{git_ref}}{% endif %}
 ```
 ````
 

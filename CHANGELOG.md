@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file
 
+## Unreleased
+
+### Docs
+
+- Fixed git submodule example to work even for tagged releases (#49)
+
+
 ## 0.0.4 - 2025-06-15
 
 ### Library
