@@ -62,6 +62,8 @@ jobs:
 
   test-plugin-legacy:
     uses: './.github/workflows/internal-test-plugin-legacy.yml'
+    with:
+      use-nuget: true
 
   test-assetbundle:
     uses: './.github/workflows/internal-test-assetbundle.yml'
