@@ -74,7 +74,7 @@ runs:
 
     - name: Restore Mod Solution
       shell: bash
-      if: {{ inputs.use-nuget == false }}
+      if: ${{ inputs.use-nuget == false }}
       working-directory: ${{ inputs.working-directory }}
       run: dotnet restore ${{ inputs.solution-file-path }} ${{ runner.debug && '-v:diagnostic' }}
 
