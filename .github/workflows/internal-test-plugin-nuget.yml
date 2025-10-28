@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         dotnet-version: [ 5.x, 7.x, 9.x ]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 

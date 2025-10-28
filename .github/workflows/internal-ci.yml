@@ -19,7 +19,7 @@ jobs:
     env:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
       DOTNET_NOLOGO: true
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       package-version: ${{ steps.get-version.outputs.version }}
     steps:
