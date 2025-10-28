@@ -89,7 +89,9 @@
   <!-- Import solution-wide props if it exists -->
   <Import Condition=" Exists('$(SolutionDir)$(SolutionName).props') " Project="$(SolutionDir)$(SolutionName).props"/>
 
-  <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)/include/*.cs" Condition="exists('$(MSBuildThisFileDirectory)/include')"/>
+  <ItemGroup Condition=" exists('$(MSBuildThisFileDirectory)/include') " >
+    <Compile
+            Include="$(MSBuildThisFileDirectory)/include/unity/*.cs"
+            Condition=" '$(KSPBT_ReferenceUnityAssemblies)' == 'true' "/>
   </ItemGroup>
 </Project>
