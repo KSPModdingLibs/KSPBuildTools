@@ -30,7 +30,7 @@ jobs:
       - name: Setup Nuget Package Sources
         run: |
           mkdir -p ${{ env.NuGetDirectory }}/local
-          nuget sources add -Name local -Source ${{ env.NuGetDirectory }}/local
+          dotnet nuget add source ${{ env.NuGetDirectory }}/local -n local
 
       - uses: actions/download-artifact@v4
         with:
