@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file
 - Mod dependencies should now be declared with
   `ModReference` items. This avoids the need for the KSP install path to be known at evaluation time.
 - Only include Log.cs (or anything else in include/unity) when `KSPBT_ReferenceUnityAssemblies` is `true` (#61)
+- Fix `KSP_VERSION_MAX` getting mangled when using an existing version file (#64)
 
 ### Docs
 
