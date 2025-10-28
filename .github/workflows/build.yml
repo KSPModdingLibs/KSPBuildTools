@@ -22,6 +22,12 @@ on:
         description: >
           If MSBuild should be used. If your mod has no msbuild project (e.g. a pure part mod) 
           you should set this to false
+      use-nuget:
+        type: boolean
+        default: false
+        description: >
+          Set to true if your project uses a packages.config file instead of packagereferences. This will cause the job 
+          to run on the Ubuntu-22.04 image instead of Ubuntu-24.04
       use-ckan:
         type: boolean
         default: false
@@ -37,7 +43,7 @@ defaults:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ${{ inputs.use-nuget == true && 'ubuntu-22.04' || 'ubuntu-24.04' }}
     steps:
       - name: Checkout Mod Repo
         uses: actions/checkout@v4
@@ -62,6 +68,7 @@ jobs:
           ksp-zip-url: ${{ inputs.ksp-zip-url }}
           ksp-zip-password: ${{ secrets.ksp-zip-password }}
           solution-file-path: ${{ inputs.solution-file-path }}
+          use-nuget: ${{ inputs.use-nuget }}
 
       # Assemble the mod into a release package and upload it as an artifact
       - uses: KSPModdingLibs/KSPBuildTools/.github/actions/assemble-release@main
