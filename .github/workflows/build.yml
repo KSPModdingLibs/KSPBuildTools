@@ -43,7 +43,7 @@ defaults:
 
 jobs:
   build:
-    runs-on: ${{ inputs.use-nuget == true && 'ubuntu-22.04' || 'ubuntu-24.04' }}
+    runs-on: ${{ inputs.use-nuget && 'ubuntu-22.04' || 'ubuntu-24.04' }}
     steps:
       - name: Checkout Mod Repo
         uses: actions/checkout@v4
