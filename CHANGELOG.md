@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file
 
 - Fixed git submodule example to work even for tagged releases (#49)
 
+### Build
+
+- BACKPORT: Fix `KSP_VERSION_MAX` getting mangled when using an existing version file (#64)
+
 
 ## 0.0.4 - 2025-06-15
 

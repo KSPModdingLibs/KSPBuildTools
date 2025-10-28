@@ -188,7 +188,7 @@
     <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION_MIN" RawValue="'%(KSPVersionFile.KSP_Version_Min)'" Condition="'%(KSPVersionFile.KSP_Version_Min)' != ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
-    <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION_MAX" Value="'%(KSPVersionFile.KSP_Version_Max)'" Condition="'%(KSPVersionFile.KSP_Version_Max)' != ''">
+    <JsonPoke Content="$(_JSON)" Query="$.KSP_VERSION_MAX" RawValue="'%(KSPVersionFile.KSP_Version_Max)'" Condition="'%(KSPVersionFile.KSP_Version_Max)' != ''">
       <Output TaskParameter="Content" PropertyName="_JSON"/>
     </JsonPoke>
     <WriteLinesToFile File="%(KSPVersionFile.Destination)" Lines="$(_JSON)" Overwrite="true"/>
