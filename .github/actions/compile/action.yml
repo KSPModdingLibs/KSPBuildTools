@@ -69,12 +69,12 @@ runs:
     - name: Restore Mod Solution
       shell: bash
       working-directory: ${{ inputs.working-directory }}
-      run: nuget restore ${{ inputs.solution-file-path }} -Verbosity detailed
+      run: dotnet restore ${{ inputs.solution-file-path }} ${{ runner.debug && '-v:diagnostic' }}
 
     - name: Build Mod Solution
       shell: bash
       working-directory: ${{ inputs.working-directory }}
-      run: |
-        dotnet msbuild -m:1 -p:Configuration=${{ inputs.build-configuration }} \
-        -p:ManagedRelativePath=KSP_x64_Data/Managed ${{ inputs.solution-file-path }} \
-        ${{ runner.debug && '-v:detailed' }}
+      run: >
+        dotnet msbuild -m:1 -p:Configuration=${{ inputs.build-configuration }}
+        -p:ManagedRelativePath=KSP_x64_Data/Managed ${{ inputs.solution-file-path }}
+        ${{ runner.debug && '-v:diagnostic' }}

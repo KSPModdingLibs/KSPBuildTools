@@ -13,8 +13,12 @@ env:
   NuGetDirectory: ${{ github.workspace}}/nuget
 
 jobs:
+
   build:
-    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        dotnet-version: [ 5.x, 7.x, 9.x ]
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -26,7 +30,7 @@ jobs:
       - name: Setup Nuget Package Sources
         run: |
           mkdir -p ${{ env.NuGetDirectory }}/local
-          nuget sources add -Name local -Source ${{ env.NuGetDirectory }}/local
+          dotnet nuget add source ${{ env.NuGetDirectory }}/local -n local
 
       - uses: actions/download-artifact@v4
         with:
@@ -39,11 +43,12 @@ jobs:
         with:
           ksp-zip-url: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
           working-directory: ${{ env.TESTDIR }}
-          solution-file-path: plugin-mod.csproj
+          solution-file-path: plugin-mod-nuget.csproj
+          dotnet-version: ${{ matrix.dotnet-version }}
         env:
           KSPBuildToolsVersion: ${{ inputs.package-version }}
 
       - uses: ./.github/actions/assemble-release
         with:
           artifacts: ${{ env.TESTDIR }}/GameData
-          output-file-name: plugin-mod-nuget
+          output-file-name: plugin-mod-nuget-${{ matrix.dotnet-version }}

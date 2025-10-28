@@ -19,7 +19,7 @@ jobs:
     env:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
       DOTNET_NOLOGO: true
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       package-version: ${{ steps.get-version.outputs.version }}
     steps:
@@ -60,9 +60,6 @@ jobs:
     with:
       package-version: ${{ needs.build.outputs.package-version }}
 
-  test-plugin-legacy:
-    uses: './.github/workflows/internal-test-plugin-legacy.yml'
-
   test-assetbundle:
     uses: './.github/workflows/internal-test-assetbundle.yml'
     if: github.event_name != 'pull_request'
@@ -70,7 +67,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-22.04
-    needs: [ build, test-plugin, test-plugin-nuget, test-plugin-legacy, test-assetbundle ]
+    needs: [ build, test-plugin, test-plugin-nuget, test-assetbundle ]
     environment:
       name: "NuGet"
       url: "https://www.nuget.org/packages/KSPBuildTools"
