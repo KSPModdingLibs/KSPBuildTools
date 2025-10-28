@@ -8,6 +8,8 @@ jobs:
   validate:
     runs-on: ubuntu-24.04
     steps:
+      - run: echo "::warning:: Due to the inability to properly pin them, reusable workflows in KSPBuildTools will be deprecated in the next major version"
+
       - name: Checkout repo
         uses: actions/checkout@v4
         

@@ -39,6 +39,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
+      - run: echo "::warning:: Due to the inability to properly pin them, reusable workflows in KSPBuildTools will be deprecated in the next major version"
       - name: Checkout Mod Repo
         uses: actions/checkout@v4
         with:

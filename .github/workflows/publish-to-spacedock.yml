@@ -29,6 +29,8 @@ jobs:
   publish-to-spacedock:
     runs-on: ubuntu-24.04
     steps:
+      - run: echo "::warning:: Due to the inability to properly pin them, reusable workflows in KSPBuildTools will be deprecated in the next major version"
+
       - name: get-release-info
         id: get-release-info
         uses: KSPModdingLibs/KSPBuildTools/.github/actions/get-release-info@main
