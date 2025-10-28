@@ -26,6 +26,10 @@ All notable changes to this project will be documented in this file
 
 - Fixed git submodule example to work even for tagged releases (#49)
 
+### Actions
+
+- Sped up `setup-ckan` action by skipping recommended packages and man-db updates
+
 
 ## 0.0.4 - 2025-06-15
 

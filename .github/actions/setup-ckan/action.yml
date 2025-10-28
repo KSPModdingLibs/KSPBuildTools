@@ -45,9 +45,10 @@ runs:
     - name: Install CKAN
       shell: bash
       run: |
+        rm -f /var/lib/man-db/auto-update # skip updating man pages, which takes a long time and makes no sense in a CI job
         gh release download ${{ inputs.ckan-version }} --repo ${{ inputs.ckan-repo }} --pattern 'ckan*.deb' -O ckan.deb
         ${{ env.ACT && 'sudo apt update --quiet' }}
-        sudo apt install --quiet ./ckan.deb  ${{ runner.debug && '--verbose-versions' }}
+        sudo apt install --quiet --no-install-recommends --no-install-suggested ./ckan.deb  ${{ runner.debug && '--verbose-versions' }}
         ckan version
       env:
         GH_TOKEN: ${{ github.token }}
