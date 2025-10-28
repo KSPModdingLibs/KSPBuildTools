@@ -20,6 +20,10 @@ All notable changes to this project will be documented in this file
 - Mod dependencies should now be declared with
   `ModReference` items. This avoids the need for the KSP install path to be known at evaluation time.
 
+### Docs
+
+- Fixed git submodule example to work even for tagged releases (#49)
+
 
 ## 0.0.4 - 2025-06-15
 
