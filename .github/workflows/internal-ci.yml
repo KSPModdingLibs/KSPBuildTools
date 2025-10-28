@@ -60,6 +60,9 @@ jobs:
     with:
       package-version: ${{ needs.build.outputs.package-version }}
 
+  test-plugin-legacy:
+    uses: './.github/workflows/internal-test-plugin-legacy.yml'
+
   test-assetbundle:
     uses: './.github/workflows/internal-test-assetbundle.yml'
     if: github.event_name != 'pull_request'
