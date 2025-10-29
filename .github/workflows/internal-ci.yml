@@ -27,6 +27,11 @@ jobs:
         with:
           fetch-depth: 0 # get full history, not shallow clone
 
+      - name: Check for workflows with outdated action pins
+        if: startsWith(github.ref, 'refs/tags')
+        run: |
+          ! grep -P -i 'uses: KSPModdingLibs/KSPBuildTools/\.github/actions/.*@(?!${{ github.ref_name }}$)' .github/workflows/*.yml
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:

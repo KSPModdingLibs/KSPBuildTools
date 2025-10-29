@@ -5,3 +5,9 @@ obj
 
 # docs
 docs/_build
+
+# misc
+.DS_Store
+.idea
+*.user
+*.backup

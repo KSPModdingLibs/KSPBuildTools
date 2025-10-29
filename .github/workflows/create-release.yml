@@ -64,7 +64,7 @@ jobs:
           submodules: true
 
       - name: update-version
-        uses: KSPModdingLibs/KSPBuildTools/.github/actions/update-version@main
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/update-version@0.0.4
         with:
           version-string: ${{ inputs.version-string }}
           template-extension: ${{ inputs.version-template-extension }}
