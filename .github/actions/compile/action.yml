@@ -36,6 +36,12 @@ inputs:
     default: ${{ github.workspace }}
     description: the working directory to run in
 
+  use-nuget-restore:
+    default: 'false'
+    description: > 
+      Set to true if your project uses a packages.config file instead of packagereferences. Ensure the environment has 
+      nuget and mono installed, either installing them manually or by using the Github Ubuntu-22.04 images
+
 runs:
   using: composite
   steps:
@@ -68,8 +74,15 @@ runs:
 
     - name: Restore Mod Solution
       shell: bash
+      if: ${{ inputs.use-nuget-restore != 'true'}} # https://github.com/actions/runner/issues/1483 :sufferbeale:
       working-directory: ${{ inputs.working-directory }}
       run: dotnet restore ${{ inputs.solution-file-path }} ${{ runner.debug && '-v:diagnostic' }}
+
+    - name: Restore Mod Solution (NuGet)
+      shell: bash
+      if: ${{ inputs.use-nuget-restore  == 'true'}}
+      working-directory: ${{ inputs.working-directory }}
+      run: nuget restore ${{ inputs.solution-file-path }} -Verbosity detailed
 
     - name: Build Mod Solution
       shell: bash
