@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file
 ### Actions
 
 - Added the `use-nuget-restore` option to the `compile` action to use the `nuget restore` command, for projects using packages.config files. This allows the `compile` action with default settings to work on any Ubuntu runner image
+- Sped up `setup-ckan` action by skipping recommended packages and man-db updates
 
 
 ## 0.0.4 - 2025-06-15
