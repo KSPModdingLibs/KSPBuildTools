@@ -159,7 +159,7 @@
       <_CKANCommands Include="compat add --gamedir &quot;$(KSPBT_GameRoot)&quot; %(_CKANCompatibleVersionItems.Identity)"
                      Condition=" '$(KSPBT_CKANCompatibleVersions)' != '' "/>
 
-      <_CKANCommands Include="install --no-recommends --gamedir &quot;$(KSPBT_GameRoot)&quot; $(_CKANDependencyList)" Condition="'$(CKANDependencyList)' != ''"/>
+      <_CKANCommands Include="install --no-recommends --gamedir &quot;$(KSPBT_GameRoot)&quot; $(_CKANDependencyList)" Condition="'$(_CKANDependencyList)' != ''"/>
     </ItemGroup>
     <Message Text="Writing CKAN commands to $(_CKANScript)"/>
     <Message Text="@(_CKANCommands, '%0a')" Importance="Low"/>

@@ -4,6 +4,7 @@
   <PropertyGroup>
     <KSPBuildToolsVersion Condition = " '$(KSPBuildToolsVersion)' == ''">*-*</KSPBuildToolsVersion>
     <RootNamespace>plugin-mod</RootNamespace>
+    <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

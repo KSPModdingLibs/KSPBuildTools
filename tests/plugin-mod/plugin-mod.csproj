@@ -22,6 +22,7 @@
     <AssemblyCopyright>2024 KSPModdingLibs Contributors</AssemblyCopyright>
     <AssemblyName>PluginMod</AssemblyName>
     <KSPBT_ModRoot>$(MSBuildThisFileDirectory)/GameData/$(MSBuildProjectName)</KSPBT_ModRoot>
+    <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>
   </PropertyGroup>
 
   <!-- DLL Dependencies-->
