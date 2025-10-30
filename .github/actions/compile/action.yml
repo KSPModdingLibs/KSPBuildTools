@@ -10,10 +10,6 @@ inputs:
     default: Release
     description: The project configuration to build.
 
-  dotnet-version:
-    default: 5.x
-    description: Version of dotnet compiler to use.  Defaults to 5.x.
-
   ksp-zip-url:
     default: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
     description: >
@@ -60,11 +56,6 @@ runs:
       if: ${{ !env.KSP_ROOT }}
       shell: bash
       run: echo 'KSP_ROOT=${{ '/tmp/ksp' }}' >> "$GITHUB_ENV"
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{ inputs.dotnet-version }}
 
     - name: Download KSP Libs
       shell: bash

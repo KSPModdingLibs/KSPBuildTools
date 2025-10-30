@@ -17,7 +17,7 @@ jobs:
   build:
     strategy:
       matrix:
-        dotnet-version: [ 5.x, 7.x, 9.x ]
+        dotnet-version: [ 7.x, 8.x, 9.x ]
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -25,7 +25,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: ${{ matrix.dotnet-version }}
 
       - name: Setup Nuget Package Sources
         run: |
@@ -44,7 +44,6 @@ jobs:
           ksp-zip-url: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
           working-directory: ${{ env.TESTDIR }}
           solution-file-path: plugin-mod-nuget.csproj
-          dotnet-version: ${{ matrix.dotnet-version }}
         env:
           KSPBuildToolsVersion: ${{ inputs.package-version }}
 
