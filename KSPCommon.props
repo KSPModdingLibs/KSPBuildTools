@@ -68,10 +68,10 @@
   </ItemDefinitionGroup>
 
   <!--Parse KSP platform-specific paths -->
-  <PropertyGroup Condition=" '$(KSPBT_ManagedRelativePath)' == '' ">
-    <KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('Windows')) ">KSP_x64_Data/Managed</KSPBT_ManagedRelativePath>
-    <KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('OSX')) ">KSP.app/Contents/Resources/Data/Managed</KSPBT_ManagedRelativePath>
-    <KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('Linux')) ">KSP_Data/Managed</KSPBT_ManagedRelativePath>
+  <PropertyGroup Condition=" '$(_KSPBT_ManagedRelativePath)' == '' ">
+    <_KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('Windows')) ">KSP_x64_Data/Managed</_KSPBT_ManagedRelativePath>
+    <_KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('OSX')) ">KSP.app/Contents/Resources/Data/Managed</_KSPBT_ManagedRelativePath>
+    <_KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('Linux')) ">KSP_Data/Managed</_KSPBT_ManagedRelativePath>
   </PropertyGroup>
 
   <PropertyGroup>

@@ -4,7 +4,7 @@
 
   <!-- Relative path that must exist for a path to be a valid KSP Install-->
   <PropertyGroup>
-    <KSPBT_GameIdentifier>$(KSPBT_ManagedRelativePath)/Assembly-CSharp.dll</KSPBT_GameIdentifier>
+    <KSPBT_GameIdentifier>$(_KSPBT_ManagedRelativePath)/Assembly-CSharp.dll</KSPBT_GameIdentifier>
     <KSPBT_GameRootSource Condition="'$(KSPBT_GameRoot)' != ''">property</KSPBT_GameRootSource>
   </PropertyGroup>
 
@@ -49,7 +49,7 @@
 
   <!-- Calculate KSPBT_ManagedPath -->
   <PropertyGroup Condition=" '$(KSPBT_ManagedPath)' == ''">
-    <KSPBT_ManagedPath>$(KSPBT_GameRoot)/$(KSPBT_ManagedRelativePath)</KSPBT_ManagedPath>
+    <KSPBT_ManagedPath>$(KSPBT_GameRoot)/$(_KSPBT_ManagedRelativePath)</KSPBT_ManagedPath>
   </PropertyGroup>
 
   <!-- Prevent the compiler from acquiring or referencing any external reference assemblies -->
