@@ -15,13 +15,13 @@
     <KSPBT_GameRootSource>environment variable</KSPBT_GameRootSource>
   </PropertyGroup>
   <ItemGroup>
-    <KSPBT_GameRootCandidate Include="$(SolutionDir)KSP" source="solution directory"/>
+    <KSPBT_GameRootCandidate Include="$(SolutionDir)KSP" source="solution directory" Condition=" '$(SolutionDir)' != '' "/>
     <KSPBT_GameRootCandidate Include="$(ReferencePath)" source="reference path"/>
     <KSPBT_GameRootCandidate Include="$(_KSPBT_SteamGameRoot)" source="steam"/>
   </ItemGroup>
 
   <!-- Look for KSP install in Solution dir -->
-  <PropertyGroup Condition=" '$(KSPBT_GameRoot)' == '' And Exists('$(SolutionDir)KSP/$(KSPBT_GameIdentifier)') ">
+  <PropertyGroup Condition=" '$(KSPBT_GameRoot)' == '' And '$(SolutionDir)' != '' And Exists('$(SolutionDir)KSP/$(KSPBT_GameIdentifier)') ">
     <KSPBT_GameRoot>$(SolutionDir)KSP</KSPBT_GameRoot>
     <KSPBT_GameRootSource>solution directory</KSPBT_GameRootSource>
   </PropertyGroup>
