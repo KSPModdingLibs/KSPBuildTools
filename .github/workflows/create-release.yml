@@ -64,7 +64,7 @@ jobs:
           submodules: true
 
       - name: update-version
-        uses: KSPModdingLibs/KSPBuildTools/.github/actions/update-version@0.0.4
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/update-version@1.0.0-alpha.1
         with:
           version-string: ${{ inputs.version-string }}
           template-extension: ${{ inputs.version-template-extension }}
@@ -81,18 +81,18 @@ jobs:
           git tag -f -a "$VERSION_STRING" -m "$VERSION_STRING"
 
       # Install CKAN and set up an instance
-      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/setup-ckan@0.0.4
+      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/setup-ckan@1.0.0-alpha.1
         if: ${{ (inputs.use-ckan && inputs.use-msbuild) || inputs.dependency-identifiers }}
 
       # Install any listed CKAN dependencies
-      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@0.0.4
+      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@1.0.0-alpha.1
         if: ${{ inputs.dependency-identifiers }}
         with:
           dependency-identifiers: ${{ inputs.dependency-identifiers }}
 
       - name: compile
         if: ${{ inputs.use-msbuild }}
-        uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@0.0.4
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@1.0.0-alpha.1
         with:
           build-configuration: ${{ inputs.build-configuration }}
           ksp-zip-url: ${{ inputs.ksp-zip-url }}
@@ -101,7 +101,7 @@ jobs:
 
       - name: assemble-release
         id: assemble-release
-        uses: KSPModdingLibs/KSPBuildTools/.github/actions/assemble-release@0.0.4
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/assemble-release@1.0.0-alpha.1
         with:
           artifacts: ${{ inputs.artifacts }}
           output-file-name: ${{ github.event.repository.name }}-${{ env.VERSION_STRING }}
