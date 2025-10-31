@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file
   `ModReference` items. This avoids the need for the KSP install path to be known at evaluation time.
 - Only include Log.cs (or anything else in include/unity) when `KSPBT_ReferenceUnityAssemblies` is `true` (#61)
 - Fix `KSP_VERSION_MAX` getting mangled when using an existing version file (#64)
+- Fix incorrect behavior when building without a solution (#50)
 
 ### Docs
 
@@ -28,8 +29,11 @@ All notable changes to this project will be documented in this file
 
 ### Actions
 
-- Added the `use-nuget-restore` option to the `compile` action to use the `nuget restore` command, for projects using packages.config files. This allows the `compile` action with default settings to work on any Ubuntu runner image
-- Sped up `setup-ckan` action by skipping recommended packages and man-db updates
+- KSPBT actions used in reusable workflows are now pinned with each tag, instead of using actions from `main`. All calls to reusable workflows should be pinned to a tag to ensure the correct actions are being used. (#21)
+- `compile` action: Use `dotnet restore` instead of `nuget restore` by default, allowing the action to work on any Ubuntu runner image. Added the `use-nuget-restore` option to restore the previous behavior for projects that use packages.config for dependencies. (#68)
+- `compile` action: Removed call to`actions/setup-dotnet`. Setting up .NET should be done as a separate step. (#65)
+- `setup-ckan` action: Sped up execution by skipping recommended packages and man-db updates
+- `assemble-release` action: `outputs.artifact-path` now includes the `.zip` extension (#51)
 
 
 ## 0.0.4 - 2025-06-15
