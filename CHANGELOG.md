@@ -2,11 +2,38 @@
 
 All notable changes to this project will be documented in this file
 
-## Unreleased
+## 1.0.0-alpha.1 - 2025-10-31
+
+### Msbuild
+
+- Renamed global msbuild properties to have the `KSPBT_` prefix to avoid namespace collisions with other frameworks
+  - `KSPRoot` is now `KSPBT_GameRoot`. It should no longer be referenced within a .csproj file
+  - `RepoRootPath` is now `KSPBT_ModRoot`, and should now point to the mod folder within GameData rather than the
+    root of a git repo
+  - `BinariesOutputRelativePath` is now `KSPBT_ModPluginFolder`
+  - `GenerateKSPAssemblyAttribute` is now `KSPBT_GenerateAssemblyAttribute` and defaults to true
+  - `GenerateKSPAssemblyDependencyAttributes` is now `KSPBT_GenerateDependencyAttributes` and defaults to true
+  - `ReferenceUnityAssemblies` is now `KSPBT_ReferenceUnityAssemblies`
+  - `ReferenceKSPAssemblies` is now `KSPBT_ReferenceGameAssemblies`
+- Added the `KSPBT_ReferenceSystemAssemblies` property to control referencing the mono system DLLs within the KSP
+  managed folder. Setting this property to false will load the implicit framework DLLs instead.
+- Mod dependencies should now be declared with
+  `ModReference` items. This avoids the need for the KSP install path to be known at evaluation time.
+- Only include Log.cs (or anything else in include/unity) when `KSPBT_ReferenceUnityAssemblies` is `true` (#61)
+- Fix `KSP_VERSION_MAX` getting mangled when using an existing version file (#64)
+- Fix incorrect behavior when building without a solution (#50)
 
 ### Docs
 
 - Fixed git submodule example to work even for tagged releases (#49)
+
+### Actions
+
+- KSPBT actions used in reusable workflows are now pinned with each tag, instead of using actions from `main`. All calls to reusable workflows should be pinned to a tag to ensure the correct actions are being used. (#21)
+- `compile` action: Use `dotnet restore` instead of `nuget restore` by default, allowing the action to work on any Ubuntu runner image. Added the `use-nuget-restore` option to restore the previous behavior for projects that use packages.config for dependencies. (#68)
+- `compile` action: Removed call to`actions/setup-dotnet`. Setting up .NET should be done as a separate step. (#65)
+- `setup-ckan` action: Sped up execution by skipping recommended packages and man-db updates
+- `assemble-release` action: `outputs.artifact-path` now includes the `.zip` extension (#51)
 
 
 ## 0.0.4 - 2025-06-15

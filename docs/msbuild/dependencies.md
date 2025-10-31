@@ -4,33 +4,31 @@ KSPBuildTools can help manage other mods that you depend on
 
 ## Referencing Dependency DLLs
 
-Mod DLLs should be referenced as with any other DLLs, like so. See [the Microsoft docs on Reference items](https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-items?view=vs-2022#reference) for more info. Make sure that `<Private>False</Private>`{l=xml} is set or the DLL will be copied to your output directory.
+Mod DLLs should be referenced with the {confval}`ModReference` item, like so. 
 
-the {confval}`KSPRoot` property can be used to reference the KSP install wherever it is. 
 ```xml
 <ItemGroup>
   <!-- Depends on Modulemanager and Harmony -->
-  <Reference Include="$(KSPRoot)/GameData/Modulemanager*.dll">
-    <Private>False</Private>
-  </Reference>
-  <Reference Include="0Harmony, Culture=neutral, PublicKeyToken=null">
-    <HintPath>$(KSPRoot)/GameData/000_Harmony/0Harmony.dll</HintPath>
-    <Private>False</Private>
-  </Reference>
+  <ModReference Include="Modulemanager">
+    <DLLPath>GameData/Modulemanager*.dll</DLLPath>
+  </ModReference>
+  <ModReference Include="0Harmony">
+    <DLLPath>GameData/000_Harmony/0Harmony.dll</DLLPath>
+  </ModReference>
 </ItemGroup>
 ```
 
 ## Installing Dependencies Automatically
 
-KSPBuildTools can install CKAN mods automatically when built. This is useful for CI workflows such as those using the {gha:action}`compile` action, or to make it easier for others to compile your mod themselves. Either add the `<CKANIdentifier>` metadata to your `<Reference>` items, or if the dependency mod doesn't have a dll you need to reference you can use the `<CKANDependency>` item.
+KSPBuildTools can install CKAN mods automatically when built. This is useful for CI workflows such as those using the {gha:action}`compile` action, or to make it easier for others to compile your mod themselves. Either add the `<CKANIdentifier>` metadata to your `<ModReference>` items, or if the dependency mod doesn't have a dll you need to reference you can use the `<CKANDependency>` item.
 
 ```xml
 <ItemGroup>
   <!-- Depends on Modulemanager -->
-  <Reference Include="$(KSPRoot)/GameData/Modulemanager*.dll">
-    <Private>False</Private>
+  <ModReference Include="Modulemanager">
+    <DLLPath>GameData/Modulemanager*.dll</DLLPath>
     <CKANIdentifier>ModuleManager</CKANIdentifier>
-  </Reference>
+  </ModReference>
   
   <!-- Also depends on Tantares SP, which doesn't have a plugin -->
   <CKANDependency Include="TantaresSP"/>
@@ -42,11 +40,11 @@ You can also mark explicit versions to install.
 ```xml
 <ItemGroup>
   <!-- Depends on Modulemanager 4.2.3 ONLY -->
-  <Reference Include="$(KSPRoot)/GameData/Modulemanager*.dll">
-    <Private>False</Private>
+  <ModReference Include="Modulemanager">
+    <DLLPath>GameData/Modulemanager*.dll</DLLPath>
     <CKANIdentifier>ModuleManager</CKANIdentifier>
     <CKANVersion>4.2.3</CKANVersion>
-  </Reference>
+  </ModReference>
   
   <!-- Also depends on Tantares SP, which doesn't have a plugin -->
   <CKANDependency Include="TantaresSP==6.0"/>
@@ -59,26 +57,32 @@ KSP mods should mark their dependency DLLs using the `KSPAssemblyDependency` att
 
 `[assembly: KSPAssemblyDependency("0Harmony", 0, 0, 0)]`{l=csharp}
 
-If the {confval}`GenerateKSPAssemblyDependencyAttributes` property is set to `true`, KSPBuildTools will generate these attributes automatically. It uses any `Reference` item that has a `<CKANIdentifier>` or `<KSPAssemblyName>` metadata value.
+If the {confval}`KSPBT_GenerateDependencyAttributes` property is set to `true` (the default), KSPBuildTools will generate these attributes automatically.
 
-The assembly name is set to the `<KSPAssemblyName>` metadata value, and falls back to the `<CKANIdentifier>` metadata value. 
+The assembly name is taken from the value of the item.
 
 The version is taken from the `<KSPAssemblyVersion>` metadata value, however leaving it at the default of 0.0.0 is usually acceptable
 
 ```xml
 <ItemGroup>
   <!-- Depends on Tweakscale -->
-  <Reference Include="$(KSPRoot)/GameData/TweakScale/plugins/Scale.dll">
-    <Private>False</Private>
+  <ModReference Include="Scale">
+    <DLLPath>GameData/TweakScale/plugins/Scale.dll</DLLPath>
     <CKANIdentifier>TweakScaleRescaled</CKANIdentifier>
-    <KSPAssemblyName>Scale</KSPAssemblyName>
     <KSPAssemblyVersion>3.2.0</KSPAssemblyVersion>
-  </Reference>
+  </ModReference>
 </ItemGroup>
+```
 
-<PropertyGroup>
-  <!-- Generate assembly attributes -->
-  <GenerateKSPAssemblyAttribute>true</GenerateKSPAssemblyAttribute>
-  <GenerateKSPAssemblyDependencyAttributes>true</GenerateKSPAssemblyDependencyAttributes>
-</PropertyGroup>
+To disable generating the `KSPAssemblyDependency` attribute for a single dependency (for example, if it lacks the `KSPAssembly` attribute), you can set `GenerateDependencyAttribute` to false
+
+```xml
+<ItemGroup>
+  <!-- Depends on Tweakscale, but without the `KSPAssemblyDependency` attribute -->
+  <ModReference Include="Scale">
+    <DLLPath>GameData/TweakScale/plugins/Scale.dll</DLLPath>
+    <CKANIdentifier>TweakScaleRescaled</CKANIdentifier>
+    <GenerateDependencyAttribute>false</GenerateDependencyAttribute>
+  </ModReference>
+</ItemGroup>
 ```

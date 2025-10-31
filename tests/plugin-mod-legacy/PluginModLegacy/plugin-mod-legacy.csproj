@@ -13,6 +13,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,10 +50,6 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup>
-    <RepoRootPath>$(MSBuildThisFileDirectory)../</RepoRootPath>
-    <BinariesOutputRelativePath>GameData/plugin-mod-legacy</BinariesOutputRelativePath>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)/$(MSBuildToolsVersion)\Microsoft.Common.props" />
   <Import Project="$(MSBuildThisFileDirectory)../../../KSPCommon.targets" />
