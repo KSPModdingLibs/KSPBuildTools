@@ -173,7 +173,7 @@
   <Target Name="KSPBT_InstallCKANDependencies" DependsOnTargets="KSPBT_GenerateCKANScript" BeforeTargets="_GenerateRestoreProjectSpec;Restore;ResolveAssemblyReferences"
           Inputs="$(_CKANScript)" Outputs="$(KSPBT_GameRoot)/CKAN/registry.json"
           Condition=" '$(KSPBT_InstallCKANDependencies)' == 'true' ">
-    <Exec Command="ckan prompt --headless &lt; '$(_CKANScript)'" Condition=" '$(_CKANDependencyList)' != '' "/>
+    <Exec Command="ckan prompt --headless --asroot &lt; '$(_CKANScript)'" Condition=" '$(_CKANDependencyList)' != '' "/>
   </Target>
 
   <Target Name="KSPBT_CleanCKANScript" AfterTargets="Clean">
