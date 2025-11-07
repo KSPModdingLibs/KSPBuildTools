@@ -23,10 +23,6 @@ All notable changes to this project will be documented in this file
 - Fix `KSP_VERSION_MAX` getting mangled when using an existing version file (#64)
 - Fix incorrect behavior when building without a solution (#50)
 
-### Docs
-
-- Fixed git submodule example to work even for tagged releases (#49)
-
 ### Actions
 
 - KSPBT actions used in reusable workflows are now pinned with each tag, instead of using actions from `main`. All calls to reusable workflows should be pinned to a tag to ensure the correct actions are being used. (#21)
@@ -34,6 +30,23 @@ All notable changes to this project will be documented in this file
 - `compile` action: Removed call to`actions/setup-dotnet`. Setting up .NET should be done as a separate step. (#65)
 - `setup-ckan` action: Sped up execution by skipping recommended packages and man-db updates
 - `assemble-release` action: `outputs.artifact-path` now includes the `.zip` extension (#51)
+
+
+## 0.0.5 - 2025-11-07
+
+Several non-breaking bugfixes backported from the next development version
+
+### Docs
+
+- Fixed git submodule example to work even for tagged releases (#49)
+
+### Build
+
+- BACKPORT: Fix `KSP_VERSION_MAX` getting mangled when using an existing version file (#64)
+
+### Actions
+
+- BACKPORT: KSPBT actions used in reusable workflows are now pinned with each tag, instead of using actions from `main`. All calls to reusable workflows should be pinned to a tag to ensure the correct actions are being used. (#21)
 
 
 ## 0.0.4 - 2025-06-15
