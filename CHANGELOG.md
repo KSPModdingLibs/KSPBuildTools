@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file
 
-## Unreleased
+## 0.0.5 - 2025-11-07
 
 Several non-breaking bugfixes backported from the next development version
 
