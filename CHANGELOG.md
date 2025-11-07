@@ -12,6 +12,10 @@ All notable changes to this project will be documented in this file
 
 - BACKPORT: Fix `KSP_VERSION_MAX` getting mangled when using an existing version file (#64)
 
+### Actions
+
+- BACKPORT: KSPBT actions used in reusable workflows are now pinned with each tag, instead of using actions from `main`. All calls to reusable workflows should be pinned to a tag to ensure the correct actions are being used. (#21)
+
 
 ## 0.0.4 - 2025-06-15
 
