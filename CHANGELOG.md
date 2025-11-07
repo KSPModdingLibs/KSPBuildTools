@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file
 
 ## Unreleased
 
+Several non-breaking bugfixes backported from the next development version
+
 ### Docs
 
 - Fixed git submodule example to work even for tagged releases (#49)
