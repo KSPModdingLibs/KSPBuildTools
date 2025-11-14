@@ -9,8 +9,8 @@ from pathlib import Path
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'KSPBuildTools'
-copyright = '2024, KSPModdingLibs Contributors'
+project = 'KSP Build Tools'
+copyright = '2025, KSPModdingLibs Contributors'
 author = 'KSPModdingLibs Contributors'
 
 # -- General configuration ---------------------------------------------------
@@ -24,7 +24,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'sphinx_book_theme'
 html_static_path = ['_static']
 
 # -- Options for myst-parser -------------------------------------------------
