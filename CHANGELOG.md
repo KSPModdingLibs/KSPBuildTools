@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file
 
-## 1.0.0-alpha.2 - 2025-11-07
+## 1.0.0-alpha.3 - 2025-11-14
 
 ### Msbuild
 

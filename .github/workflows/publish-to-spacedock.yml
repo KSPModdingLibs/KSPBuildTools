@@ -31,7 +31,7 @@ jobs:
     steps:
       - name: get-release-info
         id: get-release-info
-        uses: KSPModdingLibs/KSPBuildTools/.github/actions/get-release-info@1.0.0-alpha.2
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/get-release-info@1.0.0-alpha.3
         with:
           release-tag: ${{ inputs.release-tag }}
 
