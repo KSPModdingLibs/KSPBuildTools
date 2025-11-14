@@ -12,6 +12,11 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
         
       - uses: ./.github/actions/setup-ckan
 
@@ -19,6 +24,7 @@ jobs:
         with:
           ksp-zip-url: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
           working-directory: ${{ env.TESTDIR }}
+          use-nuget-restore: true
 
       - uses: ./.github/actions/assemble-release
         with:

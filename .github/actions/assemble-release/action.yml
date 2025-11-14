@@ -14,7 +14,7 @@ inputs:
     default: "**/*.pdb"
 
   output-file-name:
-    description: Output artifact name used in the upload-artifact action. a zip file with this name will be created in the github workspace so that it can be immediately consumed by other actions in the workflow without having to download the artifact.
+    description: Output artifact name used in the upload-artifact action WITHOUT ".zip" extension. a zip file with this name will be created in the github workspace so that it can be immediately consumed by other actions in the workflow without having to download the artifact.
     default: ${{ github.event.repository.name || 'release'}}
 
   working-directory:
@@ -61,7 +61,7 @@ runs:
       run: |
         zip -r ${{ github.workspace }}/${{ inputs.output-file-name }}.zip .
         echo 'ARTIFACT_FILENAME=${{ inputs.output-file-name }}' >> $GITHUB_ENV
-        echo 'artifact-path=${{ github.workspace }}/${{ inputs.output-file-name }}' >> $GITHUB_OUTPUT
+        echo 'artifact-path=${{ github.workspace }}/${{ inputs.output-file-name }}.zip' >> $GITHUB_OUTPUT
 
     - name: Upload Artifact
       id: upload-artifact

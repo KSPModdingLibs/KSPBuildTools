@@ -2,6 +2,7 @@
 bin
 obj
 *.nupkg
+packages
 
 # docs
 docs/_build
