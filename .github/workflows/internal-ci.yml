@@ -112,6 +112,12 @@ jobs:
         run: |
           dotnet nuget push --source "github" ${{ env.NuGetDirectory }}/*.nupkg
 
+      - name: Publish Package to Forgejo
+        run: >
+          dotnet nuget push ${{ env.NuGetDirectory }}/*.nupkg
+          --api-key ${{ secrets.FORGEJO_DEPLOY_TOKEN }} 
+          --source https://git.offworldcolonies.nexus/api/packages/KSPModdingLibs/nuget/index.json
+
       - name: Publish to Github Releases
         run: >
           gh release create ${{ github.ref_name }}
@@ -120,3 +126,4 @@ jobs:
           ${{ env.NuGetDirectory }}/*.nupkg
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
