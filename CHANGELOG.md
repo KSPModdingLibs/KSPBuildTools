@@ -32,6 +32,10 @@ All notable changes to this project will be documented in this file
 - `setup-ckan` action: Add `ckan-install-method` option for installation method. Currently supports `'apt'` for installation on Debian/Ubuntu, or `'skip'` to skip installation for runners that already have CKAN installed.
 - `assemble-release` action: `outputs.artifact-path` now includes the `.zip` extension (#51)
 
+### Library
+
+- Removed Log.cs and the entire includes directory. Please use [KSPCommunityLib](https://git.offworldcolonies.nexus/KSPModdingLibs/KSPCommunityLib) instead.
+
 
 ## 0.0.5 - 2025-11-07
 
