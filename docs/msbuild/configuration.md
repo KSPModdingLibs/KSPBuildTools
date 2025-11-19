@@ -86,7 +86,7 @@ If set to `true`, automatically generates a version file using the information i
 ```{warning}
 You should **not** set or use this property in your csproj file.
 ```
-This property should be set to the root directory of your KSP install. see [Locating your KSP Install](getting-started.md/#locating-your-ksp-install)
+This property should be set to the root directory of your KSP install. see [Locating your KSP Install](ksp-install)
 ````
 
 ## Items
