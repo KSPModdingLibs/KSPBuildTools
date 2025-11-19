@@ -108,7 +108,7 @@
     <Error Text="KSPBuildTools was unable to find a KSP installation. Please set the ReferencePath or KSPBT_GameRoot property
                  in your csproj.user file to a valid KSP installation directory (the one with GameData in it)
 
-                 See https://kspbuildtools.readthedocs.io/en/latest/msbuild/getting-started.html#locating-your-ksp-install for more information"
+                 See https://kspbuildtools.readthedocs.io/en/latest/msbuild/ksp-install.html for more information"
            Condition="'$(KSPBT_GameRoot)' == ''"/>
     <ItemGroup>
       <_GameRootMessage Include="KSPBT_GameRoot Candidates:"/>

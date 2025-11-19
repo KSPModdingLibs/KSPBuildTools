@@ -23,7 +23,7 @@ to the .csproj file. Pinning the version is highly recommended.
 
 ## Usage
 
-Once you [have a KSP installation to link to](https://kspbuildtools.readthedocs.io/en/stable/msbuild/getting-started.html#locating-your-ksp-install), all the game DLLs will be automatically included in your project automatically. 
+Once you [have a KSP installation to link to](https://kspbuildtools.readthedocs.io/en/stable/msbuild/ksp-install.html), all the game DLLs will be automatically included in your project automatically. 
 
 Configure your mod's location in GameData and where to put the output DLLs
 
