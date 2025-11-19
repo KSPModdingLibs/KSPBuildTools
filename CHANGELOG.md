@@ -29,7 +29,8 @@ All notable changes to this project will be documented in this file
 - `compile` action: Removed call to`actions/setup-dotnet`. Setting up .NET should be done as a separate step. (#65)
 - `setup-ckan` action: Sped up execution by skipping recommended packages and man-db updates
 - `setup-ckan` action: Add `ckan-install-method` option for installation method. Currently supports `'apt'` for installation on Debian/Ubuntu, or `'skip'` to skip installation for runners that already have CKAN installed.
-- `assemble-release` action: `outputs.artifact-path` now includes the `.zip` extension (#51)
+- `assemble-release` action: `outputs.artifact-path` was split into `outputs.artifact-zip-path` and `outputs.artifact-dir-path` containing paths to a zip file and directory respectively. These are also now located under `$RELEASE_STAGING` instead of inside the workspace
+- `assemble-release` action: Removed call to `actions/upload-artifact`. This should be done as a separate step.
 
 ### Library
 

@@ -111,4 +111,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           git push
-          gh release create "$VERSION_STRING" --draft --target ${{ github.ref_name }} --title "$VERSION_STRING" "$ARTIFACT_FILENAME.zip" --notes-file "$RELEASE_NOTES_FILE"
+          gh release create "$VERSION_STRING" --draft --target ${{ github.ref_name }} --title "$VERSION_STRING" "${{ steps.assemble-release.outputs.artifact-zip-path }}" --notes-file "$RELEASE_NOTES_FILE"

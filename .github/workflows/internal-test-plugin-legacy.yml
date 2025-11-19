@@ -27,6 +27,14 @@ jobs:
           use-nuget-restore: true
 
       - uses: ./.github/actions/assemble-release
+        id: assemble-release
         with:
           artifacts: ${{ env.TESTDIR }}/GameData
           output-file-name: plugin-mod-legacy
+
+      - uses: actions/upload-artifact@v4
+        with:
+          path: ${{ steps.assemble-release.outputs.artifact-dir-path }}
+          name: plugin-mod-legacy
+          if-no-files-found: error
+          include-hidden-files: 'true' # behavior changed in 4.4.0. Include hidden for matching the behavior of `zip`

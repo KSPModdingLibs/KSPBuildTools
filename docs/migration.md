@@ -39,7 +39,7 @@ would become
 
 ## CI Actions 
 
-### {gha:action}`compile`
+### {gha:action}`compile`:
 
 The compile action no longer runs `setup-dotnet`. You need to run this step separately.
 
@@ -52,6 +52,12 @@ If your mod uses a `packages.config` file, you need to specify `use-nuget-restor
 ```
 
 If your mod *does not* use a `packages.config` file, you can migrate your workflows on Github runners to use Ubuntu 24.04 or later.
+
+### {gha:action}`assemble-release`:
+
+The assemble release action no longer runs `upload-artifact`. You need to run this step separately.
+
+Additionally, the `artifact-path` output was split into `artifact-zip-path` and `artifact-dir-path` containing paths to a zip file and directory respectively. Use the correct one depending on if you want a directory or a zip.
 
 ## Library
 

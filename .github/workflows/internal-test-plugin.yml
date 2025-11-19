@@ -32,19 +32,9 @@ jobs:
           working-directory: ${{ env.TESTDIR }}
           output-file-name: plugin-mod
 
-      - name: Get github artifact
-        uses: actions/download-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
+          path: ${{ steps.assemble-release.outputs.artifact-dir-path }}
           name: plugin-mod
-          path: github-artifact
-
-      - name: Compare with zip artifact
-        run: |
-          unzip ${{ steps.assemble-release.outputs.artifact-path }} -d zip-artifact
-          
-          tree github-artifact
-          tree zip-artifact
-          
-          if [[ $(tree github-artifact/* | sed '1d') != $(tree zip-artifact/* | sed '1d') ]]; then echo "tree mismatch" && false; fi # fail if contents differ
-          if [[ ! -d github-artifact/GameData ]]; then echo "GameData not present" && false; fi # fail if GameData folder isnt present
-          if [[ -f github-artifact/GameData/plugin-mod/PluginMod.pdb ]]; then echo "pdb still present" && false; fi # fail if PDB is still present
+          if-no-files-found: error
+          include-hidden-files: 'true' # behavior changed in 4.4.0. Include hidden for matching the behavior of `zip`
