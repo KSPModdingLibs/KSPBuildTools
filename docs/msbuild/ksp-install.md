@@ -2,7 +2,7 @@
 
 KSPBuildTools needs to know where you have KSP installed in order to reference the game dlls. These are all specific to your own computer, and should not be included in your git repo.
 
-There are several options for this. KSPBuildTools will choose in the following order. Either [autodiscovery in the solution directory](#solution-directory) or [setting a reference path in a .user file](#environment-variable) are the recommended methods for most users.
+There are several options for this. KSPBuildTools will choose in the following order. Either [autodiscovery in the solution directory](#solution-directory) or [setting a reference path in a .user file](#kspbt-gameroot-msbuild-property) are the recommended methods for most users.
 
 ### KSPBT_GameRoot MSBuild Property
 
