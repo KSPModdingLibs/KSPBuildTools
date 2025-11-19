@@ -18,7 +18,7 @@ author = "KSPModdingLibs Contributors"
 extensions = ["sphinx_gha", "myst_parser", "sphinx_copybutton", "sphinx_jinja"]
 
 templates_path = ["_templates"]
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", ".venv"]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

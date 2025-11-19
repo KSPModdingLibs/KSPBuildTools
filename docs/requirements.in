@@ -1,5 +1,0 @@
-sphinx>=8
-sphinx-book-theme
-sphinx-copybutton
-sphinx-gha
-sphinx-jinja>=2

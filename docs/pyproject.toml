@@ -1,0 +1,19 @@
+[project]
+name = "docs"
+version = "0.0.0"
+requires-python = ">=3.11"
+dependencies = [
+    "sphinx>=8",
+    "myst-parser>=4",
+    "sphinx-book-theme>=1.1.4",
+    "sphinx-copybutton>=0.5.2",
+    "sphinx-gha>=1",
+    "sphinx-jinja>=2"
+]
+
+[[tool.uv.index]]
+url = "https://git.offworldcolonies.nexus/api/packages/drewcassidy/pypi/simple/"
+# not strictly required, everything here is also on PyPI
+
+[tool.uv]
+package = false
