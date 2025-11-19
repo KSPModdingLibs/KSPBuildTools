@@ -11,6 +11,7 @@ msbuild/index
 actions/index
 workflows/index
 scripts
+migration
 ```
 
 ```{toctree}
