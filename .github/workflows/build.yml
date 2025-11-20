@@ -60,17 +60,17 @@ jobs:
           dotnet-version: ${{ inputs.dotnet-version }}
 
       # Install CKAN and set up an instance
-      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/setup-ckan@1.0.0-rc.1
+      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/setup-ckan@1.0.0
         if: ${{ (inputs.use-ckan && inputs.use-msbuild) || inputs.dependency-identifiers }}
 
       # Install any listed CKAN dependencies
-      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@1.0.0-rc.1
+      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@1.0.0
         if: ${{ inputs.dependency-identifiers }}
         with:
           dependency-identifiers: ${{ inputs.dependency-identifiers }}
 
       # Compile the mod
-      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@1.0.0-rc.1
+      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@1.0.0
         if: ${{ inputs.use-msbuild }}
         with:
           build-configuration: ${{ inputs.build-configuration }}
@@ -80,7 +80,7 @@ jobs:
           use-nuget-restore: ${{ inputs.use-nuget-restore }}
 
       # Assemble the mod into a release package
-      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/assemble-release@1.0.0-rc.1
+      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/assemble-release@1.0.0
         id: assemble-release
         with:
           artifacts: ${{ inputs.artifacts }}
