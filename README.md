@@ -36,8 +36,8 @@ Configure your mod's location in GameData and where to put the output DLLs
 Reference dependency mods in your DLL by adding `ModReference` items to the project. They will be automatically installed using CKAN.
 
 ```xml
+<!-- Depends on Modulemanager and Harmony -->
 <ItemGroup>
-  <!-- Depends on Modulemanager and Harmony -->
   <ModReference Include="Modulemanager">
     <DLLPath>GameData/Modulemanager*.dll</DLLPath>
     <CKANIdentifier>ModuleManager</CKANIdentifier>
