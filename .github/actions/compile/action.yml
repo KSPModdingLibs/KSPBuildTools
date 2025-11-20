@@ -10,10 +10,6 @@ inputs:
     default: Release
     description: The project configuration to build.
 
-  dotnet-version:
-    default: 5.x
-    description: Version of dotnet compiler to use.  Defaults to 5.x.
-
   ksp-zip-url:
     default: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
     description: >
@@ -36,6 +32,12 @@ inputs:
     default: ${{ github.workspace }}
     description: the working directory to run in
 
+  use-nuget-restore:
+    default: 'false'
+    description: > 
+      Set to true if your project uses a packages.config file instead of packagereferences. Ensure the environment has 
+      nuget and mono installed, either installing them manually or by using the Github Ubuntu-22.04 images
+
 runs:
   using: composite
   steps:
@@ -55,11 +57,6 @@ runs:
       shell: bash
       run: echo 'KSP_ROOT=${{ '/tmp/ksp' }}' >> "$GITHUB_ENV"
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{ inputs.dotnet-version }}
-
     - name: Download KSP Libs
       shell: bash
       run: |
@@ -68,13 +65,20 @@ runs:
 
     - name: Restore Mod Solution
       shell: bash
+      if: ${{ inputs.use-nuget-restore != 'true'}} # https://github.com/actions/runner/issues/1483 :sufferbeale:
+      working-directory: ${{ inputs.working-directory }}
+      run: dotnet restore ${{ inputs.solution-file-path }} ${{ runner.debug && '-v:diagnostic' }}
+
+    - name: Restore Mod Solution (NuGet)
+      shell: bash
+      if: ${{ inputs.use-nuget-restore  == 'true'}}
       working-directory: ${{ inputs.working-directory }}
       run: nuget restore ${{ inputs.solution-file-path }} -Verbosity detailed
 
     - name: Build Mod Solution
       shell: bash
       working-directory: ${{ inputs.working-directory }}
-      run: |
-        dotnet msbuild -m:1 -p:Configuration=${{ inputs.build-configuration }} \
-        -p:ManagedRelativePath=KSP_x64_Data/Managed ${{ inputs.solution-file-path }} \
-        ${{ runner.debug && '-v:detailed' }}
+      run: >
+        dotnet msbuild -m:1 -p:Configuration=${{ inputs.build-configuration }}
+        -p:KSPBT_ManagedPath=${{ env.KSP_ROOT }}/KSP_x64_Data/Managed ${{ inputs.solution-file-path }}
+        ${{ runner.debug && '-v:diagnostic' }}

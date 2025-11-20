@@ -13,20 +13,24 @@ env:
   NuGetDirectory: ${{ github.workspace}}/nuget
 
 jobs:
+
   build:
-    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        dotnet-version: [ 7.x, 8.x, 9.x ]
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: ${{ matrix.dotnet-version }}
 
       - name: Setup Nuget Package Sources
         run: |
           mkdir -p ${{ env.NuGetDirectory }}/local
-          nuget sources add -Name local -Source ${{ env.NuGetDirectory }}/local
+          dotnet nuget add source ${{ env.NuGetDirectory }}/local -n local
 
       - uses: actions/download-artifact@v4
         with:
@@ -39,11 +43,19 @@ jobs:
         with:
           ksp-zip-url: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
           working-directory: ${{ env.TESTDIR }}
-          solution-file-path: plugin-mod.csproj
+          solution-file-path: plugin-mod-nuget.csproj
         env:
           KSPBuildToolsVersion: ${{ inputs.package-version }}
 
       - uses: ./.github/actions/assemble-release
+        id: assemble-release
         with:
           artifacts: ${{ env.TESTDIR }}/GameData
           output-file-name: plugin-mod-nuget
+
+      - uses: actions/upload-artifact@v4
+        with:
+          path: ${{ steps.assemble-release.outputs.artifact-dir-path }}
+          name: plugin-mod-nuget-${{ matrix.dotnet-version }}
+          if-no-files-found: error
+          include-hidden-files: 'true' # behavior changed in 4.4.0. Include hidden for matching the behavior of `zip`

@@ -27,11 +27,11 @@ on:
 
 jobs:
   publish-to-spacedock:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: get-release-info
         id: get-release-info
-        uses: KSPModdingLibs/KSPBuildTools/.github/actions/get-release-info@0.0.5
+        uses: KSPModdingLibs/KSPBuildTools/.github/actions/get-release-info@1.0.0-rc.1
         with:
           release-tag: ${{ inputs.release-tag }}
 

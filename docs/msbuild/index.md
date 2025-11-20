@@ -21,8 +21,9 @@ maxdepth: 1
 ---
 
 getting-started
-generating-version-files
+ksp-install
 dependencies
-properties
+generating-version-files
+configuration
 ```
 

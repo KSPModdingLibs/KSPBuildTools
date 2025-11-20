@@ -4,155 +4,88 @@
     <KSPCommonPropsImported>true</KSPCommonPropsImported>
   </PropertyGroup>
 
-  <!-- disable default .net framework imports; use the ones from KSP instead.  There are a few differences that are sometimes important. -->
-  <PropertyGroup>
-    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+  <!-- default settings for when building for Unity-->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Unity' ">
+    <!-- Dont KSP and mod assemblies -->
+    <KSPBT_ReferenceGameAssemblies Condition=" '$(KSPBT_ReferenceGameAssemblies)' == '' ">false</KSPBT_ReferenceGameAssemblies>
+    <KSPBT_ReferenceModAssemblies Condition=" '$(KSPBT_ReferenceModAssemblies)' == '' ">false</KSPBT_ReferenceModAssemblies>
+
+    <!-- Dont install mod dependencies from CKAN (they wont be referenced anyways) -->
+    <KSPBT_InstallCKANDependencies Condition=" '$(KSPBT_InstallCKANDependencies)' == '' ">false</KSPBT_InstallCKANDependencies>
+
+    <!-- Dont generate attributes since they depend on the KSP Assembly_Csharp.dll -->
+    <KSPBT_GenerateAssemblyAttribute Condition=" '$(KSPBT_GenerateAssemblyAttribute)' == '' ">false</KSPBT_GenerateAssemblyAttribute>
+    <KSPBT_GenerateDependencyAttributes Condition=" '$(KSPBT_GenerateDependencyAttributes)' == '' ">false</KSPBT_GenerateDependencyAttributes>
+
+    <!-- Dont copy DLLs to mod folder, since theyre not the full mod-->
+    <KSPBT_CopyDLLsToPluginFolder Condition=" '$(KSPBT_CopyDLLsToPluginFolder)' == '' ">false</KSPBT_CopyDLLsToPluginFolder>
+
+    <!-- Dont generate a version file -->
+    <KSPBT_GenerateVersionFile Condition=" '$(KSPBT_GenerateVersionFile)' == '' ">false</KSPBT_GenerateVersionFile>
   </PropertyGroup>
 
-  <!--reference unity and KSP assemblies unless explicitly disabled-->
+  <!-- default settings when building normally -->
   <PropertyGroup>
-    <ReferenceUnityAssemblies Condition=" '$(ReferenceUnityAssemblies)' == '' ">true</ReferenceUnityAssemblies>
-    <ReferenceKSPAssemblies Condition=" '$(ReferenceKSPAssemblies)' == '' ">true</ReferenceKSPAssemblies>
+    <!-- The root directory of the mod, the folder that gets placed in GameData -->
+    <KSPBT_ModRoot Condition=" '$(KSPBT_ModRoot)' == '' ">$(MSBuildProjectDirectory)/../GameData/$(MSBuildProjectName)/</KSPBT_ModRoot>
+
+    <!-- The folder to place resulting DLLs into, relative to KSPBT_ModRoot -->
+    <KSPBT_ModPluginFolder Condition=" '$(KSPBT_ModPluginFolder)' == '' "/>
+
+    <!-- default CKAN compatibility versions -->
+    <KSPBT_CKANCompatibleVersions Condition=" '$(KSPBT_CKANCompatibleVersions)' == '' ">1.12 1.11 1.10 1.9 1.8</KSPBT_CKANCompatibleVersions>
+
+    <!-- reference system, unity, KSP, and dependency mod assemblies -->
+    <KSPBT_ReferenceSystemAssemblies Condition=" '$(KSPBT_ReferenceSystemAssemblies)' == '' ">true</KSPBT_ReferenceSystemAssemblies>
+    <KSPBT_ReferenceUnityAssemblies Condition=" '$(KSPBT_ReferenceUnityAssemblies)' == '' ">true</KSPBT_ReferenceUnityAssemblies>
+    <KSPBT_ReferenceGameAssemblies Condition=" '$(KSPBT_ReferenceGameAssemblies)' == '' ">true</KSPBT_ReferenceGameAssemblies>
+    <KSPBT_ReferenceModAssemblies Condition=" '$(KSPBT_ReferenceModAssemblies)' == '' ">true</KSPBT_ReferenceModAssemblies>
+
+    <!-- Install all dependency mods from CKAN -->
+    <KSPBT_InstallCKANDependencies Condition=" '$(KSPBT_InstallCKANDependencies)' == '' ">true</KSPBT_InstallCKANDependencies>
+
+    <!-- Generate KSP assembly and dependency attributes for the assembly -->
+    <KSPBT_GenerateAssemblyAttribute Condition=" '$(KSPBT_GenerateAssemblyAttribute)' == '' ">true</KSPBT_GenerateAssemblyAttribute>
+    <KSPBT_GenerateDependencyAttributes Condition=" '$(KSPBT_GenerateDependencyAttributes)' == '' ">true</KSPBT_GenerateDependencyAttributes>
+
+    <!-- Copy DLLs to mod folder -->
+    <KSPBT_CopyDLLsToPluginFolder Condition=" '$(KSPBT_CopyDLLsToPluginFolder)' == '' ">true</KSPBT_CopyDLLsToPluginFolder>
+
+    <KSPBT_GenerateVersionFile Condition=" '$(KSPBT_GenerateVersionFile)' == '' ">true</KSPBT_GenerateVersionFile>
   </PropertyGroup>
 
-  <!-- default CKAN compatibility versions -->
-  <PropertyGroup>
-    <CKANCompatibleVersions Condition="('$(CKANCompatibleVersions)' == '')">1.12 1.11 1.10 1.9 1.8</CKANCompatibleVersions>
-  </PropertyGroup>
+  <!-- Define items -->
+  <ItemDefinitionGroup>
+    <ModReference>
+      <Private>false</Private>
+      <GenerateDependencyAttribute>true</GenerateDependencyAttribute>
+    </ModReference>
+    <KSPVersionFile>
+      <KSP_Version>1.12</KSP_Version>
+      <KSP_Version_Min>1.8</KSP_Version_Min>
+      <KSP_Version_Max>1.12</KSP_Version_Max>
+    </KSPVersionFile>
+  </ItemDefinitionGroup>
 
   <!--Parse KSP platform-specific paths -->
-  <!-- These can be overwritten by user and props files -->
-  <PropertyGroup Condition=" '$(ManagedRelativePath)' == '' ">
-    <ManagedRelativePath Condition="$([MSBuild]::IsOsPlatform('Windows'))">KSP_x64_Data\Managed</ManagedRelativePath>
-    <ManagedRelativePath Condition="$([MSBuild]::IsOsPlatform('OSX'))">KSP.app\Contents\Resources\Data\Managed</ManagedRelativePath>
-    <ManagedRelativePath Condition="$([MSBuild]::IsOsPlatform('Linux'))">KSP_Data\Managed</ManagedRelativePath>
-  </PropertyGroup>
-  <PropertyGroup>
-    <KSPExecutable Condition="$([MSBuild]::IsOsPlatform('Windows'))">KSP_x64.exe</KSPExecutable>
-    <KSPExecutable Condition="$([MSBuild]::IsOsPlatform('OSX'))">KSP.app/Contents/MacOS/KSP</KSPExecutable>
-    <KSPExecutable Condition="$([MSBuild]::IsOsPlatform('Linux'))">KSP.x86_64</KSPExecutable>
-    <SteamKSPRoot Condition="($([MSBuild]::IsOsPlatform('Windows')))">C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program</SteamKSPRoot>
-    <SteamKSPRoot Condition="($([MSBuild]::IsOsPlatform('OSX')))">$(HOME)/Library/Application Support/Steam/steamapps/common/Kerbal Space Program</SteamKSPRoot>
+  <PropertyGroup Condition=" '$(_KSPBT_ManagedRelativePath)' == '' ">
+    <_KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('Windows')) ">KSP_x64_Data/Managed</_KSPBT_ManagedRelativePath>
+    <_KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('OSX')) ">KSP.app/Contents/Resources/Data/Managed</_KSPBT_ManagedRelativePath>
+    <_KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('Linux')) ">KSP_Data/Managed</_KSPBT_ManagedRelativePath>
   </PropertyGroup>
 
-  <!-- Calculate mod paths -->
-  <!-- These can be overwritten by user, csproj, and props files -->
   <PropertyGroup>
-    <!-- The root directory of the mod repository -->
-    <RepoRootPath Condition=" '$(RepoRootPath)' == '' ">$(SolutionDir.TrimEnd([System.IO.Path]::DirectorySeparatorChar))</RepoRootPath>
-    <BinariesOutputRelativePath Condition=" '$(BinariesOutputRelativePath)' == '' ">GameData/$(SolutionName)</BinariesOutputRelativePath>
+    <_KSPBT_GameExecutable Condition=" $([MSBuild]::IsOsPlatform('Windows')) ">KSP_x64.exe</_KSPBT_GameExecutable>
+    <_KSPBT_GameExecutable Condition=" $([MSBuild]::IsOsPlatform('OSX')) ">KSP.app/Contents/MacOS/KSP</_KSPBT_GameExecutable>
+    <_KSPBT_GameExecutable Condition=" $([MSBuild]::IsOsPlatform('Linux')) ">KSP.x86_64</_KSPBT_GameExecutable>
+    <_KSPBT_SteamGameRoot Condition=" $([MSBuild]::IsOsPlatform('Windows')) ">C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program</_KSPBT_SteamGameRoot>
+    <_KSPBT_SteamGameRoot Condition=" $([MSBuild]::IsOsPlatform('OSX')) ">$(HOME)/Library/Application Support/Steam/steamapps/common/Kerbal Space Program</_KSPBT_SteamGameRoot>
   </PropertyGroup>
-
-  <!-- Import the csproj.user file. -->
-  <!-- This can overwrite ManagedRelativePath and KSPExecutable,
-       set KSPRoot and ReferencePath, and any other user-specific settings -->
-  <Import Project="$(MSBuildProjectFullPath).user" Condition="Exists('$(MSBuildProjectFullPath).user')"/>
 
   <!-- Import a props.user file -->
   <!-- serves the same role as the csproj.user file -->
-  <Import Condition=" Exists('$(SolutionDir)$(SolutionName).props.user') " Project="$(SolutionDir)$(SolutionName).props.user"/>
+  <Import Condition=" '$(SolutionDir)' != '' And Exists('$(SolutionDir)$(SolutionName).props.user') " Project="$(SolutionDir)$(SolutionName).props.user"/>
 
   <!-- Import solution-wide props if it exists -->
-  <Import Condition=" Exists('$(SolutionDir)$(SolutionName).props') " Project="$(SolutionDir)$(SolutionName).props"/>
-
-  <PropertyGroup>
-    <!-- Relative path that must exist for a path to be a valid KSP Install-->
-    <KSPRootIdentifier>$(ManagedRelativePath)/Assembly-CSharp.dll</KSPRootIdentifier>
-    <KSPRootSource Condition="'$(KSPRoot)' != ''">property</KSPRootSource>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(KSPRoot)' == '' And '$(KSP_ROOT)' != '' ">
-    <!-- Default KSPRoot to the "KSP_ROOT" environment variable if it exists -->
-    <!-- Doing this skips any checks for a valid KSP install so be careful! -->
-    <KSPRoot >$(KSP_ROOT)</KSPRoot>
-    <KSPRootSource>environment variable</KSPRootSource>
-  </PropertyGroup>
-  <ItemGroup>
-    <KSPRootCandidate Include="$(SolutionDir)KSP" source="solution directory"/>
-    <KSPRootCandidate Include="$(ReferencePath)" source="reference path"/>
-    <KSPRootCandidate Include="$(SteamKSPRoot)" source="steam"/>
-  </ItemGroup>
-
-  <PropertyGroup Condition=" '$(KSPRoot)' == '' And Exists('$(SolutionDir)KSP/$(KSPRootIdentifier)') ">
-    <!-- Look for KSP install in Solution dir -->
-    <KSPRoot >$(SolutionDir)KSP</KSPRoot>
-    <KSPRootSource>solution directory</KSPRootSource>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(KSPRoot)' == '' And Exists('$(ReferencePath)/$(KSPRootIdentifier)') ">
-    <!-- Look for KSP install in ReferencePath -->
-    <KSPRoot>$(ReferencePath)</KSPRoot>
-    <KSPRootSource>reference path</KSPRootSource>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(KSPRoot)' == '' And Exists('$(SteamKSPRoot)/$(KSPRootIdentifier)') ">
-    <!-- Look for KSP steam install-->
-    <KSPRoot>$(SteamKSPRoot)</KSPRoot>
-    <KSPRootSource>steam</KSPRootSource>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <!-- Calculate ManagedPath -->
-    <ManagedPath>$(KSPRoot)/$(ManagedRelativePath)</ManagedPath>
-  </PropertyGroup>
-
-  <!-- set the start action so that you can launch directly from VS -->
-  <PropertyGroup>
-    <StartAction>Program</StartAction>
-    <StartProgram>$(KSPRoot)\$(KSPExecutable)</StartProgram>
-    <StartWorkingDirectory>$(KSPRoot)</StartWorkingDirectory>
-    <DebugType>portable</DebugType>
-  </PropertyGroup>
-
-  <!-- Prevent the compiler from acquiring or referencing any external reference assemblies -->
-  <PropertyGroup>
-    <!-- Do not download the .NET Framework Target Pack NuGet package automatically -->
-    <DisableTransitiveFrameworkReferenceDownloads>true</DisableTransitiveFrameworkReferenceDownloads>
-    <!-- Instruct the compiler to not automatically reference mscorlib -->
-    <NoStandardLib>true</NoStandardLib>
-    <!-- Prevent the GetReferenceAssemblyPaths task in Microsoft.Common.CurrentVersion.targets
-         from attempting to locate an external copy of the reference assemblies. -->
-    <AutomaticallyUseReferenceAssemblyPackages>false</AutomaticallyUseReferenceAssemblyPackages>
-    <FrameworkPathOverride>$(ManagedPath)</FrameworkPathOverride>
-  </PropertyGroup>
-
-  <!--Import references-->
-  <ItemGroup>
-    <Reference Include="$(ManagedPath)\System.dll">
-      <Name>System (KSP/Mono)</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="$(ManagedPath)\System.Core.dll">
-      <Name>System (KSP/Mono)</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="$(ManagedPath)\mscorlib.dll">
-      <Name>System.Core (KSP/Mono)</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="$(ManagedPath)\System.Xml.dll">
-      <Name>System.Xml (KSP/Mono)</Name>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup Condition=" '$(ReferenceUnityAssemblies)' == 'true' ">
-    <Reference Include="$(ManagedPath)\UnityEngine*.dll">
-      <Name>UnityEngine</Name>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup Condition=" '$(ReferenceKSPAssemblies)' == 'true' ">
-    <Reference Include="$(ManagedPath)\Assembly-CSharp.dll">
-      <Name>Assembly-CSharp</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="$(ManagedPath)\Assembly-CSharp-firstpass.dll">
-      <Name>Assembly-CSharp-firstpass</Name>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include = "$(MSBuildThisFileDirectory)/include/*.cs" Condition="exists('$(MSBuildThisFileDirectory)/include')"/>
-  </ItemGroup>
+  <Import Condition=" '$(SolutionDir)' != '' And Exists('$(SolutionDir)$(SolutionName).props') " Project="$(SolutionDir)$(SolutionName).props"/>
 </Project>

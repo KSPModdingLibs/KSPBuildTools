@@ -22,6 +22,16 @@ on:
         description: >
           If MSBuild should be used. If your mod has no msbuild project (e.g. a pure part mod) 
           you should set this to false
+      use-nuget-restore:
+        type: boolean
+        default: false
+        description: >
+          Set to true if your project uses a packages.config file instead of packagereferences. This will cause the job 
+          to run on the Ubuntu-22.04 image instead of Ubuntu-24.04
+      dotnet-version:
+        type: string
+        default: 8.x
+        description: Version of dotnet compiler to use.
       use-ckan:
         type: boolean
         default: false
@@ -37,34 +47,50 @@ defaults:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ${{ inputs.use-nuget-restore && 'ubuntu-22.04' || 'ubuntu-24.04' }}
     steps:
       - name: Checkout Mod Repo
         uses: actions/checkout@v4
         with:
           submodules: true
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
+
       # Install CKAN and set up an instance
-      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/setup-ckan@0.0.5
+      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/setup-ckan@1.0.0-rc.1
         if: ${{ (inputs.use-ckan && inputs.use-msbuild) || inputs.dependency-identifiers }}
 
       # Install any listed CKAN dependencies
-      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@0.0.5
+      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/install-dependencies@1.0.0-rc.1
         if: ${{ inputs.dependency-identifiers }}
         with:
           dependency-identifiers: ${{ inputs.dependency-identifiers }}
 
       # Compile the mod
-      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@0.0.5
+      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/compile@1.0.0-rc.1
         if: ${{ inputs.use-msbuild }}
         with:
           build-configuration: ${{ inputs.build-configuration }}
           ksp-zip-url: ${{ inputs.ksp-zip-url }}
           ksp-zip-password: ${{ secrets.ksp-zip-password }}
           solution-file-path: ${{ inputs.solution-file-path }}
+          use-nuget-restore: ${{ inputs.use-nuget-restore }}
 
-      # Assemble the mod into a release package and upload it as an artifact
-      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/assemble-release@0.0.5
+      # Assemble the mod into a release package
+      - uses: KSPModdingLibs/KSPBuildTools/.github/actions/assemble-release@1.0.0-rc.1
+        id: assemble-release
         with:
           artifacts: ${{ inputs.artifacts }}
-          output-file-name: ${{ github.event.repository.name }}-${{ inputs.build-configuration }}
+          output-file-name: ${{ github.event.repository.name }}
+
+      # Upload artifact
+      - uses: actions/upload-artifact@v4
+        id: upload-artifact
+        with:
+          path: ${{ steps.assemble-release.outputs.artifact-dir-path }}
+          name: ${{ github.event.repository.name }}-${{ inputs.build-configuration }}
+          if-no-files-found: error
+          include-hidden-files: 'true' # behavior changed in 4.4.0. Include hidden for matching the behavior of `zip`

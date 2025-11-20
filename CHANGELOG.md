@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file
 
+## 1.0.0-rc.1 - 2025-11-19
+
+### Msbuild
+
+- Renamed global msbuild properties to have the `KSPBT_` prefix to avoid namespace collisions with other frameworks
+  - `KSPRoot` is now `KSPBT_GameRoot`. It should no longer be referenced within a .csproj file
+  - `RepoRootPath` is now `KSPBT_ModRoot`, and should now point to the mod folder within GameData rather than the
+    root of a git repo
+  - `BinariesOutputRelativePath` is now `KSPBT_ModPluginFolder`
+  - `GenerateKSPAssemblyAttribute` is now `KSPBT_GenerateAssemblyAttribute` and defaults to true
+  - `GenerateKSPAssemblyDependencyAttributes` is now `KSPBT_GenerateDependencyAttributes` and defaults to true
+  - `ReferenceUnityAssemblies` is now `KSPBT_ReferenceUnityAssemblies`
+  - `ReferenceKSPAssemblies` is now `KSPBT_ReferenceGameAssemblies`
+- Added the `KSPBT_ReferenceSystemAssemblies` property to control referencing the mono system DLLs within the KSP
+  managed folder. Setting this property to false will load the implicit framework DLLs instead.
+- Mod dependencies should now be declared with
+  `ModReference` items. This avoids the need for the KSP install path to be known at evaluation time.
+- Fix `KSP_VERSION_MAX` getting mangled when using an existing version file (#64)
+- Fix incorrect behavior when building without a solution (#50)
+
+### Actions
+
+- KSPBT actions used in reusable workflows are now pinned with each tag, instead of using actions from `main`. All calls to reusable workflows should be pinned to a tag to ensure the correct actions are being used. (#21)
+- `compile` action: Use `dotnet restore` instead of `nuget restore` by default, allowing the action to work on any Ubuntu runner image. Added the `use-nuget-restore` option to restore the previous behavior for projects that use packages.config for dependencies. (#68)
+- `compile` action: Removed call to`actions/setup-dotnet`. Setting up .NET should be done as a separate step. (#65)
+- `setup-ckan` action: Sped up execution by skipping recommended packages and man-db updates
+- `setup-ckan` action: Add `ckan-install-method` option for installation method. Currently supports `'apt'` for installation on Debian/Ubuntu, or `'skip'` to skip installation for runners that already have CKAN installed.
+- `assemble-release` action: `outputs.artifact-path` was split into `outputs.artifact-zip-path` and `outputs.artifact-dir-path` containing paths to a zip file and directory respectively. These are also now located under `$RELEASE_STAGING` instead of inside the workspace
+- `assemble-release` action: Removed call to `actions/upload-artifact`. This should be done as a separate step.
+
+### Library
+
+- Removed Log.cs and the entire includes directory. Please use [KSPCommunityLib](https://git.offworldcolonies.nexus/KSPModdingLibs/KSPCommunityLib) instead.
+
+
 ## 0.0.5 - 2025-11-07
 
 Several non-breaking bugfixes backported from the next development version
