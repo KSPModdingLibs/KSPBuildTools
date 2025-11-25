@@ -133,7 +133,7 @@
           Condition=" '$(KSPBT_ReferenceModAssemblies)' == 'true' ">
     <ItemGroup>
       <Reference Include="@(ModReference->'$(KSPBT_GameRoot)/%(DLLPath)')">
-        <KSPAssemblyName Condition=" '%(ModReference.KSPAssemblyName' == '' ">%(ModReference.identity)</KSPAssemblyName>
+        <KSPAssemblyName Condition=" '%(ModReference.KSPAssemblyName)' == '' ">%(ModReference.identity)</KSPAssemblyName>
       </Reference>
     </ItemGroup>
   </Target>

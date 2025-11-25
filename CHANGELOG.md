@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file
 
+## Unreleased
+
+### Msbuild
+
+- Fix broken `KSPAssemblyDependency` attributes when using `ModReference` items.
+
+
 ## 1.0.0 - 2025-11-20
 
 ### Msbuild
