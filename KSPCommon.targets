@@ -139,7 +139,6 @@
   </Target>
 
 
-
   <!-- Generate script to run to install CKAN dependencies -->
   <PropertyGroup>
     <_CKANScript>$(BaseIntermediateOutputPath)ckancommands.cache</_CKANScript>
@@ -156,6 +155,7 @@
     </PropertyGroup>
     <ItemGroup>
       <!-- Not using `ckan compat set` because as of 2024-08-16 it is still only available in the dev branch -->
+      <_CKANCommands Include="update" />
       <_CKANCommands Include="compat add --gamedir &quot;$(KSPBT_GameRoot)&quot; %(_CKANCompatibleVersionItems.Identity)"
                      Condition=" '$(KSPBT_CKANCompatibleVersions)' != '' "/>
 
@@ -242,7 +242,6 @@
       </AssemblyAttribute>
     </ItemGroup>
   </Target>
-
 
 
   <!-- Target to generate the KSP version json file for AVC/CKAN etc-->
