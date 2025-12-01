@@ -293,7 +293,7 @@
           Condition=" '$(KSPBT_CopyDLLsToPluginFolder)' == 'true'">
     <ItemGroup>
       <_BinariesToCopy Include="$(TargetDir)/**/*.dll"/>
-      <_BinariesToCopy Include="$(TargetDir)/**/*.pdb" Condition="'$(Condition)' == 'Debug'"/>
+      <_BinariesToCopy Include="$(TargetDir)/**/*.pdb" Condition="'$(Configuration)' == 'Debug'"/>
     </ItemGroup>
     <MakeDir Directories="$(KSPBT_ModRoot)/$(KSPBT_ModPluginFolder)"/>
     <Copy SourceFiles="@(_BinariesToCopy)" DestinationFolder="$(KSPBT_ModRoot)/$(KSPBT_ModPluginFolder)/%(RecursiveDir)"/>

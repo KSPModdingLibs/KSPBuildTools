@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file
 
+## Unreleased
+
+### Msbuild
+
+- Fixed pdb files not being copied to GameData in Debug configuration
+
+
 ## 1.1.0 - 2025-11-30
 
 ### Msbuild
