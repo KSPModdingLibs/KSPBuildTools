@@ -31,6 +31,10 @@ on:
         description: >
           If MSBuild should be used. If your mod has no msbuild project (e.g. a pure part mod) 
           you should set this to false
+      msbuild-args:
+        type: string
+        description: >
+          Any additional args to pass to msbuild
       use-ckan:
         type: boolean
         default: false
@@ -98,6 +102,7 @@ jobs:
           ksp-zip-url: ${{ inputs.ksp-zip-url }}
           ksp-zip-password: ${{ secrets.ksp-zip-password }}
           solution-file-path: ${{ inputs.solution-file-path }}
+          msbuild-args: ${{ inputs.msbuild-args }} -p:KSPBT_ModVersion=${{ inputs.version-string }}
 
       - name: assemble-release
         id: assemble-release

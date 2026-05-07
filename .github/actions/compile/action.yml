@@ -38,6 +38,10 @@ inputs:
       Set to true if your project uses a packages.config file instead of packagereferences. Ensure the environment has 
       nuget and mono installed, either installing them manually or by using the Github Ubuntu-22.04 images
 
+  msbuild-args:
+    description: >
+      Additional args to pass to msbuild
+
 runs:
   using: composite
   steps:
@@ -80,5 +84,5 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: >
         dotnet msbuild -m:1 -p:Configuration=${{ inputs.build-configuration }}
-        -p:KSPBT_ManagedPath=${{ env.KSP_ROOT }}/KSP_x64_Data/Managed ${{ inputs.solution-file-path }}
+        -p:KSPBT_ManagedPath=${{ env.KSP_ROOT }}/KSP_x64_Data/Managed ${{ inputs.msbuild-args }} ${{ inputs.solution-file-path }}
         ${{ runner.debug && '-v:diagnostic' }}

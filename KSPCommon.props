@@ -67,6 +67,11 @@
     </KSPVersionFile>
   </ItemDefinitionGroup>
 
+  <!-- version provided by create-release workflow, if available -->
+  <PropertyGroup Condition=" '$(KSPBT_ModVersion)' != '' ">
+	<Version>$(KSBT_ModVersion)</Version>
+  </PropertyGroup>
+
   <!--Parse KSP platform-specific paths -->
   <PropertyGroup Condition=" '$(_KSPBT_ManagedRelativePath)' == '' ">
     <_KSPBT_ManagedRelativePath Condition=" $([MSBuild]::IsOsPlatform('Windows')) ">KSP_x64_Data/Managed</_KSPBT_ManagedRelativePath>
