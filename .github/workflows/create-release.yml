@@ -20,7 +20,7 @@ on:
         default: GameData LICENSE* README* CHANGELOG*
       flatten:
         type: boolean
-        default: false
+        default: true
         description: >
           If true, the release zip is built with the artifact files at the root
           instead of nested under a top-level directory. Forwarded to the

@@ -19,7 +19,7 @@ inputs:
 
   flatten:
     description: If `true`, the zip is built with the artifact files at the root instead of nested under a top-level `output-file-name` directory. Use this when consumers expect to extract the archive directly into a target directory (e.g. `GameData/`, `LICENSE`, etc. at the root of the zip).
-    default: "false"
+    default: "true"
 
   working-directory:
     default: ${{ github.workspace }}
