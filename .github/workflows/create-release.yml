@@ -102,7 +102,7 @@ jobs:
           ksp-zip-url: ${{ inputs.ksp-zip-url }}
           ksp-zip-password: ${{ secrets.ksp-zip-password }}
           solution-file-path: ${{ inputs.solution-file-path }}
-          msbuild-args: ${{ inputs.msbuild-args }} -p:KSPBT_ModVersion=${{ inputs.version-string }}
+          msbuild-args: ${{ inputs.msbuild-args }} -p:KSPBT_ModVersion=${{ env.VERSION_STRING }}
 
       - name: assemble-release
         id: assemble-release
