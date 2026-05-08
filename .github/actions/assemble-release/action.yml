@@ -1,4 +1,6 @@
 name: Assemble Release
+description: 
+  assembles a release zip from local files.  Usually you run this after update-version, compile, etc.
 
 x-env:
   RELEASE_STAGING:
@@ -7,7 +9,7 @@ x-env:
 inputs:
   artifacts:
     description: Space-separated list of file globs to include in the output artifact, relative to `working-directory`
-    default: GameData LICENSE* README* CHANGELOG*
+    default: GameData Extras LICENSE* README* CHANGELOG*
 
   artifacts-exclude:
     description: Space-separated list of file globs remove from the staging directory before zipping

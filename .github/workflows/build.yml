@@ -8,7 +8,7 @@ on:
         default: Release
       artifacts:
         type: string
-        default: GameData LICENSE* README* CHANGELOG*
+        default: GameData Extras LICENSE* README* CHANGELOG*
       ksp-zip-url:
         type: string
         default: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip

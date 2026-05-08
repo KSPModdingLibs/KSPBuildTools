@@ -38,5 +38,5 @@ jobs:
       # Assemble the mod into a release package and upload it as an artifact
       - uses: KSPModdingLibs/KSPBuildTools/.github/actions/assemble-release@main
         with:
-          artifacts: "GameData LICENSE* README* CHANGELOG*"
+          artifacts: "GameData Extras LICENSE* README* CHANGELOG*"
           output-file-name: ${{ github.event.repository.name }}-${{ inputs.build-configuration }}

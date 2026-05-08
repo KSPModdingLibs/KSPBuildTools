@@ -17,7 +17,7 @@ on:
         default: Release
       artifacts:
         type: string
-        default: GameData LICENSE* README* CHANGELOG*
+        default: GameData Extras LICENSE* README* CHANGELOG*
       flatten:
         type: boolean
         default: true
