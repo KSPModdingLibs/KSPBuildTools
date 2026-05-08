@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file
 
+## Unreleased
+
+### Workflows
+
+- `assemble-release` action: zip output now uses maximum compression (`-9`).
+- `assemble-release` action: new `flatten` input. When `true`, the artifact files are placed at the root of the zip instead of nested under a top-level `output-file-name` directory.
+- `create-release` workflow: forwards a new `flatten` input to `assemble-release`.
+- `create-release` workflow: new `version-file` input — path to a KSP-AVC `.version` file that should be attached to the github release as a separate asset alongside the assembled zip (for tools like CKAN's NetKAN).
+
+
 ## 1.1.1 - 2025-12-01
 
 ### Msbuild

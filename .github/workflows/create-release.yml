@@ -18,6 +18,20 @@ on:
       artifacts:
         type: string
         default: GameData LICENSE* README* CHANGELOG*
+      flatten:
+        type: boolean
+        default: true
+        description: >
+          If true, the release zip is built with the artifact files at the root
+          instead of nested under a top-level directory. Forwarded to the
+          assemble-release action.
+      version-file:
+        type: string
+        description: >
+          Path to a KSP-AVC `.version` file (relative to the repository root).
+          If set, the file is attached to the github release as a separate
+          asset alongside the assembled zip, so tools like CKAN's NetKAN can
+          read it without downloading the full archive.
       ksp-zip-url:
         type: string
         default: https://github.com/KSPModdingLibs/KSPLibs/raw/main/KSP-1.12.5.zip
@@ -110,10 +124,15 @@ jobs:
         with:
           artifacts: ${{ inputs.artifacts }}
           output-file-name: ${{ github.event.repository.name }}-${{ env.VERSION_STRING }}
+          flatten: ${{ inputs.flatten }}
 
       - name: create-release
         env:
           GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ZIP: ${{ steps.assemble-release.outputs.artifact-zip-path }}
+          VERSION_FILE: ${{ inputs.version-file }}
         run: |
           git push
-          gh release create "$VERSION_STRING" --draft --target ${{ github.ref_name }} --title "$VERSION_STRING" "${{ steps.assemble-release.outputs.artifact-zip-path }}" --notes-file "$RELEASE_NOTES_FILE"
+          assets=("$ARTIFACT_ZIP")
+          [ -n "$VERSION_FILE" ] && assets+=("$VERSION_FILE")
+          gh release create "$VERSION_STRING" --draft --target ${{ github.ref_name }} --title "$VERSION_STRING" --notes-file "$RELEASE_NOTES_FILE" "${assets[@]}"

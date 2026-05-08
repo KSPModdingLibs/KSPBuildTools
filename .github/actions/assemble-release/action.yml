@@ -17,6 +17,10 @@ inputs:
     description: Output artifact name used in the upload-artifact action WITHOUT ".zip" extension. a zip file with this name will be created in the github workspace so that it can be immediately consumed by other actions in the workflow without having to download the artifact.
     default: ${{ github.event.repository.name || 'release'}}
 
+  flatten:
+    description: If `true`, the zip is built with the artifact files at the root instead of nested under a top-level `output-file-name` directory. Use this when consumers expect to extract the archive directly into a target directory (e.g. `GameData/`, `LICENSE`, etc. at the root of the zip).
+    default: "true"
+
   working-directory:
     default: ${{ github.workspace }}
     description: The working directory to run in
@@ -63,6 +67,10 @@ runs:
       shell: bash
       working-directory: ${{ env.RELEASE_STAGING }}
       run: |
-        zip -r ${{ inputs.output-file-name }}.zip ${{ inputs.output-file-name}}
+        if [ '${{ inputs.flatten }}' = 'true' ]; then
+          (cd '${{ inputs.output-file-name }}' && zip -9 -r '../${{ inputs.output-file-name }}.zip' .)
+        else
+          zip -9 -r '${{ inputs.output-file-name }}.zip' '${{ inputs.output-file-name }}'
+        fi
         echo 'artifact-zip-path=${{ env.RELEASE_STAGING }}/${{ inputs.output-file-name }}.zip' >> $GITHUB_OUTPUT
         echo 'artifact-dir-path=${{ env.RELEASE_STAGING }}/${{ inputs.output-file-name}}' >> $GITHUB_OUTPUT
